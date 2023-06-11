@@ -52,8 +52,10 @@
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
 						<Button class="w-full hover:bg-accent hover:text-white">Watch</Button>
-						<Button href={`/${data.provider}/anime/${anime.id.replace('/', 'forwardslash')}`} variant="outline" class="w-full"
-							>Info</Button
+						<Button
+							href={`/${data.provider}/anime/${anime.id.replace('/', 'forwardslash')}`}
+							variant="outline"
+							class="w-full">Info</Button
 						>
 					</CardFooter>
 				</Card>
@@ -68,7 +70,8 @@
 		{:catch error}
 			<Alert variant="destructive">
 				<AlertTitle class="flex gap-x-2"><AlertCircle class="h-4 w-4" />Error</AlertTitle>
-				<AlertDescription>{error.message}, please try another provider.</AlertDescription>
+				<AlertDescription>{error.message}</AlertDescription>
+				<AlertDescription>Please try another provider.</AlertDescription>
 			</Alert>
 		{/await}
 	</div>

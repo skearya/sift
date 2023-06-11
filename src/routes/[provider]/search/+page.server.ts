@@ -19,7 +19,7 @@ export const load = (async ({ url, params }) => {
 			// the api currently does not work with enime pages
 			if (params.provider == 'enime' && url.searchParams.get('page')) throw new Error();
 
-			return await ky(endpoint, { timeout: 1 }).json<IAnimeResult>();
+			return await ky(endpoint, { timeout: 3000 }).json<IAnimeResult>();
 		} catch {
 			try {
 				let provider = new ANIME[convertForLibrary(params.provider) as keyof typeof ANIME]();
@@ -28,15 +28,17 @@ export const load = (async ({ url, params }) => {
 					url.searchParams.get('query')!,
 					Number(url.searchParams.get('page')) || 1
 				);
-			} catch {
-				throw error(404, 'Error searching anime');
+			} catch (e: any) {
+				throw new Error(e.message);
 			}
 		}
 	}
 
 	return {
 		streamed: {
-			response: fetchResults()
+			response: fetchResults().catch((e) => {
+				throw error(404, e.message);
+			})
 		},
 		provider: params.provider
 	};

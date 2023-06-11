@@ -15,11 +15,7 @@ export const load = (async ({ params }) => {
 	let response: AnimeInfo;
 	let endpoint: string;
 
-	if (
-		provider == 'gogoanime' ||
-		provider == 'animepahe' ||
-		provider == '9anime'
-	) {
+	if (provider == 'gogoanime' || provider == 'animepahe' || provider == '9anime') {
 		endpoint = `${consumet}/anime/${provider}/info/${animeId}`;
 	} else {
 		endpoint = `${consumet}/anime/${provider}/info?${new URLSearchParams({
@@ -35,12 +31,15 @@ export const load = (async ({ params }) => {
 
 			// @ts-expect-error
 			response = await anime.fetchAnimeInfo(animeId);
-		} catch {
-			throw error(404, 'Error fetching anime info');
+		} catch (e: any) {
+			throw error(404, {
+				message: 'Error fetching anime info',
+				info: e.message
+			});
 		}
 	}
 
-	response.image = response.image.replace('i.animepahe.ru', 'i.animepahe.com')
+	response.image = response.image.replace('i.animepahe.ru', 'i.animepahe.com');
 	return response;
 }) satisfies PageServerLoad;
 

@@ -1,10 +1,25 @@
 <script lang="ts">
 	import '../app.postcss';
-	import { Input } from '$components/ui/input';
+	import { initFlash } from 'sveltekit-flash-message/client';
+	import toast, { Toaster } from 'svelte-french-toast';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { provider } from '$lib/provider';
 	import { providers } from '$lib/api';
-	import { goto } from '$app/navigation';
-	import { Toaster } from 'svelte-french-toast';
+	import { Input } from '$components/ui/input';
+
+	const flash = initFlash(page);
+
+	$: if ($flash) {
+		switch ($flash.type) {
+			case 'success':
+				toast.success($flash.message);
+				break;
+			case 'error':
+				toast.error($flash.message);
+				break;
+		}
+	}
 
 	let input: string;
 </script>
@@ -14,7 +29,7 @@
 		<a href="/" class="mr-5 font-bold">21</a>
 
 		<h1 class="mr-3">Provider:</h1>
-		<div class="rounded-md border mr-3">
+		<div class="mr-3 rounded-md border">
 			<select
 				class="rounded-md border-r-8 border-r-transparent bg-transparent px-3 py-2"
 				bind:value={$provider}
