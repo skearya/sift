@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { Button } from '$components/ui/button';
-	import { Input } from '$components/ui/input';
+
+	export let data;
 </script>
 
-<form
-	use:enhance
-	method="post"
-	class="flex h-[calc(100vh-64px)] w-full items-center justify-center"
->
-	<Input class="w-72" name="password" placeholder="password" />
-	<Button type="submit">Log in</Button>
-</form>
+<div class="flex h-[calc(100vh-64px)] w-full items-center justify-center gap-2">
+	{#if !data.user}
+		<Button size="lg" href="/oauth" type="submit">Log in</Button>
+	{:else}
+		<code>authorized: {data.user.authorized}</code>
+	{/if}
+</div>

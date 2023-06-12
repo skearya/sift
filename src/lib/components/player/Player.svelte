@@ -3,6 +3,7 @@
 	export let headers: object | undefined;
 
 	import { onMount } from 'svelte';
+	import { PUBLIC_PROXY } from '$env/static/public';
 	import toast from 'svelte-french-toast';
 	import Player from '@oplayer/core';
 	import ui from '@oplayer/ui';
@@ -25,7 +26,7 @@
 				toast.error('Encountered CORS error, trying proxy. Switching providers is recommended.');
 
 				player.changeSource({
-					src: `https://m3u8-proxy-ixam.onrender.com/m3u8-proxy?url=${encodeURIComponent(
+					src: `${PUBLIC_PROXY}/m3u8-proxy?url=${encodeURIComponent(
 						src
 					)}&headers=${encodeURIComponent(JSON.stringify(headers || {}))}`,
 					format: 'm3u8'

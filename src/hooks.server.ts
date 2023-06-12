@@ -1,10 +1,21 @@
-import { PASSWORD } from '$env/static/private';
-import { redirect, type Handle } from '@sveltejs/kit';
+import { auth } from '$lib/server/lucia';
+import { redirect } from 'sveltekit-flash-message/server';
+import type { Handle } from '@sveltejs/kit';
 
 export const handle = (async ({ event, resolve }) => {
-	if (event.url.pathname.startsWith('/') && !(event.url.pathname == '/login')) {
-		if (!(event.cookies.get('auth') == PASSWORD)) {
-			throw redirect(303, '/login');
+	event.locals.auth = auth.handleRequest(event);
+
+	const { user, session } = await event.locals.auth.validateUser();
+	const { pathname } = event.url;
+
+	if (
+		pathname.startsWith('/') &&
+		pathname != '/login' &&
+		pathname != '/logout' &&
+		!pathname.startsWith('/oauth')
+	) {
+		if (!session || !user.authorized) {
+			throw redirect(303, '/login', { type: 'error', message: 'Unauthorized!' }, event);
 		}
 	}
 

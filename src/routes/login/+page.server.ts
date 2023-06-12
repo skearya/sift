@@ -1,29 +1,14 @@
-import type { PageServerLoad, Actions } from './$types';
-import { PASSWORD } from '$env/static/private';
-import { redirect, setFlash } from 'sveltekit-flash-message/server';
+import type { PageServerLoad } from './$types';
+import { redirect } from '@sveltejs/kit';
 
-export const load = (async () => {
-	return {};
-}) satisfies PageServerLoad;
+export const load = (async ({ locals }) => {
+	const { user } = await locals.auth.validateUser();
 
-export const actions = {
-	default: async (event) => {
-		const formData = await event.request.formData();
-
-		const pass = formData.get('password');
-
-		if (pass == PASSWORD) {
-			event.cookies.set('auth', PASSWORD, {
-				path: '/',
-				httpOnly: true,
-				sameSite: 'strict',
-				secure: process.env.NODE_ENV === 'production',
-				maxAge: 60 * 60 * 24 * 7
-			});
-
-			throw redirect(303, '/', { type: 'success', message: 'Logged in' }, event);
-		} else {
-			setFlash({ type: 'error', message: 'Incorrect password!' }, event);
-		}
+	if (user?.authorized) {
+		throw redirect(303, '/');
 	}
-} satisfies Actions;
+
+	return {
+		user
+	};
+}) satisfies PageServerLoad;

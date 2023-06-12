@@ -6,11 +6,24 @@ declare global {
 			message: string;
 			info?: string;
 		}
-		// interface Locals {}
+		interface Locals {
+			auth: import('lucia-auth').AuthRequest;
+		}
 		interface PageData {
 			flash?: { type: 'success' | 'error'; message: string };
 		}
 		// interface Platform {}
+	}
+}
+
+/// <reference types="lucia-auth" />
+declare global {
+	namespace Lucia {
+		type Auth = import('$lib/server/lucia').Auth;
+		type UserAttributes = {
+			username: string;
+			authorized: boolean;
+		};
 	}
 }
 
