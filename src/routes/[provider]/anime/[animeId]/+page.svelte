@@ -30,8 +30,13 @@
 		</div>
 	</div>
 
-	<div class="">
+	<div>
 		<h1 class="text-4xl font-semibold">Episodes</h1>
+
+		<button
+			on:click={() => window.scrollTo(0, document.body.scrollHeight)}
+			class="mt-2 text-muted-foreground">scroll to bottom</button
+		>
 
 		<Separator class="my-6" />
 
@@ -57,5 +62,10 @@
 				</Alert>
 			{/each}
 		</div>
+
+		<button
+			on:click={() => window.scrollTo({ top: 0 })}
+			class="mt-4 text-muted-foreground">scroll to top</button
+		>
 	</div>
 </section>
