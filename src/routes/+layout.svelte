@@ -33,6 +33,9 @@
 			<select
 				class="rounded-md border-r-8 border-r-transparent bg-transparent px-3 py-2"
 				bind:value={$provider}
+				on:change={() => {
+					toast.success('Search again to apply the changes made to the provider.');
+				}}
 			>
 				{#each providers as provider}
 					<option value={provider}>{provider}</option>

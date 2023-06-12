@@ -39,12 +39,12 @@
 			{#each data.episodes as episode}
 				<a
 					href={`/${$page.params.provider}/watch/${episode.id}`}
-					class="flex w-full items-center overflow-hidden whitespace-nowrap rounded-md"
+					class="flex h-min w-full items-stretch overflow-hidden rounded-md border"
 				>
-					<div class="w-15 bg-accent px-4 py-4">
-						<h1 class="text-muted-foreground">{episode.number}</h1>
+					<div class="m-2 flex items-center justify-center rounded-md bg-secondary px-3">
+						<h1 class="font-semibold">{episode.number}</h1>
 					</div>
-					<div class="w-full bg-secondary p-4">
+					<div class="flex-grow bg-transparent px-2 py-4">
 						<h1 class="font-medium">{episode.title || episode.id}</h1>
 					</div>
 				</a>
