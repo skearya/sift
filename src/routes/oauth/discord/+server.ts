@@ -34,6 +34,7 @@ export const GET: RequestHandler = async (event) => {
 		const session = await auth.createSession(user.userId);
 		locals.auth.setSession(session);
 	} catch (e) {
+		console.log(e)
 		throw error(404, 'invalid code');
 	}
 
