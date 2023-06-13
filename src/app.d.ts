@@ -21,6 +21,7 @@ declare global {
 	namespace Lucia {
 		type Auth = import('$lib/server/lucia').Auth;
 		type UserAttributes = {
+			discordId: string;
 			username: string;
 			authorized: boolean;
 		};

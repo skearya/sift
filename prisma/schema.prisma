@@ -15,10 +15,9 @@ model AuthUser {
   id           String        @id @unique
   auth_session AuthSession[]
   auth_key     AuthKey[]
-  username     String        @unique
+  discordId    String        @unique
+  username     String
   authorized   Boolean
-  // here you can add custom fields for your user
-  // e.g. name, email, username, roles, etc.
 
   @@map("auth_user")
 }

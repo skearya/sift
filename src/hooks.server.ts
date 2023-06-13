@@ -1,6 +1,5 @@
 import { auth } from '$lib/server/lucia';
-import { redirect } from 'sveltekit-flash-message/server';
-import type { Handle } from '@sveltejs/kit';
+import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle = (async ({ event, resolve }) => {
 	event.locals.auth = auth.handleRequest(event);
@@ -15,7 +14,7 @@ export const handle = (async ({ event, resolve }) => {
 		!pathname.startsWith('/oauth')
 	) {
 		if (!session || !user.authorized) {
-			throw redirect(303, '/login', { type: 'error', message: 'Unauthorized!' }, event);
+			throw redirect(303, '/login');
 		}
 	}
 

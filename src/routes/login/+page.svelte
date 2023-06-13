@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { Alert, AlertDescription, AlertTitle } from '$components/ui/alert';
 	import { Button } from '$components/ui/button';
+	import { Lock } from 'lucide-svelte';
 
 	export let data;
 </script>
@@ -8,6 +10,9 @@
 	{#if !data.user}
 		<Button size="lg" href="/oauth" type="submit">Log in</Button>
 	{:else}
-		<code>authorized: {data.user.authorized}</code>
+		<Alert class="w-min whitespace-nowrap" variant="destructive">
+			<AlertTitle class="flex gap-x-2 items-center"><Lock class="h-4 w-4" />Error</AlertTitle>
+			<AlertDescription>Not authorized!</AlertDescription>
+		</Alert>
 	{/if}
 </div>

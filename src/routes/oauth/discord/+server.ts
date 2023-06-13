@@ -25,6 +25,7 @@ export const GET: RequestHandler = async (event) => {
 		const getUser = async () => {
 			if (existingUser) return existingUser;
 			return await createUser({
+				discordId: providerUser.id,
 				username: providerUser.username,
 				authorized: false
 			});
