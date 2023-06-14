@@ -15,6 +15,7 @@ model AuthUser {
   id           String        @id @unique
   auth_session AuthSession[]
   auth_key     AuthKey[]
+  
   discordId    String        @unique
   username     String
   authorized   Boolean

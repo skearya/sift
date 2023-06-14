@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.postcss';
+	import type { LayoutData } from './$types';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { initFlash } from 'sveltekit-flash-message/client';
@@ -10,11 +11,13 @@
 	import { Button } from '$components/ui/button';
 	import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '$components/ui/tooltip';
 
-	export let data;
+	export let data: LayoutData;
 
 	const flash = initFlash(page);
 
-	$: if ($flash) {
+	flash.subscribe(($flash) => {
+		if (!$flash) return;
+
 		switch ($flash.type) {
 			case 'success':
 				toast.success($flash.message);
@@ -23,7 +26,9 @@
 				toast.error($flash.message);
 				break;
 		}
-	}
+
+		flash.set(undefined);
+	});
 
 	let input: string;
 </script>

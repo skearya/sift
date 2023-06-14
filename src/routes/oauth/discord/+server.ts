@@ -2,6 +2,7 @@ import type { RequestHandler } from './$types';
 import { auth, discordAuth } from '$lib/server/lucia';
 import { redirect } from 'sveltekit-flash-message/server';
 import { error } from '@sveltejs/kit';
+import { OWNER_ID } from '$env/static/private';
 
 export const GET: RequestHandler = async (event) => {
 	let { cookies, url, locals } = event;
@@ -27,14 +28,14 @@ export const GET: RequestHandler = async (event) => {
 			return await createUser({
 				discordId: providerUser.id,
 				username: providerUser.username,
-				authorized: false
+				authorized: providerUser.id == OWNER_ID ? true : false
 			});
 		};
 		const user = await getUser();
 		const session = await auth.createSession(user.userId);
 		locals.auth.setSession(session);
 	} catch (e) {
-		console.log(e)
+		console.log(e);
 		throw error(404, 'invalid code');
 	}
 
