@@ -1,23 +1,25 @@
-const consumet = 'https://api.consumet.org';
-const providers = ['9anime', 'animefox', 'animepahe', 'enime', 'gogoanime', 'zoro'];
+import ky from 'ky-universal';
 
-function convertForLibrary(provider: string): string {
-	switch (provider) {
-		case '9anime':
-			return 'NineAnime';
-		case 'animefox':
-			return 'AnimeFox';
-		case 'animepahe':
-			return 'AnimePahe';
-		case 'enime':
-			return 'Enime';
-		case 'gogoanime':
-			return 'Gogoanime';
-		case 'zoro':
-			return 'Zoro';
-		default:
-			return provider;
+const api = ky.create({ prefixUrl: 'https://api.anify.tv/' });
+
+export function bestFallback(artwork: Artwork[]) {
+	let newImg = '';
+
+	for (let i = 0; i < artwork.length; i++) {
+		if (artwork[i].providerId == 'mal') newImg = artwork[i].img;
+		if (artwork[i].providerId == 'anilist') newImg = artwork[i].img;
+		if (artwork[i].providerId == 'anilist' && artwork[i].img.includes('large'))
+			newImg = artwork[i].img;
+		if (artwork[i].providerId == 'kitsu' && artwork[i].type == 'poster') newImg = artwork[i].img;
 	}
+
+	return newImg;
 }
 
-export { consumet, providers, convertForLibrary };
+interface Artwork {
+	img: string;
+	type: string;
+	providerId: string;
+}
+
+export { api };
