@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { bestFallback } from '$lib/api';
 	import { Button } from '$components/ui/button';
 	import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '$components/ui/card';
 	import { Skeleton } from '$components/ui/skeleton';
@@ -39,24 +40,28 @@
 				</Card>
 			{/each}
 		{:then results}
-			{#each results.results as anime}
+			{#each results as anime}
 				<Card class="flex h-full w-full flex-col overflow-hidden">
 					<CardHeader class="p-0">
-						<img class="h-96 w-full object-cover" src={anime.image} alt="anime art" />
+						<img
+							class="h-96 w-full object-cover"
+							src={anime.coverImage}
+							alt="Anime cover art"
+							on:error={(event) => {
+								// @ts-expect-error
+								event.target.src = bestFallback(anime.artwork);
+							}}
+						/>
 					</CardHeader>
 					<div class="space-y-1.5 p-6">
-						<CardTitle>{anime.title || anime.id}</CardTitle>
+						<CardTitle>{anime.title.romaji || anime.slug}</CardTitle>
 						<CardDescription class="flex justify-between">
-							<h1>{anime.releaseDate || ''}</h1>
+							<h1>{anime.year || ''}</h1>
 						</CardDescription>
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
 						<Button class="w-full hover:bg-accent hover:text-white">Watch</Button>
-						<Button
-							href={`/${data.provider}/anime/${anime.id.replace('/', 'forwardslash')}`}
-							variant="outline"
-							class="w-full">Info</Button
-						>
+						<Button href={`/info/${anime.id}`} variant="outline" class="w-full">Info</Button>
 					</CardFooter>
 				</Card>
 			{:else}
@@ -64,14 +69,13 @@
 					<AlertTitle class="flex gap-x-2"
 						><AlertCircle class="h-4 w-4" />No results found</AlertTitle
 					>
-					<AlertDescription>Please try another provider.</AlertDescription>
+					<AlertDescription>Please try another search.</AlertDescription>
 				</Alert>
 			{/each}
 		{:catch error}
 			<Alert variant="destructive">
 				<AlertTitle class="flex gap-x-2"><AlertCircle class="h-4 w-4" />Error</AlertTitle>
 				<AlertDescription>{error.message}</AlertDescription>
-				<AlertDescription>Please try another provider.</AlertDescription>
 			</Alert>
 		{/await}
 	</div>
