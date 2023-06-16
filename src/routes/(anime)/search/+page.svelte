@@ -61,7 +61,7 @@
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
 						<Button class="w-full hover:bg-accent hover:text-white">Watch</Button>
-						<Button href={`/info/${anime.id}`} variant="outline" class="w-full">Info</Button>
+						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 					</CardFooter>
 				</Card>
 			{:else}
