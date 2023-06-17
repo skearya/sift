@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import { PUBLIC_PROXY } from '$env/static/public';
 	import { onMount } from 'svelte';
+	import toast from 'svelte-french-toast';
 	import HLS from 'hls.js';
 	import { defineCustomElements } from 'vidstack/elements';
 	import 'vidstack/styles/defaults.css';
@@ -12,23 +13,37 @@
 
 	for (const source of data.sources) {
 		if (source.quality == 'default' || source.quality == 'auto') {
-			src = `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
-				source.url
-			)}&headers=${encodeURIComponent(JSON.stringify(data.headers || {}))}`;
+			// src = `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
+			// 	source.url
+			// )}&headers=${encodeURIComponent(JSON.stringify(data.headers || {}))}`;
+			src = source.url;
 		}
 	}
 
 	onMount(async () => {
 		await defineCustomElements();
 
-		const player = document.querySelector('media-player');
+		const player = document.querySelector('media-player')!;
 
-		player!.addEventListener('provider-change', (event) => {
+		player.addEventListener('provider-change', (event) => {
 			const provider = event.detail;
 
 			if (provider?.type === 'hls') {
 				// @ts-expect-error
 				provider.library = HLS;
+			}
+		});
+
+		player.addEventListener('error', (event) => {
+			if ((event.detail.message = 'Failed to open media')) {
+				toast.error('Encountered CORS error, trying proxy. Switching providers is recommended.');
+
+				player.src = {
+					src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
+						src
+					)}&headers=${encodeURIComponent(JSON.stringify(data.headers || {}))}`,
+					type: 'application/x-mpegurl'
+				};
 			}
 		});
 	});
