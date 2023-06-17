@@ -7,6 +7,7 @@
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
+	import { fly } from 'svelte/transition';
 
 	export let data: LayoutData;
 
@@ -59,12 +60,17 @@
 	</div>
 </nav>
 
-<slot />
+{#key data.url}
+	<main in:fly={{ x: 200, duration: 300, delay: 300 }} out:fly={{ x: -200, duration: 300 }}>
+		<slot />
+	</main>
+{/key}
 
 <Toaster />
 
 <style lang="postcss">
-	:global(body) {
+	:global(html) {
+		scroll-behavior: smooth;
 		font-family: 'Inter var', sans-serif;
 	}
 

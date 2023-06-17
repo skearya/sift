@@ -50,6 +50,7 @@
 		"svelte-local-storage-store": "^0.4.0",
 		"sveltekit-flash-message": "^1.0.0",
 		"tailwind-merge": "^1.13.0",
-		"tailwindcss-animate": "^1.0.5"
+		"tailwindcss-animate": "^1.0.5",
+		"vidstack": "^0.6.13"
 	}
 }

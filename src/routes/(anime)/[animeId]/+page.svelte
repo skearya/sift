@@ -50,10 +50,12 @@
 
 		<Separator class="my-6" />
 
-		<Tabs value={data.episodes[0].providerId} class="w-full">
+		<Tabs value={data?.episodes[0]?.providerId} class="w-full">
 			<TabsList class={`mb-6 grid w-full grid-cols-${data.episodes.length} w-full`}>
 				{#each data.episodes as provider}
 					<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
+				{:else}
+					<h1>No providers found</h1>
 				{/each}
 			</TabsList>
 			{#each data.episodes as provider}
@@ -61,7 +63,9 @@
 					<div class="flex flex-col justify-center gap-4">
 						{#each provider.episodes as episode}
 							<a
-								href={`/${data.info.id}/${provider.providerId}/${encodeURIComponent(episode.id)}/${episode.number}`}
+								href={`/${data.info.id}/${provider.providerId}/${encodeURIComponent(episode.id)}/${
+									episode.number
+								}`}
 								class="flex h-min w-full items-stretch overflow-hidden rounded-md border"
 							>
 								<div class="m-2 flex items-center justify-center rounded-md bg-secondary px-3">
