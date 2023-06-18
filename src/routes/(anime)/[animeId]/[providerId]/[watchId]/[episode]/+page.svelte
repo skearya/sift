@@ -10,12 +10,10 @@
 
 	export let data: PageData;
 	let src: string;
+	let usingProxy: boolean = false;
 
 	for (const source of data.sources) {
 		if (source.quality == 'default' || source.quality == 'auto') {
-			// src = `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
-			// 	source.url
-			// )}&headers=${encodeURIComponent(JSON.stringify(data.headers || {}))}`;
 			src = source.url;
 		}
 	}
@@ -35,7 +33,7 @@
 		});
 
 		player.addEventListener('error', (event) => {
-			if ((event.detail.message = 'Failed to open media')) {
+			if ((event.detail.message = 'Failed to open media') && !usingProxy) {
 				toast.error('Encountered CORS error, trying proxy. Switching providers is recommended.');
 
 				player.src = {
@@ -44,6 +42,8 @@
 					)}&headers=${encodeURIComponent(JSON.stringify(data.headers || {}))}`,
 					type: 'application/x-mpegurl'
 				};
+
+				usingProxy = true;
 			}
 		});
 	});

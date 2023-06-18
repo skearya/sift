@@ -1,13 +1,14 @@
 <script lang="ts">
 	import '../app.postcss';
 	import type { LayoutData } from './$types';
-	import { page } from '$app/stores';
+	import { page, navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { fly, slide } from 'svelte/transition';
 	import { initFlash } from 'sveltekit-flash-message/client';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
-	import { fly } from 'svelte/transition';
+	import { Loader2 } from 'lucide-svelte';
 
 	export let data: LayoutData;
 
@@ -31,7 +32,18 @@
 	let input: string;
 </script>
 
-<nav class="flex h-16 w-full items-center justify-between border-b bg-primary-foreground px-6">
+{#if $navigating}
+	<div
+		transition:fly={{ x: -200 }}
+		class="fixed left-8 top-24 z-50 rounded-lg bg-secondary p-3 shadow-lg border"
+	>
+		<Loader2 class="animate-spin" size="35" />
+	</div>
+{/if}
+
+<nav
+	class="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b bg-primary-foreground px-6"
+>
 	<div class="flex items-center">
 		<a href="/" class="mr-5 font-bold">sift</a>
 	</div>

@@ -13,7 +13,7 @@ export const load = (async ({ params }) => {
 	try {
 		response = await api(
 			`sources?providerId=${providerId}&watchId=${watchId}&episode=${episode}&id=${animeId}&apikey=${API_KEY}`,
-			{ timeout: 3000 }
+			{ timeout: 4500 }
 		).json<SourceInfo>();
 	} catch {
 		throw error(404, 'Error fetching episode sources');
