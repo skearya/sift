@@ -14,6 +14,10 @@
 	let src: string;
 	let usingProxy: boolean = false;
 
+	const providerEpisodes = data.episodes.filter(
+		(provider) => provider.providerId == $page.params.providerId
+	)[0];
+
 	for (const source of data.source.sources) {
 		if (source.quality == 'default' || source.quality == 'auto') {
 			src = source.url;
@@ -48,6 +52,14 @@
 				usingProxy = true;
 			}
 		});
+
+		const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
+
+		currentEpisode.scrollIntoView({
+			behavior: 'smooth',
+			block: 'start',
+			inline: 'start'
+		});
 	});
 </script>
 
@@ -79,7 +91,7 @@
 	<div class="p-4 md:p-6">
 		<div class="flex items-center justify-between">
 			<div class="space-y-1">
-				<h1 class="text-2xl font-semibold tracking-tight md:text-3xl">{data.info.title.romaji}</h1>
+				<a href="/{$page.params.animeId}" class="text-2xl font-semibold tracking-tight md:text-3xl hover:text-white transition-colors">{data.info.title.romaji}</a>
 				<h1 class="text-md capitalize text-muted-foreground md:text-lg">
 					{data.info.season}
 					{data.info.year}
@@ -93,10 +105,12 @@
 
 		<Separator class="my-4" />
 
-		<!-- <div class="flex gap-2 overflow-x-scroll">
-			{#each data.episodes[0].episodes as episode}
+		<div class="flex gap-2 overflow-x-scroll">
+			{#each providerEpisodes.episodes as episode}
 				<a
-					href="/"
+					href="/{$page.params.animeId}/{$page.params.providerId}/{encodeURIComponent(
+						episode.id
+					)}/{episode.number}"
 					id={String(episode.number)}
 					class={`rounded-sm ${
 						episode.number == Number($page.params.episode) ? 'bg-primary text-black' : 'bg-muted'
@@ -105,7 +119,7 @@
 					{episode.number}
 				</a>
 			{/each}
-		</div> -->
+		</div>
 	</div>
 </section>
 

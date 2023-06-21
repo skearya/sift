@@ -10,6 +10,10 @@ export const auth = lucia({
 	adapter: prisma(PrismaClient),
 	env: dev ? 'DEV' : 'PROD',
 	middleware: sveltekit(),
+	sessionExpiresIn: {
+		activePeriod: 1000 * 60 * 60 * 24 * 7,
+		idlePeriod: 1000 * 60 * 60 * 24 * 14
+	},
 	transformDatabaseUser: (userData) => {
 		return {
 			userId: userData.id,
