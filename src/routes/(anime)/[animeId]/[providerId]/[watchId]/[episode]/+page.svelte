@@ -91,7 +91,11 @@
 	<div class="p-4 md:p-6">
 		<div class="flex items-center justify-between">
 			<div class="space-y-1">
-				<a href="/{$page.params.animeId}" class="text-2xl font-semibold tracking-tight md:text-3xl hover:text-white transition-colors">{data.info.title.romaji}</a>
+				<a
+					href="/{$page.params.animeId}"
+					class="text-2xl font-semibold tracking-tight transition-colors hover:text-white md:text-3xl"
+					>{data.info.title.romaji}</a
+				>
 				<h1 class="text-md capitalize text-muted-foreground md:text-lg">
 					{data.info.season}
 					{data.info.year}
