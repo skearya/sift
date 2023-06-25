@@ -11,23 +11,30 @@
 	import 'vidstack/styles/community-skin/video.css';
 
 	export let data: PageData;
-	let src: string;
+	let currentSource: string;
 	let usingProxy: boolean = false;
 
 	const providerEpisodes = data.episodes.filter(
 		(provider) => provider.providerId == $page.params.providerId
 	)[0];
 
-	for (const source of data.source.sources) {
-		if (source.quality == 'default' || source.quality == 'auto') {
-			src = source.url;
-		}
-	}
-
 	onMount(async () => {
 		await defineCustomElements();
 
 		const player = document.querySelector('media-player')!;
+
+		for (const source of data.source.sources) {
+			if (source.quality == 'default' || source.quality == 'auto') {
+				player.src = {
+					src: source.url,
+					type: 'application/x-mpegurl'
+				};
+
+				currentSource = source.url;
+			}
+		}
+
+		player.startLoading();
 
 		player.addEventListener('provider-change', (event) => {
 			const provider = event.detail;
@@ -44,7 +51,7 @@
 
 				player.src = {
 					src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
-						src
+						currentSource
 					)}&headers=${encodeURIComponent(JSON.stringify(data.source.headers || {}))}`,
 					type: 'application/x-mpegurl'
 				};
@@ -68,10 +75,9 @@
 >
 	<media-player
 		title={`${data.info.title.romaji} - Episode ${$page.params.episode}`}
-		{src}
 		aspect-ratio="16/9"
+		load="custom"
 		crossorigin
-		type="application/x-mpegurl"
 	>
 		<media-outlet>
 			{#if data.source.subtitles[0]}
@@ -112,6 +118,7 @@
 		<div class="flex gap-2 overflow-x-scroll">
 			{#each providerEpisodes.episodes as episode}
 				<a
+					data-sveltekit-reload
 					href="/{$page.params.animeId}/{$page.params.providerId}/{encodeURIComponent(
 						episode.id
 					)}/{episode.number}"
