@@ -121,3 +121,8 @@ interface Source {
 	url: string;
 	quality: string;
 }
+
+export interface EpisodeCovers {
+  episode: number;
+  img: string;
+}
