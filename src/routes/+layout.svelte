@@ -45,7 +45,7 @@
 	class="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b bg-primary-foreground px-6"
 >
 	<div class="flex items-center">
-		<a href="/" class="mr-5 font-bold">sift</a>
+		<a href="/" class="mr-5">sift</a>
 	</div>
 
 	<div class="flex items-center gap-x-4">

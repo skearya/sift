@@ -2,10 +2,8 @@
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import { bestFallback } from '$lib/api';
-	import { Label } from '$components/ui/label';
 	import { Badge } from '$components/ui/badge';
 	import { Button } from '$components/ui/button';
-	import { Switch } from '$components/ui/switch';
 	import { Separator } from '$components/ui/separator';
 	import { Alert, AlertTitle } from '$components/ui/alert';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
@@ -32,7 +30,9 @@
 
 <section class="container my-10 space-y-10">
 	<div class="flex flex-col gap-8 md:flex-row">
-		<div class="max-w-[15rem] flex-shrink-0 space-y-3 self-center md:max-w-[20rem] lg:max-w-sm">
+		<div
+			class="max-w-[15rem] flex-shrink-0 space-y-3 self-center md:max-w-[20rem] md:self-start lg:max-w-sm"
+		>
 			<img
 				id="img"
 				src={data.info.coverImage}
@@ -91,20 +91,22 @@
 	<div>
 		<div class="flex items-center justify-between text-4xl font-semibold">
 			<h1>Episodes</h1>
-			<div class="flex items-center gap-3">
+			<!-- <div class="flex items-center gap-3">
 				<Label class="text-sm text-muted-foreground">Consumet</Label>
 				<Switch bind:rootChecked={consumet} />
-			</div>
+			</div> -->
 		</div>
 
 		<Separator class="my-6" />
 
 		<Tabs value={data?.episodes[0]?.providerId} class="w-full">
-			<TabsList class={`mb-6 grid w-full grid-cols-${data.episodes.length} w-full`}>
+			<TabsList class={`mb-6 grid w-full grid-cols-1 sm:grid-cols-${data.episodes.length}`}>
 				{#each data.episodes as provider}
 					<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
 				{:else}
-					<h1>No providers found</h1>
+					<div class="flex w-full justify-center">
+						<h1>No providers found</h1>
+					</div>
 				{/each}
 			</TabsList>
 
@@ -116,7 +118,7 @@
 								href={`/${data.info.id}/${provider.providerId}/${encodeURIComponent(episode.id)}/${
 									episode.number
 								}`}
-								class="flex h-min w-full items-center overflow-hidden rounded-md border"
+								class="flex h-min w-full items-center overflow-hidden rounded-md border last:mb-4"
 							>
 								<div
 									class="m-2 flex items-center justify-center self-stretch rounded-md bg-secondary px-3 py-2"
@@ -138,9 +140,9 @@
 							</a>
 						{:else}
 							<Alert>
-								<AlertTitle class="flex gap-x-2"
-									><AlertCircle class="h-4 w-4" />No episodes found</AlertTitle
-								>
+								<AlertTitle class="flex gap-x-2">
+									<AlertCircle class="h-4 w-4" />No episodes found
+								</AlertTitle>
 							</Alert>
 						{/each}
 					</div>
@@ -148,8 +150,8 @@
 			{/each}
 		</Tabs>
 
-		<button on:click={() => window.scrollTo({ top: 0 })} class="mt-4 text-muted-foreground"
-			>scroll to top</button
-		>
+		<button on:click={() => window.scrollTo({ top: 0 })} class="text-muted-foreground"
+			>scroll to top
+		</button>
 	</div>
 </section>

@@ -34,8 +34,6 @@
 			}
 		}
 
-		player.startLoading();
-
 		player.addEventListener('provider-change', (event) => {
 			const provider = event.detail;
 
@@ -76,7 +74,6 @@
 	<media-player
 		title={`${data.info.title.romaji} - Episode ${$page.params.episode}`}
 		aspect-ratio="16/9"
-		load="custom"
 		crossorigin
 	>
 		<media-outlet>

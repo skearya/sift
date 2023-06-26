@@ -12,9 +12,9 @@
 </script>
 
 <section class="container">
-	<h1 class="mb-3 mt-6 text-3xl font-semibold">Top Results</h1>
+	<h1 class="mt-6 text-3xl">Results</h1>
 
-	<Separator class="my-6" />
+	<Separator class="my-4" />
 
 	<div
 		class="mb-6 grid auto-rows-[1fr] grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
@@ -42,9 +42,9 @@
 		{:then results}
 			{#each results as anime}
 				<Card class="flex h-full w-full flex-col overflow-hidden">
-					<CardHeader class="p-0">
+					<CardHeader class="p-2 pb-0">
 						<img
-							class="h-96 w-full object-cover"
+							class="h-96 w-full rounded-md object-cover"
 							src={anime.coverImage}
 							alt="Anime cover art"
 							on:error={(event) => {
