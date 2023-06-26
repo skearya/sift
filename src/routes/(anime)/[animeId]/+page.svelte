@@ -27,8 +27,6 @@
 	let kitsuId = data.info.mappings.find((provider) => provider.providerId === 'kitsu')?.id;
 	let simklId = data.info.mappings.find((provider) => provider.providerId === 'simkl')?.id;
 
-	console.log(simklId);
-
 	let consumet: boolean = false;
 </script>
 
