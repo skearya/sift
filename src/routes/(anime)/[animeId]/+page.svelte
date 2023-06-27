@@ -39,12 +39,14 @@
 				alt="anime cover"
 				class="rounded-md object-cover shadow"
 			/>
-			<Button
-				href={data.info.trailer}
-				class="w-full text-base font-bold underline-offset-4 hover:underline"
-			>
-				<Play size="22" class="mr-2" /> Trailer
-			</Button>
+			{#if data.info.trailer !== '' && data.info.trailer !== 'https://youtube.com/watch?v=undefined'}
+				<Button
+					href={data.info.trailer}
+					class="w-full text-base font-bold underline-offset-4 hover:underline"
+				>
+					<Play size="22" class="mr-2" /> Trailer
+				</Button>
+			{/if}
 			<div class="flex gap-x-2">
 				<Button
 					href={`https://anilist.co/anime/${data.info.id}`}
@@ -54,30 +56,37 @@
 				>
 					<AniList />
 				</Button>
-				<Button
-					href={`https://kitsu.io/anime/${kitsuId}`}
-					target="_blank"
-					variant="outline"
-					class="flex-1"
-				>
-					<Kitsu />
-				</Button>
-				<Button
-					href={`https://simkl.com/anime/${simklId}`}
-					target="_blank"
-					variant="outline"
-					class="flex-1"
-				>
-					<Simkl />
-				</Button>
+				{#if kitsuId}
+					<Button
+						href={`https://kitsu.io/anime/${kitsuId}`}
+						target="_blank"
+						variant="outline"
+						class="flex-1"
+					>
+						<Kitsu />
+					</Button>
+				{/if}
+				{#if simklId}
+					<Button
+						href={`https://simkl.com/anime/${simklId}`}
+						target="_blank"
+						variant="outline"
+						class="flex-1"
+					>
+						<Simkl />
+					</Button>
+				{/if}
 			</div>
 		</div>
 		<div class="space-y-3">
 			<h1 class="text-4xl font-semibold">{data.info.title.romaji}</h1>
-			{#if data.info.season && data.info.year}
-				<h1 class="text-muted-foreground">{data.info.season} {data.info.year}</h1>
+			{#if data.info?.year}
+				<h1 class="text-muted-foreground">
+					{data.info.season == 'UNKNOWN' ? '' : data.info.season}
+					{data.info.year}
+				</h1>
 			{/if}
-			{#if data.info.genres}
+			{#if data.info?.genres}
 				<div class="flex flex-wrap gap-2">
 					{#each data.info.genres || [] as genre}
 						<Badge variant="secondary">{genre}</Badge>
@@ -129,7 +138,6 @@
 									{episode.title || episode.id}
 								</h1>
 								{#if data.covers[episode.number - 1]?.img}
-									<!-- content here -->
 									<div class="m-2 hidden min-w-[210px] overflow-hidden rounded-md md:block">
 										<img
 											loading="lazy"
