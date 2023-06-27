@@ -88,16 +88,15 @@
 		crossorigin
 	>
 		<media-outlet>
-			{#if data.source.subtitles[0]}
+			{#each data.source.subtitles as subtitle}
 				<track
-					src={data.source.subtitles[0].url}
+					src={subtitle.url}
 					kind="subtitles"
-					label={data.source.subtitles[0].lang}
-					srclang="en-US"
-					default
+					label={subtitle.lang}
+					default={subtitle.lang == 'English'}
 					data-type="vtt"
 				/>
-			{/if}
+			{/each}
 		</media-outlet>
 		<media-community-skin />
 	</media-player>

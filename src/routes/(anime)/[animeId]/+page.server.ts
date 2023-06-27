@@ -12,7 +12,7 @@ export const load = (async ({ params, url }) => {
 	async function fetchInfo() {
 		try {
 			return await api(`info/${animeId}?apikey=${API_KEY}`, {
-				timeout: 3500
+				timeout: 4000
 			}).json<Anime>();
 		} catch (e: any) {
 			throw error(404, {

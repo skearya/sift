@@ -3,12 +3,13 @@
 	import type { LayoutData } from './$types';
 	import { page, navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { fly } from 'svelte/transition';
+	import { fly, slide, scale } from 'svelte/transition';
 	import { initFlash } from 'sveltekit-flash-message/client';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
-	import { Loader2 } from 'lucide-svelte';
+	import { Toggle } from '$components/ui/toggle';
+	import { ChevronDown, Loader2 } from 'lucide-svelte';
 
 	export let data: LayoutData;
 
@@ -30,6 +31,9 @@
 	});
 
 	let input: string;
+	let dropdown: boolean;
+
+	$: if ($navigating) dropdown = false;
 </script>
 
 {#if $navigating}
@@ -41,35 +45,59 @@
 	</div>
 {/if}
 
-<nav
-	class="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b bg-primary-foreground px-6"
->
-	<div class="flex items-center">
-		<a href="/" class="mr-5">sift</a>
-	</div>
-
-	<div class="flex items-center gap-x-4">
-		<div class="flex items-center gap-x-6">
-			<form
-				on:submit|preventDefault={() => {
-					goto(`/search?${new URLSearchParams({ query: input })}`);
-				}}
-			>
-				<Input class="max-w-[200px]" placeholder="Search..." bind:value={input} />
-			</form>
+<nav class="sticky top-0 z-40 flex w-full flex-col border-b bg-primary-foreground px-6">
+	<div class="flex h-16 items-center justify-between">
+		<div class="flex items-center">
+			<a href="/" class="mr-5">sift</a>
 		</div>
 
-		{#if data.user}
-			<Button href="/logout" variant="outline" class="flex h-10 items-center gap-x-3 px-3">
-				<img
-					class="rounded-full"
-					src={`https://avatar.vercel.sh/${data.user.username}?size=25`}
-					alt="pfp"
-				/>
-				<h1>{data.user?.username}</h1>
-			</Button>
-		{/if}
+		<div class="flex items-center gap-x-4">
+			<div class="items-center gap-x-6">
+				<form
+					on:submit|preventDefault={() => {
+						goto(`/search?${new URLSearchParams({ query: input })}`);
+					}}
+					class="hidden sm:flex"
+				>
+					<Input class="max-w-[200px]" placeholder="Search..." bind:value={input} />
+				</form>
+
+				<Toggle
+					bind:pressed={dropdown}
+					on:click={() => (dropdown = !dropdown)}
+					class="-mr-1 block cursor-pointer p-2 sm:hidden"
+				>
+					<ChevronDown
+						class={`transition-transform duration-300 ${dropdown ? 'rotate-180' : ''}`}
+					/>
+				</Toggle>
+			</div>
+
+			{#if data.user}
+				<Button href="/logout" variant="outline" class="flex h-10 items-center gap-x-3 px-3">
+					<img
+						class="rounded-full"
+						src={`https://avatar.vercel.sh/${data.user.username}?size=25`}
+						alt="pfp"
+					/>
+					<h1>{data.user?.username}</h1>
+				</Button>
+			{/if}
+		</div>
 	</div>
+	{#if dropdown}
+		<form
+			transition:slide
+			on:submit|preventDefault={() => {
+				goto(`/search?${new URLSearchParams({ query: input })}`);
+			}}
+			class="mb-3 block sm:hidden"
+		>
+			<div transition:scale>
+				<Input placeholder="Search..." bind:value={input} />
+			</div>
+		</form>
+	{/if}
 </nav>
 
 {#key data.url}
