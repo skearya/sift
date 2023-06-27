@@ -3,7 +3,7 @@
 	import type { LayoutData } from './$types';
 	import { page, navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { fly, slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { initFlash } from 'sveltekit-flash-message/client';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { Input } from '$components/ui/input';
@@ -35,7 +35,7 @@
 {#if $navigating}
 	<div
 		transition:fly={{ x: -200 }}
-		class="fixed left-8 top-24 z-50 rounded-lg bg-secondary p-3 shadow-lg border"
+		class="fixed left-8 top-24 z-50 rounded-lg border bg-secondary p-3 shadow-lg"
 	>
 		<Loader2 class="animate-spin" size="35" />
 	</div>

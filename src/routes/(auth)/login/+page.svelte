@@ -2,10 +2,10 @@
 	import { enhance } from '$app/forms';
 	import { Alert, AlertDescription, AlertTitle } from '$components/ui/alert';
 	import { Button } from '$components/ui/button';
-	import Input from '$components/ui/input/Input.svelte';
-	import Separator from '$components/ui/separator/Separator.svelte';
-	import Discord from '$lib/icons/Discord.svelte';
+	import { Input } from '$components/ui/input';
+	import { Separator } from '$components/ui/separator';
 	import { Lock } from 'lucide-svelte';
+	import Discord from '$lib/icons/Discord.svelte';
 
 	export let data;
 </script>

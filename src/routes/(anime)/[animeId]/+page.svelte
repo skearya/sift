@@ -128,15 +128,18 @@
 								<h1 class="flex-grow p-1 pl-1 pr-2 text-lg font-medium">
 									{episode.title || episode.id}
 								</h1>
-								<div class="m-2 hidden min-w-[210px] overflow-hidden rounded-md md:block">
-									<img
-										loading="lazy"
-										width="210"
-										height="118"
-										src={data.covers[episode.number - 1]?.img}
-										alt="episode cover"
-									/>
-								</div>
+								{#if data.covers[episode.number - 1]?.img}
+									<!-- content here -->
+									<div class="m-2 hidden min-w-[210px] overflow-hidden rounded-md md:block">
+										<img
+											loading="lazy"
+											width="210"
+											height="118"
+											src={data.covers[episode.number - 1]?.img}
+											alt="episode cover"
+										/>
+									</div>
+								{/if}
 							</a>
 						{:else}
 							<Alert>

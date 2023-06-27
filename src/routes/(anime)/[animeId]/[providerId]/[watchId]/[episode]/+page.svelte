@@ -23,6 +23,14 @@
 
 		const player = document.querySelector('media-player')!;
 
+		const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
+
+		currentEpisode.scrollIntoView({
+			behavior: 'smooth',
+			block: 'start',
+			inline: 'start'
+		});
+
 		for (const source of data.source.sources) {
 			if (source.quality == 'default' || source.quality == 'auto') {
 				player.src = {
@@ -45,26 +53,29 @@
 
 		player.addEventListener('error', (event) => {
 			if ((event.detail.message = 'Failed to open media') && !usingProxy) {
-				toast.error('Encountered CORS error, trying proxy. Switching providers is recommended.');
-
-				player.src = {
-					src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
-						currentSource
-					)}&headers=${encodeURIComponent(JSON.stringify(data.source.headers || {}))}`,
-					type: 'application/x-mpegurl'
-				};
-
-				usingProxy = true;
+				useProxy();
 			}
 		});
 
-		const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
-
-		currentEpisode.scrollIntoView({
-			behavior: 'smooth',
-			block: 'start',
-			inline: 'start'
+		player.addEventListener('hls-error', (event) => {
+			// @ts-expect-error
+			if ((event.detail.details = 'manifestLoadError') && !usingProxy) {
+				useProxy();
+			}
 		});
+
+		function useProxy() {
+			toast.error('Encountered CORS error, trying proxy. Switching providers is recommended.');
+
+			player.src = {
+				src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
+					currentSource
+				)}&headers=${encodeURIComponent(JSON.stringify(data.source.headers || {}))}`,
+				type: 'application/x-mpegurl'
+			};
+
+			usingProxy = true;
+		}
 	});
 </script>
 
