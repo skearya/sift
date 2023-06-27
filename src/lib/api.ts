@@ -2,7 +2,7 @@ import ky from 'ky-universal';
 
 const api = ky.create({ prefixUrl: 'https://api.anify.tv/' });
 
-export function bestFallback(artwork: Artwork[]) {
+function bestFallback(artwork: Artwork[]) {
 	let newImg = '';
 
 	for (let i = 0; i < artwork.length; i++) {
@@ -22,4 +22,4 @@ interface Artwork {
 	providerId: string;
 }
 
-export { api };
+export { api, bestFallback };

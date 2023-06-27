@@ -44,7 +44,7 @@
 				<Card class="flex h-full w-full flex-col overflow-hidden">
 					<CardHeader class="p-2 pb-0">
 						<img
-							class="h-96 w-full rounded-md object-cover"
+							class="h-[30rem] w-full rounded-md object-cover sm:h-96"
 							src={anime.coverImage}
 							alt="Anime cover art"
 							on:error={(event) => {

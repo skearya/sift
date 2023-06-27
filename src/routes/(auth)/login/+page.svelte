@@ -1,6 +1,10 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { Alert, AlertDescription, AlertTitle } from '$components/ui/alert';
 	import { Button } from '$components/ui/button';
+	import Input from '$components/ui/input/Input.svelte';
+	import Separator from '$components/ui/separator/Separator.svelte';
+	import Discord from '$lib/icons/Discord.svelte';
 	import { Lock } from 'lucide-svelte';
 
 	export let data;
@@ -8,10 +12,22 @@
 
 <div class="flex h-[calc(100vh-64px)] w-full items-center justify-center gap-2">
 	{#if !data.user}
-		<Button size="lg" href="/oauth" type="submit">Log in</Button>
+		<form method="POST" use:enhance class="flex flex-col items-center gap-2">
+			<h1 class="mb-4 text-3xl font-semibold tracking-tight">Log In</h1>
+			<Input name="username" placeholder="username" />
+			<Input type="password" name="password" placeholder="password" />
+			<Button class="w-full">Sign In</Button>
+
+			<Separator class="my-2" />
+
+			<Button variant="outline" href="/oauth" type="submit" class="w-full space-x-3">
+				<Discord />
+				<h1>Discord</h1>
+			</Button>
+		</form>
 	{:else}
 		<Alert class="w-min whitespace-nowrap" variant="destructive">
-			<AlertTitle class="flex gap-x-2 items-center"><Lock class="h-4 w-4" />Error</AlertTitle>
+			<AlertTitle class="flex items-center gap-x-2"><Lock class="h-4 w-4" />Error</AlertTitle>
 			<AlertDescription>Not authorized!</AlertDescription>
 		</Alert>
 	{/if}

@@ -7,7 +7,7 @@
 </script>
 
 <section class="container">
-	<h1 class="mb-4 mt-8 text-3xl font-medium">Trending</h1>
+	<h1 class="mb-5 mt-8 text-3xl font-medium tracking-tight">Trending</h1>
 
 	<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-scroll">
 		{#each data.trending.results as anime}
@@ -36,7 +36,7 @@
 		{/each}
 	</div>
 
-	<h1 class="mb-4 mt-10 text-3xl font-medium">Popular</h1>
+	<h1 class="mb-5 mt-10 text-3xl font-medium tracking-tight">Popular</h1>
 
 	<div class="mb-8 flex snap-x snap-mandatory items-stretch gap-3 overflow-scroll">
 		{#each data.popular.results as anime}
