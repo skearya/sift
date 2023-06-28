@@ -23,13 +23,13 @@
 
 		const player = document.querySelector('media-player')!;
 
-		const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
+		// const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
 
-		currentEpisode.scrollIntoView({
-			behavior: 'smooth',
-			block: 'start',
-			inline: 'start'
-		});
+		// currentEpisode.scrollIntoView({
+		// 	behavior: 'smooth'
+		// });
+
+		// messes up page transition, fix later?
 
 		for (const source of data.source.sources) {
 			if (source.quality == 'default' || source.quality == 'auto') {
@@ -65,8 +65,8 @@
 		});
 
 		function useProxy() {
-			toast.error('Encountered CORS error, trying proxy. Switching providers is recommended.');
-
+			toast.error('Encountered CORS error, trying proxy');
+			
 			player.src = {
 				src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
 					currentSource

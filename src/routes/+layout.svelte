@@ -52,7 +52,11 @@
 		</div>
 
 		<div class="flex items-center gap-x-4">
-			<div class="items-center gap-x-6">
+			<a
+				href="/whitelist"
+				class="text-sm text-muted-foreground transition-colors hover:text-foreground">Whitelist</a
+			>
+			<div>
 				<form
 					on:submit|preventDefault={() => {
 						goto(`/search?${new URLSearchParams({ query: input })}`);
@@ -106,7 +110,12 @@
 	</main>
 {/key}
 
-<Toaster />
+<Toaster
+	toastOptions={{
+		style:
+			'border-width: 1px; background-color: hsl(var(--background)); color: hsl(var(--foreground));'
+	}}
+/>
 
 <style lang="postcss">
 	:global(html) {

@@ -7,6 +7,7 @@
 	import { Separator } from '$components/ui/separator';
 	import { Alert, AlertDescription, AlertTitle } from '$components/ui/alert';
 	import { AlertCircle } from 'lucide-svelte';
+	import Episodes from '$components/Episodes.svelte';
 
 	export let data: PageData;
 </script>
@@ -58,7 +59,7 @@
 						</CardDescription>
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
-						<Button class="w-full hover:bg-accent hover:text-white">Watch</Button>
+						<Episodes animeId={Number(anime.id)} />
 						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 					</CardFooter>
 				</Card>

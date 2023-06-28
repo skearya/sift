@@ -1,0 +1,169 @@
+<script lang="ts">
+	import { createDialog } from '@melt-ui/svelte';
+	import { navigating } from '$app/stores';
+	import { fade, slide, type TransitionConfig } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
+	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
+	import { Loader2, X } from 'lucide-svelte';
+
+	export let animeId: number;
+
+	const { trigger, portal, overlay, content, title, description, close, open } = createDialog();
+
+	async function fetchEpisodes() {
+		const res = await fetch(`/api/episodes/${animeId}`);
+		return await res.json();
+	}
+
+	$: if ($navigating) $open = false;
+
+	// https://github.com/melt-ui/melt-ui/blob/388d8fe4282c1b7fb1b0359482fc184169fd872e/src/routes/helpers.ts#L101
+
+	type FlyAndScaleOptions = {
+		y: number;
+		start: number;
+		duration?: number;
+	};
+
+	const flyAndScale = (node: HTMLElement, options: FlyAndScaleOptions): TransitionConfig => {
+		const style = getComputedStyle(node);
+		const transform = style.transform === 'none' ? '' : style.transform;
+
+		return {
+			duration: options.duration ?? 150,
+			delay: 0,
+			css: (t) => {
+				const y = scaleConversion(t, [0, 1], [options.y, 0]);
+				const scale = scaleConversion(t, [0, 1], [options.start, 1]);
+
+				return styleToString({
+					transform: `${transform} translate3d(0, ${y}px, 0) scale(${scale})`,
+					opacity: t
+				});
+			},
+			easing: cubicOut
+		};
+	};
+
+	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
+		const [minA, maxA] = scaleA;
+		const [minB, maxB] = scaleB;
+
+		const percentage = (valueA - minA) / (maxA - minA);
+		const valueB = percentage * (maxB - minB) + minB;
+
+		return valueB;
+	};
+
+	function styleToString(style: Record<string, number | string | undefined>): string {
+		return Object.keys(style).reduce((str, key) => {
+			if (style[key] === undefined) return str;
+			return str + `${key}:${style[key]};`;
+		}, '');
+	}
+</script>
+
+<button
+	{...$trigger}
+	use:trigger.action
+	class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+>
+	Watch
+</button>
+
+<div use:portal>
+	{#if $open}
+		<div
+			transition:fade={{ duration: 150 }}
+			{...$overlay}
+			class="fixed inset-0 z-20 bg-background/80 backdrop-blur-sm"
+		/>
+		<div
+			class="fixed left-[50%] top-[50%] z-30 grid max-h-[85vh] w-full translate-x-[-50%]
+				translate-y-[-50%] gap-3 border-y bg-background p-6
+				shadow-lg sm:w-[90vw] sm:max-w-[450px] sm:rounded-lg sm:border"
+			in:flyAndScale={{ duration: 300, y: 20, start: 0.96 }}
+			out:flyAndScale={{ duration: 300, y: 0, start: 0.96 }}
+			{...$content}
+			use:content.action
+		>
+			<h2 {...title} class="text-xl font-semibold leading-none tracking-tight">Episode Selector</h2>
+
+			{#await fetchEpisodes()}
+				<div class="-mb-10 mt-2 flex w-full flex-wrap items-center justify-center gap-2">
+					<Loader2 class="animate-spin" />
+				</div>
+
+				<div class="mt-[25px] flex justify-end gap-4">
+					<button
+						{...close}
+						use:close.action
+						disabled
+						class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+					>
+						Anime Info
+					</button>
+				</div>
+			{:then data}
+				<div class="mt-2 flex flex-wrap gap-2" in:slide={{ delay: 100 }}>
+					<Tabs value={data[0]?.providerId} class="w-full">
+						<TabsList class={`mb-0 grid w-full grid-cols-1 sm:grid-cols-${data.length}`}>
+							{#each data as provider}
+								<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
+							{:else}
+								<div class="flex w-full justify-center">
+									<h1>No providers found</h1>
+								</div>
+							{/each}
+						</TabsList>
+
+						{#each data as provider}
+							<TabsContent value={provider.providerId} class="mt-4 max-h-40 overflow-y-scroll">
+								<div class="flex flex-wrap gap-2">
+									{#each provider.episodes as episode}
+										<a
+											href={`/${animeId}/${provider.providerId}/${encodeURIComponent(episode.id)}/${
+												episode.number
+											}`}
+											class="rounded-md bg-muted px-4 py-2 text-black text-muted-foreground transition-all hover:bg-primary hover:text-black"
+										>
+											{episode.number}
+										</a>
+									{:else}
+										<div class="flex w-full justify-center">
+											<h1>No episodes found</h1>
+										</div>
+									{/each}
+								</div>
+							</TabsContent>
+						{/each}
+					</Tabs>
+				</div>
+
+				<div class="mt-[25px] flex justify-end gap-4">
+					<a
+						href={`/${animeId}`}
+						{...close}
+						use:close.action
+						class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+					>
+						Anime Info
+					</a>
+				</div>
+			{:catch error}
+				<h1 class="text-destructive">An error occurred</h1>
+			{/await}
+
+			<!-- <p {...description} class="mb-5 text-sm text-muted-foreground"></p> -->
+
+			<button
+				{...close}
+				use:close.action
+				class="absolute right-[19px] top-[19px] inline-flex h-[30px] w-[30px] rounded-full
+				text-muted-foreground transition-colors hover:text-white"
+			>
+				<X />
+			</button>
+		</div>
+	{/if}
+</div>

@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import { Button } from '$components/ui/button';
 	import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from '$components/ui/card';
+	import Episodes from '$components/Episodes.svelte';
 
 	export let data: PageData;
 </script>
@@ -26,10 +27,7 @@
 					</CardDescription>
 				</div>
 				<CardFooter class="mt-auto flex gap-x-3">
-					<Button
-						on:click={() => alert('implement this')}
-						class="w-full hover:bg-accent hover:text-white">Watch</Button
-					>
+					<Episodes animeId={Number(anime.id)} />
 					<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 				</CardFooter>
 			</Card>
@@ -55,7 +53,7 @@
 					</CardDescription>
 				</div>
 				<CardFooter class="mt-auto flex gap-x-3">
-					<Button class="w-full hover:bg-accent hover:text-white">Watch</Button>
+					<Episodes animeId={Number(anime.id)} />
 					<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 				</CardFooter>
 			</Card>
