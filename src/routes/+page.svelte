@@ -15,9 +15,10 @@
 			<Card class="flex flex-shrink-0 basis-64 snap-start flex-col">
 				<CardHeader class="p-2 pb-0">
 					<img
-						class="h-96 w-full rounded-md object-cover"
 						src={anime.image}
+						loading="lazy"
 						alt="Anime cover art"
+						class="h-96 w-full rounded-md object-cover"
 					/>
 				</CardHeader>
 				<div class="space-y-1.5 p-6">
@@ -41,9 +42,10 @@
 			<Card class="flex flex-shrink-0 basis-64 snap-start flex-col">
 				<CardHeader class="p-2 pb-0">
 					<img
-						class="h-96 w-full rounded-md object-cover"
 						src={anime.image}
+						loading="lazy"
 						alt="Anime cover art"
+						class="h-96 w-full rounded-md object-cover"
 					/>
 				</CardHeader>
 				<div class="space-y-1.5 p-6">

@@ -52,10 +52,6 @@
 		</div>
 
 		<div class="flex items-center gap-x-4">
-			<a
-				href="/whitelist"
-				class="text-sm text-muted-foreground transition-colors hover:text-foreground">Whitelist</a
-			>
 			<div>
 				<form
 					on:submit|preventDefault={() => {

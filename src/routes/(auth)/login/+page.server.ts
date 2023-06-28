@@ -1,6 +1,6 @@
 import type { PageServerLoad, Actions } from './$types';
-import { fail, redirect } from '@sveltejs/kit';
-import { setFlash } from 'sveltekit-flash-message/server';
+import { setFlash, redirect } from 'sveltekit-flash-message/server';
+import { fail } from '@sveltejs/kit';
 import { auth } from '$lib/server/lucia';
 
 export const load = (async ({ locals }) => {
@@ -30,5 +30,7 @@ export const actions: Actions = {
 			setFlash({ type: 'error', message: 'Invalid username or password' }, event);
 			return fail(400);
 		}
+
+		throw redirect(302, '/', { type: 'success', message: 'Logged in' }, event);
 	}
 };
