@@ -3,8 +3,11 @@ import { api } from '$lib/api';
 import { redirect, error } from '@sveltejs/kit';
 import { API_KEY } from '$env/static/private';
 import type { Anime, EpisodeData, SourceInfo } from '$lib/types';
+import { prisma } from '$lib/server/prisma';
 
-export const load = (async ({ params }) => {
+export const load = (async ({ url, params, locals }) => {
+	const { user } = await locals.auth.validateUser();
+
 	let { animeId, providerId, watchId, episode } = params;
 
 	if (!episode) throw redirect(303, `/search`);
@@ -26,8 +29,10 @@ export const load = (async ({ params }) => {
 	}
 
 	async function fetchInfo() {
+		let response: Anime;
+
 		try {
-			return await api(`info/${animeId}?apikey=${API_KEY}`, {
+			response = await api(`info/${animeId}?apikey=${API_KEY}`, {
 				timeout: 3000
 			}).json<Anime>();
 		} catch (e: any) {
@@ -36,6 +41,37 @@ export const load = (async ({ params }) => {
 				info: e.message
 			});
 		}
+
+		await prisma.userData.update({
+			where: {
+				user_id: user!.userId
+			},
+			data: {
+				watchHistory: {
+					upsert: {
+						where: {
+							animeId
+						},
+						create: {
+							animeId,
+							episodeNumber: Number(episode),
+							animeName: response.title.romaji,
+							providerId,
+							watchId
+						},
+						update: {
+							animeId,
+							episodeNumber: Number(episode),
+							animeName: response.title.romaji,
+							providerId,
+							watchId
+						}
+					}
+				}
+			}
+		});
+
+		return response;
 	}
 
 	async function fetchEpisodes() {
@@ -53,8 +89,8 @@ export const load = (async ({ params }) => {
 
 	return {
 		source: fetchSource(),
-		info: fetchInfo(),
-		episodes: fetchEpisodes()
+		info: fetchInfo().then(),
+		episodes: fetchEpisodes(),
+		time: url.searchParams.get('time')
 	};
 }) satisfies PageServerLoad;
-

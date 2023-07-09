@@ -11,6 +11,7 @@
 	import 'vidstack/styles/community-skin/video.css';
 
 	export let data: PageData;
+	let interval: NodeJS.Timer;
 	let currentSource: string;
 	let usingProxy: boolean = false;
 
@@ -23,14 +24,6 @@
 
 		const player = document.querySelector('media-player')!;
 
-		// const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
-
-		// currentEpisode.scrollIntoView({
-		// 	behavior: 'smooth'
-		// });
-
-		// messes up page transition, fix later?
-
 		for (const source of data.source.sources) {
 			if (source.quality == 'default' || source.quality == 'auto') {
 				player.src = {
@@ -41,6 +34,29 @@
 				currentSource = source.url;
 			}
 		}
+
+		player.onAttach(() => {
+			if (data.time) player.currentTime = Number(data.time);
+
+			interval = setInterval(() => {
+				if (!player.state.playing) return;
+
+				const { animeId, providerId, watchId, episode } = $page.params;
+
+				fetch('/api/history', {
+					method: 'POST',
+					body: JSON.stringify({
+						animeName: data.info.title.romaji,
+						animeId,
+						providerId,
+						watchId,
+						episode,
+						length: player.state.duration,
+						time: player.currentTime
+					})
+				});
+			}, 10000);
+		});
 
 		player.addEventListener('provider-change', (event) => {
 			const provider = event.detail;
@@ -64,9 +80,13 @@
 			}
 		});
 
+		player.addEventListener('destroy', () => {
+			clearInterval(interval);
+		});
+
 		function useProxy() {
 			toast.error('Encountered CORS error, trying proxy');
-			
+
 			player.src = {
 				src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
 					currentSource
@@ -76,6 +96,14 @@
 
 			usingProxy = true;
 		}
+
+		// const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
+
+		// currentEpisode.scrollIntoView({
+		// 	behavior: 'smooth'
+		// });
+
+		// messes up page transition, fix later?
 	});
 </script>
 

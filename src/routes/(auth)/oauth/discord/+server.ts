@@ -3,6 +3,7 @@ import { auth, discordAuth } from '$lib/server/lucia';
 import { redirect } from 'sveltekit-flash-message/server';
 import { error } from '@sveltejs/kit';
 import { OWNER_ID } from '$env/static/private';
+import { prisma } from '$lib/server/prisma';
 
 export const GET: RequestHandler = async (event) => {
 	let { cookies, url, locals } = event;
@@ -34,6 +35,16 @@ export const GET: RequestHandler = async (event) => {
 		const user = await getUser();
 		const session = await auth.createSession(user.userId);
 		locals.auth.setSession(session);
+
+		await prisma.userData.create({
+			data: {
+				user: {
+					connect: {
+						id: user!.userId
+					}
+				}
+			}
+		});
 	} catch (e) {
 		console.log(e);
 		throw error(404, 'invalid code');

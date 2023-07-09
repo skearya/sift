@@ -26,4 +26,3 @@ export const load = (async ({ url }) => {
 		}
 	};
 }) satisfies PageServerLoad;
-

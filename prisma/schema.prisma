@@ -17,11 +17,36 @@ model AuthUser {
   auth_session AuthSession[]
   auth_key     AuthKey[]
 
-  discordId  String  @unique
-  username   String  @unique
+  discordId  String    @unique
+  username   String    @unique
   authorized Boolean
+  userData   UserData?
 
   @@map("auth_user")
+}
+
+model UserData {
+  id           String    @id @default(uuid())
+  watchHistory Episode[]
+  user         AuthUser  @relation(fields: [user_id], references: [id])
+  user_id      String    @unique
+}
+
+model Episode {
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  animeName     String?
+  animeId       String   @unique
+  providerId    String
+  watchId       String
+  episodeNumber Int      @unique
+  progress      Int?
+  totalLength   Int?
+
+  UserData   UserData? @relation(fields: [userDataId], references: [id])
+  userDataId String?
+
+  @@index([userDataId])
 }
 
 model AuthSession {

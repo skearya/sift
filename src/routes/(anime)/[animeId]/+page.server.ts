@@ -4,7 +4,7 @@ import { API_KEY } from '$env/static/private';
 import { api } from '$lib/api';
 import type { Anime, EpisodeCovers, EpisodeData } from '$lib/types';
 
-export const load = (async ({ params, url }) => {
+export const load = (async ({ params }) => {
 	let { animeId } = params;
 
 	if (!animeId) throw redirect(303, `/search`);
@@ -40,9 +40,13 @@ export const load = (async ({ params, url }) => {
 	}
 
 	async function fetchCovers() {
-		return await api(`episode-covers/${animeId}?apikey=${API_KEY}`, {
-			timeout: 3500
-		}).json<EpisodeCovers[]>();
+		try {
+			return await api(`episode-covers/${animeId}?apikey=${API_KEY}`, {
+				timeout: 3500
+			}).json<EpisodeCovers[]>();
+		} catch (e: any) {
+			return {} as EpisodeCovers[];
+		}
 	}
 
 	return {

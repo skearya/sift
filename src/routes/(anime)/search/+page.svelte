@@ -4,7 +4,6 @@
 	import { Button } from '$components/ui/button';
 	import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '$components/ui/card';
 	import { Skeleton } from '$components/ui/skeleton';
-	import { Separator } from '$components/ui/separator';
 	import { Alert, AlertDescription, AlertTitle } from '$components/ui/alert';
 	import { AlertCircle } from 'lucide-svelte';
 	import Episodes from '$components/Episodes.svelte';

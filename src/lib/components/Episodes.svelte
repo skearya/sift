@@ -94,16 +94,7 @@
 					<Loader2 class="animate-spin" />
 				</div>
 
-				<div class="mt-[25px] flex justify-end gap-4">
-					<button
-						{...close}
-						use:close.action
-						disabled
-						class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-					>
-						Anime Info
-					</button>
-				</div>
+				<div class="mt-[25px]" />
 			{:then data}
 				<div class="mt-2 flex flex-wrap gap-2" in:slide={{ delay: 100 }}>
 					<Tabs value={data[0]?.providerId} class="w-full">
@@ -111,7 +102,7 @@
 							{#each data as provider}
 								<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
 							{:else}
-								<div class="flex w-full justify-center">
+								<div class="flex w-full items-center h-12 justify-center">
 									<h1>No providers found</h1>
 								</div>
 							{/each}
@@ -139,18 +130,7 @@
 						{/each}
 					</Tabs>
 				</div>
-
-				<div class="mt-[25px] flex justify-end gap-4">
-					<a
-						href={`/${animeId}`}
-						{...close}
-						use:close.action
-						class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-					>
-						Anime Info
-					</a>
-				</div>
-			{:catch error}
+			{:catch}
 				<h1 class="text-destructive">An error occurred</h1>
 			{/await}
 

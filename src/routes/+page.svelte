@@ -7,12 +7,36 @@
 	export let data: PageData;
 </script>
 
-<section class="container">
+<section class="container pr-0">
+	{#if data.history?.length > 0}
+		<h1 class="mb-5 mt-8 text-3xl font-medium tracking-tight">Continue Watching</h1>
+
+		<div class="flex gap-4 overflow-x-scroll">
+			{#each data.history as episode}
+				<a
+					href={`/${episode.animeId}/${episode.providerId}/${encodeURIComponent(episode.watchId)}/${
+						episode.episodeNumber
+					}?time=${episode.progress || 0}`}
+					class="flex h-min min-w-min items-center overflow-hidden whitespace-nowrap rounded-md border"
+				>
+					<div
+						class="m-2 flex items-center justify-center self-stretch rounded-md bg-secondary px-3 py-2"
+					>
+						<h1>{episode.animeName}</h1>
+					</div>
+					<h1 class="flex-grow p-1 pl-1 pr-3">
+						Episode {episode.episodeNumber}
+					</h1>
+				</a>
+			{/each}
+		</div>
+	{/if}
+
 	<h1 class="mb-5 mt-8 text-3xl font-medium tracking-tight">Trending</h1>
 
 	<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-scroll">
 		{#each data.trending.results as anime}
-			<Card class="flex flex-shrink-0 basis-64 snap-start flex-col">
+			<Card class="flex flex-shrink-0 basis-[16.4rem] snap-start flex-col">
 				<CardHeader class="p-2 pb-0">
 					<img
 						src={anime.image}
@@ -39,7 +63,7 @@
 
 	<div class="mb-8 flex snap-x snap-mandatory items-stretch gap-3 overflow-scroll">
 		{#each data.popular.results as anime}
-			<Card class="flex flex-shrink-0 basis-64 snap-start flex-col">
+			<Card class="flex flex-shrink-0 basis-[16.4rem] snap-start flex-col">
 				<CardHeader class="p-2 pb-0">
 					<img
 						src={anime.image}

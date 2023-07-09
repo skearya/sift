@@ -1,8 +1,11 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { api } from '$lib/api';
+import { prisma } from '$lib/server/prisma';
 
-export const load = (async () => {
+export const load = (async ({ locals }) => {
+	const { user } = await locals.auth.validateUser();
+
 	async function fetchTrending() {
 		try {
 			return await api(`meta/anilist/trending`, {
@@ -31,9 +34,20 @@ export const load = (async () => {
 		}
 	}
 
+	async function fetchHistory() {
+		return await prisma.episode.findMany({
+			where: {
+				UserData: { user_id: user!.userId }
+			},
+			orderBy: { createdAt: 'desc' },
+			take: 5
+		});
+	}
+
 	return {
 		trending: fetchTrending(),
-		popular: fetchPopular()
+		popular: fetchPopular(),
+		history: fetchHistory()
 	};
 }) satisfies PageServerLoad;
 
