@@ -20,7 +20,7 @@
 					class="flex h-min min-w-min items-center overflow-hidden whitespace-nowrap rounded-md border"
 				>
 					<div
-						class="m-2 flex items-center justify-center self-stretch rounded-md bg-secondary px-3 py-2"
+						class="m-2 flex items-center justify-center self-stretch rounded-md bg-secondary px-3 py-2 font-medium"
 					>
 						<h1>{episode.animeName}</h1>
 					</div>

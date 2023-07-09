@@ -36,15 +36,17 @@ export const GET: RequestHandler = async (event) => {
 		const session = await auth.createSession(user.userId);
 		locals.auth.setSession(session);
 
-		await prisma.userData.create({
-			data: {
-				user: {
-					connect: {
-						id: user!.userId
+		if (!existingUser) {
+			await prisma.userData.create({
+				data: {
+					user: {
+						connect: {
+							id: user!.userId
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	} catch (e) {
 		console.log(e);
 		throw error(404, 'invalid code');
