@@ -12,7 +12,7 @@
 </script>
 
 <section class="container">
-	<h1 class="mb-5 mt-8 text-3xl font-medium tracking-tight">Results</h1>
+	<h1 class="mb-5 mt-8 text-2xl font-medium tracking-tight lg:text-3xl">Results</h1>
 
 	<div
 		class="mb-6 grid auto-rows-[1fr] grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"

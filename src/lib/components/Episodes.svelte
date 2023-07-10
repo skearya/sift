@@ -96,7 +96,7 @@
 
 				<div class="mt-[25px]" />
 			{:then data}
-				<div class="mt-2 flex flex-wrap gap-2" in:slide={{ delay: 100 }}>
+				<div class="mt-2 flex flex-wrap gap-2" in:slide>
 					<Tabs value={data[0]?.providerId} class="w-full">
 						<TabsList class={`mb-0 grid w-full grid-cols-1 sm:grid-cols-${data.length}`}>
 							{#each data as provider}

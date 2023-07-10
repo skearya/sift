@@ -9,7 +9,7 @@
 
 <section class="container pr-0">
 	{#if data.history?.length > 0}
-		<h1 class="mb-5 mt-8 text-3xl font-medium tracking-tight">Continue Watching</h1>
+		<h1 class="mb-5 mt-8 text-2xl font-medium tracking-tight lg:text-3xl">Continue Watching</h1>
 
 		<div class="flex gap-4 overflow-x-scroll">
 			{#each data.history as episode}
@@ -32,7 +32,7 @@
 		</div>
 	{/if}
 
-	<h1 class="mb-5 mt-8 text-3xl font-medium tracking-tight">Trending</h1>
+	<h1 class="mb-5 mt-8 text-2xl font-medium tracking-tight lg:text-3xl">Trending</h1>
 
 	<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-scroll">
 		{#each data.trending.results as anime}
@@ -59,7 +59,7 @@
 		{/each}
 	</div>
 
-	<h1 class="mb-5 mt-10 text-3xl font-medium tracking-tight">Popular</h1>
+	<h1 class="mb-5 mt-10 text-2xl font-medium tracking-tight lg:text-3xl">Popular</h1>
 
 	<div class="mb-8 flex snap-x snap-mandatory items-stretch gap-3 overflow-scroll">
 		{#each data.popular.results as anime}
