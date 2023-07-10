@@ -39,7 +39,7 @@ model Episode {
   animeId       String   @unique
   providerId    String
   watchId       String
-  episodeNumber Int      @unique
+  episodeNumber Int
   progress      Int?
   totalLength   Int?
 
