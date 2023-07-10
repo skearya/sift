@@ -28,7 +28,7 @@
 	{:else}
 		<Alert class="w-min whitespace-nowrap" variant="destructive">
 			<AlertTitle class="flex items-center gap-x-2"><Lock class="h-4 w-4" />Error</AlertTitle>
-			<AlertDescription>Not authorized!</AlertDescription>
+			<AlertDescription>Not (yet?) whitelisted!</AlertDescription>
 		</Alert>
 	{/if}
 </div>

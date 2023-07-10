@@ -33,7 +33,7 @@ export const load = (async ({ url, params, locals }) => {
 
 		try {
 			response = await api(`info/${animeId}?apikey=${API_KEY}`, {
-				timeout: 3000
+				timeout: 3500
 			}).json<Anime>();
 		} catch (e: any) {
 			throw error(404, {
@@ -41,6 +41,11 @@ export const load = (async ({ url, params, locals }) => {
 				info: e.message
 			});
 		}
+
+		let userData = await prisma.userData.findUnique({
+			where: { user_id: user!.userId },
+			select: { id: true }
+		});
 
 		await prisma.userData.update({
 			where: {
@@ -50,7 +55,10 @@ export const load = (async ({ url, params, locals }) => {
 				watchHistory: {
 					upsert: {
 						where: {
-							animeId
+							animeId_userDataId: {
+								animeId,
+								userDataId: userData!.id
+							}
 						},
 						create: {
 							animeId,
@@ -77,7 +85,7 @@ export const load = (async ({ url, params, locals }) => {
 	async function fetchEpisodes() {
 		try {
 			return await api(`episodes/${animeId}?apikey=${API_KEY}`, {
-				timeout: 3000
+				timeout: 3500
 			}).json<EpisodeData[]>();
 		} catch (e: any) {
 			throw error(404, {
@@ -89,7 +97,7 @@ export const load = (async ({ url, params, locals }) => {
 
 	return {
 		source: fetchSource(),
-		info: fetchInfo().then(),
+		info: fetchInfo(),
 		episodes: fetchEpisodes(),
 		time: url.searchParams.get('time')
 	};

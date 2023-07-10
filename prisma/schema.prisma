@@ -36,7 +36,7 @@ model Episode {
   id            String   @id @default(uuid())
   createdAt     DateTime @default(now())
   animeName     String?
-  animeId       String   @unique
+  animeId       String
   providerId    String
   watchId       String
   episodeNumber Int
@@ -46,6 +46,7 @@ model Episode {
   UserData   UserData? @relation(fields: [userDataId], references: [id])
   userDataId String?
 
+  @@unique([animeId, userDataId])
   @@index([userDataId])
 }
 

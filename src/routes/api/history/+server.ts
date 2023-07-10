@@ -6,6 +6,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	let { animeName, animeId, providerId, watchId, episode, length, time } = await request.json();
 
+	let userData = await prisma.userData.findUnique({
+		where: { user_id: user!.userId },
+		select: { id: true }
+	});
+
 	await prisma.userData.update({
 		where: {
 			user_id: user!.userId
@@ -14,7 +19,10 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			watchHistory: {
 				update: {
 					where: {
-						animeId
+						animeId_userDataId: {
+							animeId,
+							userDataId: userData!.id
+						}
 					},
 					data: {
 						animeId,

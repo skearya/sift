@@ -7,7 +7,7 @@
 	export let data: PageData;
 </script>
 
-<section class="container pr-0">
+<section class="container px-6 lg:px-8">
 	{#if data.history?.length > 0}
 		<h1 class="mb-5 mt-8 text-2xl font-medium tracking-tight lg:text-3xl">Continue Watching</h1>
 
@@ -36,7 +36,7 @@
 
 	<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-scroll">
 		{#each data.trending.results as anime}
-			<Card class="flex flex-shrink-0 basis-[16.4rem] snap-start flex-col">
+			<Card class="flex flex-shrink-0 basis-[16rem] snap-start flex-col">
 				<CardHeader class="p-2 pb-0">
 					<img
 						src={anime.image}
@@ -63,7 +63,7 @@
 
 	<div class="mb-8 flex snap-x snap-mandatory items-stretch gap-3 overflow-scroll">
 		{#each data.popular.results as anime}
-			<Card class="flex flex-shrink-0 basis-[16.4rem] snap-start flex-col">
+			<Card class="flex flex-shrink-0 basis-[16rem] snap-start flex-col">
 				<CardHeader class="p-2 pb-0">
 					<img
 						src={anime.image}
