@@ -35,12 +35,12 @@
 	<h1 class="mb-5 mt-8 text-2xl font-medium tracking-tight lg:text-3xl">Trending</h1>
 
 	<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll">
-		{#each data.trending.results as anime}
+		{#each data.trending.results as anime, i}
 			<Card class="flex flex-shrink-0 basis-[16rem] snap-start flex-col">
 				<CardHeader class="p-2 pb-0">
 					<img
 						src={anime.image}
-						loading="lazy"
+						loading={i >= 5 ? 'lazy' : 'eager'}
 						alt="Anime cover art"
 						class="h-96 w-full rounded-md object-cover"
 					/>
@@ -62,12 +62,12 @@
 	<h1 class="mb-5 mt-10 text-2xl font-medium tracking-tight lg:text-3xl">Popular</h1>
 
 	<div class="mb-8 flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll">
-		{#each data.popular.results as anime}
+		{#each data.popular.results as anime, i}
 			<Card class="flex flex-shrink-0 basis-[16rem] snap-start flex-col">
 				<CardHeader class="p-2 pb-0">
 					<img
 						src={anime.image}
-						loading="lazy"
+						loading={i >= 5 ? 'lazy' : 'eager'}
 						alt="Anime cover art"
 						class="h-96 w-full rounded-md object-cover"
 					/>
