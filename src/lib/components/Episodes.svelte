@@ -5,6 +5,7 @@
 	import { cubicOut } from 'svelte/easing';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
 	import { Loader2, X } from 'lucide-svelte';
+	import type { EpisodeData } from '$lib/types';
 
 	export let animeId: number;
 
@@ -12,7 +13,18 @@
 
 	async function fetchEpisodes() {
 		const res = await fetch(`/api/episodes/${animeId}`);
-		return await res.json();
+		let json: EpisodeData[] = await res.json();
+
+		for (let i = 0; i < json.length; i++) {
+			let firstItem = json[i].episodes[0].number;
+			let lastItem = json[i].episodes[json[i].episodes.length - 1].number;
+
+			if (firstItem > lastItem) {
+				json[i].episodes.reverse();
+			}
+		}
+
+		return json;
 	}
 
 	$: if ($navigating) $open = false;
