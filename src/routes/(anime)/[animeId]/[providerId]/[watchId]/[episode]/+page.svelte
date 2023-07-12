@@ -15,10 +15,6 @@
 	let currentSource: string;
 	let usingProxy: boolean = false;
 
-	const providerEpisodes = data.episodes.filter(
-		(provider) => provider.providerId == $page.params.providerId
-	)[0];
-
 	onMount(async () => {
 		await defineCustomElements();
 
@@ -151,7 +147,7 @@
 		<Separator class="my-4" />
 
 		<div class="flex gap-2 overflow-x-scroll">
-			{#each providerEpisodes.episodes as episode}
+			{#each data.episodes?.episodes as episode}
 				<a
 					data-sveltekit-reload
 					href="/{$page.params.animeId}/{$page.params.providerId}/{encodeURIComponent(

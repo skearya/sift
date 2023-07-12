@@ -84,9 +84,19 @@ export const load = (async ({ url, params, locals }) => {
 
 	async function fetchEpisodes() {
 		try {
-			return await api(`episodes/${animeId}?apikey=${API_KEY}`, {
+			let response = await api(`episodes/${animeId}?apikey=${API_KEY}`, {
 				timeout: 3500
 			}).json<EpisodeData[]>();
+
+			const providerEpisodes = response.filter((provider) => provider.providerId == providerId)[0];
+
+			if (providerEpisodes == undefined) {
+				throw Error(
+					`Episode could not be found on ${providerId} anymore, please try another provider`
+				);
+			} else {
+				return providerEpisodes;
+			}
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching episode info',
