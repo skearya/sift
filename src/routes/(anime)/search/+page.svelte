@@ -47,7 +47,10 @@
 							alt="Anime cover art"
 							on:error={(event) => {
 								// @ts-expect-error
-								event.target.src = bestFallback(anime.artwork);
+								if (event.target.src !== anime.fallback) {
+									// @ts-expect-error
+									event.target.src = anime.fallback;
+								}
 							}}
 						/>
 					</CardHeader>

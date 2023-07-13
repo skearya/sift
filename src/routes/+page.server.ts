@@ -1,34 +1,33 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { api } from '$lib/api';
+import { api, bestFallback } from '$lib/api';
 import { prisma } from '$lib/server/prisma';
+import { API_KEY } from '$env/static/private';
+import type { Anime, SeasonalData } from '$lib/types';
 
 export const load = (async ({ locals }) => {
 	const { user } = await locals.auth.validateUser();
 
-	async function fetchTrending() {
+	async function fetchData() {
 		try {
-			return await api(`meta/anilist/trending`, {
-				timeout: 3500,
-				prefixUrl: 'https://api.consumet.org/'
-			}).json<ConsumetResult>();
-		} catch (e: any) {
-			throw error(404, {
-				message: 'Error fetching trending anime',
-				info: e.message
-			});
-		}
-	}
+			let response = await api(`seasonal/anime?apikey=${API_KEY}`, {
+				timeout: 4500
+			}).json<any>();
 
-	async function fetchPopular() {
-		try {
-			return await api(`meta/anilist/popular`, {
-				timeout: 3500,
-				prefixUrl: 'https://api.consumet.org/'
-			}).json<ConsumetResult>();
+			for (const collection in response) {
+				response[collection] = response[collection].map((anime: Anime) => ({
+					id: anime.id,
+					coverImage: anime.coverImage,
+					title: anime.title,
+					year: anime.year,
+					fallback: bestFallback(anime.artwork)
+				}));
+			}
+
+			return response as SeasonalData;
 		} catch (e: any) {
 			throw error(404, {
-				message: 'Error fetching popular anime',
+				message: 'Error fetching homepage data',
 				info: e.message
 			});
 		}
@@ -45,45 +44,7 @@ export const load = (async ({ locals }) => {
 	}
 
 	return {
-		trending: fetchTrending(),
-		popular: fetchPopular(),
+		anime: fetchData(),
 		history: fetchHistory()
 	};
 }) satisfies PageServerLoad;
-
-interface ConsumetResult {
-	currentPage: number;
-	hasNextPage: boolean;
-	results: Anime[];
-}
-
-interface Anime {
-	id: string;
-	malId?: number;
-	title: Title;
-	image: string;
-	trailer: Trailer;
-	description?: string;
-	status: string;
-	cover: string;
-	rating?: number;
-	releaseDate?: number;
-	color?: string;
-	genres: string[];
-	totalEpisodes?: number;
-	duration?: number;
-	type: string;
-}
-
-interface Trailer {
-	id?: string;
-	site?: string;
-	thumbnail?: string;
-}
-
-interface Title {
-	romaji: string;
-	english?: string;
-	native: string;
-	userPreferred: string;
-}

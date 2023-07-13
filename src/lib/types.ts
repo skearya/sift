@@ -123,6 +123,18 @@ interface Source {
 }
 
 export interface EpisodeCovers {
-  episode: number;
-  img: string;
+	episode: number;
+	img: string;
 }
+
+export interface SeasonalData {
+	trending: MinifiedAnime[];
+	popular: MinifiedAnime[];
+	top: MinifiedAnime[];
+	seasonal: MinifiedAnime[];
+	[x: string]: MinifiedAnime[];
+}
+
+export type MinifiedAnime = Pick<Anime, 'id' | 'coverImage' | 'title' | 'year'> & {
+	fallback: string;
+};
