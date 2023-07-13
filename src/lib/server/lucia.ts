@@ -1,4 +1,4 @@
-import { CLIENT_ID, CLIENT_SECRET, VERCEL_URL } from '$env/static/private';
+import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from '$env/static/private';
 import lucia from 'lucia-auth';
 import { sveltekit } from 'lucia-auth/middleware';
 import { discord } from '@lucia-auth/oauth/providers';
@@ -27,7 +27,7 @@ export const auth = lucia({
 export const discordAuth = discord(auth, {
 	clientId: CLIENT_ID,
 	clientSecret: CLIENT_SECRET,
-	redirectUri: `https://${VERCEL_URL}/oauth/discord`
+	redirectUri: REDIRECT_URI
 });
 
 export type Auth = typeof auth;
