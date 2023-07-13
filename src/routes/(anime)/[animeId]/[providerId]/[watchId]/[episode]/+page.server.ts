@@ -15,10 +15,7 @@ export const load = (async ({ url, params, locals }) => {
 	async function fetchSource() {
 		try {
 			return await api(
-				`sources?providerId=${providerId}&watchId=${watchId}&episode=${episode}&id=${animeId}&apikey=${API_KEY}`,
-				{
-					timeout: 4500
-				}
+				`sources?providerId=${providerId}&watchId=${watchId}&episode=${episode}&id=${animeId}&apikey=${API_KEY}`
 			).json<SourceInfo>();
 		} catch (e: any) {
 			throw error(404, {
@@ -32,9 +29,7 @@ export const load = (async ({ url, params, locals }) => {
 		let response: Anime;
 
 		try {
-			response = await api(`info/${animeId}?apikey=${API_KEY}`, {
-				timeout: 3500
-			}).json<Anime>();
+			response = await api(`info/${animeId}?apikey=${API_KEY}`).json<Anime>();
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching anime info',
@@ -84,9 +79,7 @@ export const load = (async ({ url, params, locals }) => {
 
 	async function fetchEpisodes() {
 		try {
-			let response = await api(`episodes/${animeId}?apikey=${API_KEY}`, {
-				timeout: 3500
-			}).json<EpisodeData[]>();
+			let response = await api(`episodes/${animeId}?apikey=${API_KEY}`).json<EpisodeData[]>();
 
 			const providerEpisodes = response.filter((provider) => provider.providerId == providerId)[0];
 

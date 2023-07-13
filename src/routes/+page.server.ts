@@ -10,9 +10,7 @@ export const load = (async ({ locals }) => {
 
 	async function fetchData() {
 		try {
-			let response = await api(`seasonal/anime?apikey=${API_KEY}`, {
-				timeout: 4500
-			}).json<any>();
+			let response = await api(`seasonal/anime?apikey=${API_KEY}`).json<any>();
 
 			for (const collection in response) {
 				response[collection] = response[collection].map((anime: Anime) => ({

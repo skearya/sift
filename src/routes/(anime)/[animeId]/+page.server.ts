@@ -11,9 +11,7 @@ export const load = (async ({ params }) => {
 
 	async function fetchInfo() {
 		try {
-			return await api(`info/${animeId}?apikey=${API_KEY}`, {
-				timeout: 4000
-			}).json<Anime>();
+			return await api(`info/${animeId}?apikey=${API_KEY}`).json<Anime>();
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching anime info',
@@ -27,9 +25,7 @@ export const load = (async ({ params }) => {
 			// if (url.searchParams.get('consumet')) {
 			// 	return await new META.Anilist().fetchAnimeInfo(animeId);
 			// } else {
-			let json = await api(`episodes/${animeId}?apikey=${API_KEY}`, {
-				timeout: 3500
-			}).json<EpisodeData[]>();
+			let json = await api(`episodes/${animeId}?apikey=${API_KEY}`).json<EpisodeData[]>();
 			// }
 
 			for (let i = 0; i < json.length; i++) {
@@ -52,9 +48,7 @@ export const load = (async ({ params }) => {
 
 	async function fetchCovers() {
 		try {
-			return await api(`episode-covers/${animeId}?apikey=${API_KEY}`, {
-				timeout: 3500
-			}).json<EpisodeCovers[]>();
+			return await api(`episode-covers/${animeId}?apikey=${API_KEY}`).json<EpisodeCovers[]>();
 		} catch (e: any) {
 			return {} as EpisodeCovers[];
 		}

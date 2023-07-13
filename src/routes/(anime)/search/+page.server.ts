@@ -10,10 +10,7 @@ export const load = (async ({ url }) => {
 	async function fetchResults() {
 		try {
 			return await api(
-				`search/anime/${encodeURIComponent(url.searchParams.get('query')!)}?apikey=${API_KEY}`,
-				{
-					timeout: 3000
-				}
+				`search/anime/${encodeURIComponent(url.searchParams.get('query')!)}?apikey=${API_KEY}`
 			).json<Anime[]>();
 		} catch (e: any) {
 			throw error(500, e.message);

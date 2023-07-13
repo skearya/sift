@@ -1,6 +1,6 @@
 import ky from 'ky-universal';
 
-const api = ky.create({ prefixUrl: 'https://api.anify.tv/' });
+const api = ky.create({ prefixUrl: 'https://api.anify.tv/', timeout: 4500 });
 
 function bestFallback(artwork: Artwork[]): string {
 	let newImg = '';

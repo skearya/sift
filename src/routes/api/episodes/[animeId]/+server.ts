@@ -11,11 +11,9 @@ export const GET: RequestHandler = async ({ params }) => {
 
 	async function fetchEpisodes() {
 		try {
-			return await api(`episodes/${animeId}?apikey=${API_KEY}`, {
-				timeout: 4000
-			}).json<EpisodeData[]>();
+			return await api(`episodes/${animeId}?apikey=${API_KEY}`).json<EpisodeData[]>();
 		} catch (e: any) {
-			return { messsage: 'Error fetching episode info' }
+			return { messsage: 'Error fetching episode info' };
 		}
 	}
 
