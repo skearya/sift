@@ -22,22 +22,18 @@ export const load = (async ({ params }) => {
 
 	async function fetchEpisodes() {
 		try {
-			// if (url.searchParams.get('consumet')) {
-			// 	return await new META.Anilist().fetchAnimeInfo(animeId);
-			// } else {
-			let json = await api(`episodes/${animeId}?apikey=${API_KEY}`).json<EpisodeData[]>();
-			// }
+			let response = await api(`episodes/${animeId}?apikey=${API_KEY}`).json<EpisodeData[]>();
 
-			for (let i = 0; i < json.length; i++) {
-				let firstItem = json[i].episodes[0].number;
-				let lastItem = json[i].episodes[json[i].episodes.length - 1].number;
+			for (let i = 0; i < response.length; i++) {
+				let firstItem = response[i].episodes[0].number;
+				let lastItem = response[i].episodes[response[i].episodes.length - 1].number;
 
 				if (firstItem > lastItem) {
-					json[i].episodes.reverse();
+					response[i].episodes.reverse();
 				}
 			}
 
-			return json;
+			return response;
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching episode info',

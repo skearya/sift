@@ -8,7 +8,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	let userData = await prisma.userData.findUnique({
 		where: { user_id: user!.userId },
-		select: { id: true }
+		select: {
+			id: true
+		}
 	});
 
 	await prisma.userData.update({

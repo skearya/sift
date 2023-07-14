@@ -12,8 +12,8 @@
 	const { trigger, portal, overlay, content, title, description, close, open } = createDialog();
 
 	async function fetchEpisodes() {
-		const res = await fetch(`/api/episodes/${animeId}`);
-		let json: EpisodeData[] = await res.json();
+		const response = await fetch(`/api/episodes/${animeId}`);
+		let json: EpisodeData[] = await response.json();
 
 		for (let i = 0; i < json.length; i++) {
 			let firstItem = json[i].episodes[0].number;

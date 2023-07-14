@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { Button } from '$components/ui/button';
+	import { Progress } from '$components/ui/progress';
 	import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from '$components/ui/card';
 	import Episodes from '$components/Episodes.svelte';
 	import { onMount } from 'svelte';
@@ -12,7 +13,7 @@
 
 		for (let i = 0; i < img.length; i++) {
 			if (img[i].naturalWidth === 0 && img[i].naturalHeight === 0) {
-				img[i].src = img[i].getAttribute('fallback')!;
+				img[i].src = img[i].getAttribute('fallback') || img[i].src;
 			}
 		}
 	});
@@ -22,22 +23,32 @@
 	{#if data.history?.length > 0}
 		<h1 class="mb-5 mt-8 text-2xl font-medium tracking-tight lg:text-3xl">Continue Watching</h1>
 
-		<div class="flex gap-4 overflow-x-scroll">
+		<div class="flex items-stretch gap-4 overflow-x-scroll">
 			{#each data.history as episode}
 				<a
 					href={`/${episode.animeId}/${episode.providerId}/${encodeURIComponent(episode.watchId)}/${
 						episode.episodeNumber
 					}?time=${episode.progress || 0}`}
-					class="flex h-min min-w-min items-center overflow-hidden whitespace-nowrap rounded-md border"
+					class="flex min-h-full min-w-max flex-col justify-center overflow-hidden whitespace-nowrap rounded-md border"
 				>
+					{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
+						<img src={episode.cover} alt="anime episode cover" class="max-h-28 object-cover" />
+						<Progress
+							value={((episode.progress || 0) / (episode.totalLength || 22)) * 100}
+							class="h-1 rounded-none transition-all"
+						/>
+					{/if}
 					<div
-						class="m-2 flex items-center justify-center self-stretch rounded-md bg-secondary px-3 py-2 font-medium"
+						class="flex items-center justify-between gap-x-4 p-4"
+						class:flex-col={!(
+							episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'
+						)}
 					>
-						<h1>{episode.animeName}</h1>
+						<h1 class="font-medium">{episode.animeName}</h1>
+						<h1 class="font-bold text-muted-foreground">
+							{episode.episodeNumber}
+						</h1>
 					</div>
-					<h1 class="flex-grow p-1 pl-1 pr-3">
-						Episode {episode.episodeNumber}
-					</h1>
 				</a>
 			{/each}
 		</div>
@@ -54,7 +65,6 @@
 					<CardHeader class="p-2 pb-0">
 						<img
 							src={anime.coverImage}
-							loading={i >= 5 ? 'lazy' : 'eager'}
 							alt="Anime cover art"
 							class="h-96 w-full rounded-md object-cover"
 							data-fallback={anime.fallback}

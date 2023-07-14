@@ -39,7 +39,8 @@ model Episode {
   animeId       String
   providerId    String
   watchId       String
-  episodeNumber Int
+  episodeNumber Float
+  cover         String?
   progress      Int?
   totalLength   Int?
 
