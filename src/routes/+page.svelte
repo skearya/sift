@@ -21,7 +21,7 @@
 
 <section class="container px-6 lg:px-8">
 	{#if data.history?.length > 0}
-		<h1 class="mb-5 mt-8 text-2xl font-medium tracking-tight lg:text-3xl">Continue Watching</h1>
+		<h1 class="mb-5 mt-8 text-2xl font-semibold tracking-tight lg:text-3xl">Continue Watching</h1>
 
 		<div class="flex items-stretch gap-4 overflow-x-scroll">
 			{#each data.history as episode}
@@ -55,7 +55,7 @@
 	{/if}
 
 	{#each Object.keys(data.anime) as collection}
-		<h1 class="mb-5 mt-8 text-2xl font-medium tracking-tight first-letter:uppercase lg:text-3xl">
+		<h1 class="mb-5 mt-8 text-2xl font-semibold tracking-tight first-letter:uppercase lg:text-3xl">
 			{collection}
 		</h1>
 
