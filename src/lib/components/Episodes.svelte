@@ -1,30 +1,48 @@
 <script lang="ts">
-	import { createDialog } from '@melt-ui/svelte';
 	import { navigating } from '$app/stores';
 	import { fade, slide, type TransitionConfig } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
+	import { createDialog } from '@melt-ui/svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
 	import { Loader2, X } from 'lucide-svelte';
+	import ky from 'ky';
 	import type { EpisodeData } from '$lib/types';
 
 	export let animeId: number;
+	let longLoading: boolean = false;
+	let timeout: NodeJS.Timeout;
 
-	const { trigger, portal, overlay, content, title, description, close, open } = createDialog();
+	const { trigger, portal, overlay, content, title, close, open } = createDialog();
 
 	async function fetchEpisodes() {
-		const response = await fetch(`/api/episodes/${animeId}`);
-		let json: EpisodeData[] = await response.json();
+		longLoading = false;
 
-		for (let i = 0; i < json.length; i++) {
-			let firstItem = json[i].episodes[0].number;
-			let lastItem = json[i].episodes[json[i].episodes.length - 1].number;
+		let response = await ky(`/api/episodes/${animeId}`, {
+			hooks: {
+				beforeRequest: [
+					() => {
+						timeout = setTimeout(() => (longLoading = true), 2000);
+					}
+				],
+				afterResponse: [
+					() => {
+						clearTimeout(timeout);
+						longLoading = false;
+					}
+				]
+			}
+		}).json<EpisodeData[] & { message?: string }>();
+
+		for (let i = 0; i < response.length; i++) {
+			let firstItem = response[i].episodes[0].number;
+			let lastItem = response[i].episodes[response[i].episodes.length - 1].number;
 
 			if (firstItem > lastItem) {
-				json[i].episodes.reverse();
+				response[i].episodes.reverse();
 			}
 		}
 
-		return json;
+		return response;
 	}
 
 	$: if ($navigating) $open = false;
@@ -104,49 +122,56 @@
 			{#await fetchEpisodes()}
 				<div class="-mb-10 mt-2 flex w-full flex-wrap items-center justify-center gap-2">
 					<Loader2 class="animate-spin" />
+					{#if longLoading}
+						<h1 in:slide={{ axis: 'x' }} class="whitespace-nowrap text-muted-foreground">
+							this can take a while..
+						</h1>
+					{/if}
 				</div>
 
 				<div class="mt-[25px]" />
 			{:then data}
-				<div class="mt-2 flex flex-wrap gap-2" in:slide>
-					<Tabs value={data[0]?.providerId} class="w-full">
-						<TabsList class={`mb-0 grid w-full grid-cols-1 sm:grid-cols-${data.length}`}>
-							{#each data as provider}
-								<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
-							{:else}
-								<div class="flex w-full items-center h-12 justify-center">
-									<h1>No providers found</h1>
-								</div>
-							{/each}
-						</TabsList>
+				{#if data?.message}
+					<h1 class="text-destructive">{data.message}</h1>
+				{:else}
+					<div class="mt-2 flex flex-wrap gap-2" in:slide>
+						<Tabs value={data[0]?.providerId} class="w-full">
+							<TabsList class={`mb-0 grid w-full grid-cols-1 sm:grid-cols-${data.length}`}>
+								{#each data as provider}
+									<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
+								{:else}
+									<div class="flex w-full items-center h-12 justify-center">
+										<h1>No providers found</h1>
+									</div>
+								{/each}
+							</TabsList>
 
-						{#each data as provider}
-							<TabsContent value={provider.providerId} class="mt-4 max-h-40 overflow-y-scroll">
-								<div class="flex flex-wrap gap-2">
-									{#each provider.episodes as episode}
-										<a
-											href={`/${animeId}/${provider.providerId}/${encodeURIComponent(episode.id)}/${
-												episode.number
-											}`}
-											class="rounded-md bg-muted px-4 py-2 text-black text-muted-foreground transition-all hover:bg-primary hover:text-black"
-										>
-											{episode.number}
-										</a>
-									{:else}
-										<div class="flex w-full justify-center">
-											<h1>No episodes found</h1>
-										</div>
-									{/each}
-								</div>
-							</TabsContent>
-						{/each}
-					</Tabs>
-				</div>
+							{#each data as provider}
+								<TabsContent value={provider.providerId} class="mt-4 max-h-40 overflow-y-scroll">
+									<div class="flex flex-wrap gap-2">
+										{#each provider.episodes as episode}
+											<a
+												href={`/${animeId}/${provider.providerId}/${encodeURIComponent(
+													episode.id
+												)}/${episode.number}`}
+												class="rounded-md bg-muted px-4 py-2 text-black text-muted-foreground transition-all hover:bg-primary hover:text-black"
+											>
+												{episode.number}
+											</a>
+										{:else}
+											<div class="flex w-full justify-center">
+												<h1>No episodes found</h1>
+											</div>
+										{/each}
+									</div>
+								</TabsContent>
+							{/each}
+						</Tabs>
+					</div>
+				{/if}
 			{:catch}
 				<h1 class="text-destructive">An error occurred</h1>
 			{/await}
-
-			<!-- <p {...description} class="mb-5 text-sm text-muted-foreground"></p> -->
 
 			<button
 				{...close}

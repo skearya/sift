@@ -76,8 +76,8 @@
 			{#if data.user}
 				<Button href="/logout" variant="outline" class="flex h-10 items-center gap-x-3 px-3">
 					<img
-						class="rounded-full"
-						src={`https://avatar.vercel.sh/${data.user.username}?size=25`}
+						class="rounded-full h-7 w-7"
+						src={`https://avatar.vercel.sh/${data.user.username}?size=50`}
 						alt="pfp"
 					/>
 					<h1>{data.user?.username}</h1>
