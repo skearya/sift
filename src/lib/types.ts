@@ -136,5 +136,5 @@ export interface SeasonalData {
 }
 
 export type MinifiedAnime = Pick<Anime, 'id' | 'coverImage' | 'title' | 'year'> & {
-	fallback: string;
+	fallback?: string;
 };

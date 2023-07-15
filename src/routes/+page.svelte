@@ -29,24 +29,25 @@
 					href={`/${episode.animeId}/${episode.providerId}/${encodeURIComponent(episode.watchId)}/${
 						episode.episodeNumber
 					}?time=${episode.progress || 0}`}
-					class="flex min-h-full min-w-max flex-col justify-center overflow-hidden whitespace-nowrap rounded-md border"
+					class="flex min-h-full min-w-max flex-col overflow-hidden whitespace-nowrap rounded-md border"
 				>
 					{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
 						<img src={episode.cover} alt="anime episode cover" class="max-h-28 object-cover" />
 						<Progress
 							value={((episode.progress || 0) / (episode.totalLength || 22)) * 100}
-							class="h-1 rounded-none transition-all"
+							class="h-1 rounded-none"
 						/>
 					{/if}
 					<div
-						class="flex items-center justify-between gap-x-4 p-4"
-						class:flex-col={!(
+						class={`flex items-center justify-between gap-x-4 p-4 ${
 							episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'
-						)}
+								? ''
+								: 'h-full flex-col'
+						}`}
 					>
-						<h1 class="font-medium">{episode.animeName}</h1>
-						<h1 class="font-bold text-muted-foreground">
-							{episode.episodeNumber}
+						<h1 class="max-w-[12rem] whitespace-normal font-semibold">{episode.animeName}</h1>
+						<h1 class="text-muted-foreground">
+							EP {episode.episodeNumber}
 						</h1>
 					</div>
 				</a>
