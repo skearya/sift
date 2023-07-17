@@ -47,8 +47,7 @@ export const GET: RequestHandler = async (event) => {
 				}
 			});
 		}
-	} catch (e) {
-		console.log(e);
+	} catch {
 		throw error(404, 'invalid code');
 	}
 

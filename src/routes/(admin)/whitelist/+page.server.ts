@@ -1,4 +1,4 @@
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, Actions } from './$types';
 import { prisma } from '$lib/server/prisma';
 import { error } from '@sveltejs/kit';
 import { OWNER_ID } from '$env/static/private';
@@ -11,9 +11,7 @@ export const load = (async ({ locals }) => {
 
 	let users = await prisma.authUser.findMany();
 
-	return {
-		users
-	};
+	return { users };
 }) satisfies PageServerLoad;
 
 export const actions = {
@@ -40,9 +38,9 @@ export const actions = {
 				}
 			});
 		} catch {
-			throw error(500, 'Prisma error');
+			throw error(500, 'Error updating user');
 		}
 
-		redirect(303, '/whitelist', { type: 'success', message: 'User updated' }, event);
+		throw redirect(303, '/whitelist', { type: 'success', message: 'User updated' }, event);
 	}
-};
+} satisfies Actions;

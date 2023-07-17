@@ -5,7 +5,7 @@
 	import { createDialog } from '@melt-ui/svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
 	import { Loader2, X } from 'lucide-svelte';
-	import ky from 'ky';
+	import ky from 'ky-universal';
 	import type { EpisodeData } from '$lib/types';
 
 	export let animeId: number;
@@ -21,7 +21,7 @@
 			hooks: {
 				beforeRequest: [
 					() => {
-						timeout = setTimeout(() => (longLoading = true), 2000);
+						timeout = setTimeout(() => (longLoading = true), 3000);
 					}
 				],
 				afterResponse: [

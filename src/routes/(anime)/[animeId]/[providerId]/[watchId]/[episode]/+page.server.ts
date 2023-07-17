@@ -37,69 +37,71 @@ export const load = (async ({ url, params, locals }) => {
 			});
 		}
 
-		let userData = await prisma.userData.findUnique({
-			where: { user_id: user!.userId },
-			select: {
-				id: true,
-				watchHistory: {
-					take: 1,
-					where: {
-						animeId: animeId,
-						UserData: {
-							user_id: user!.userId
-						}
-					}
-				}
-			}
-		});
-
-		let newCover: string | undefined = undefined;
-
-		if (
-			userData?.watchHistory[0]?.cover == undefined ||
-			userData?.watchHistory[0].episodeNumber !== Number(episode)
-		) {
-			let response = await api(`episode-covers/${animeId}?apikey=${API_KEY}`).json<
-				EpisodeCovers[]
-			>();
-
-			newCover = response[Number(episode) - 1]?.img;
-		}
-
-		await prisma.userData.update({
-			where: {
-				user_id: user!.userId
-			},
-			data: {
-				watchHistory: {
-					upsert: {
+		try {
+			let userData = await prisma.userData.findUnique({
+				where: { user_id: user!.userId },
+				select: {
+					id: true,
+					watchHistory: {
+						take: 1,
 						where: {
-							animeId_userDataId: {
-								animeId,
-								userDataId: userData!.id
+							animeId: animeId,
+							UserData: {
+								user_id: user!.userId
 							}
-						},
-						create: {
-							animeId,
-							episodeNumber: Number(episode),
-							animeName: response.title.romaji,
-							providerId,
-							watchId,
-							...(newCover !== undefined ? { cover: newCover } : {})
-						},
-						update: {
-							animeId,
-							episodeNumber: Number(episode),
-							animeName: response.title.romaji,
-							providerId,
-							watchId,
-							createdAt: new Date(),
-							...(newCover !== undefined ? { cover: newCover } : {})
 						}
 					}
 				}
+			});
+
+			let newCover: string | undefined = undefined;
+
+			if (
+				userData?.watchHistory[0]?.cover == undefined ||
+				userData?.watchHistory[0].episodeNumber !== Number(episode)
+			) {
+				let response = await api(`episode-covers/${animeId}?apikey=${API_KEY}`).json<
+					EpisodeCovers[]
+				>();
+
+				newCover = response[Number(episode) - 1]?.img;
 			}
-		});
+
+			await prisma.userData.update({
+				where: {
+					user_id: user!.userId
+				},
+				data: {
+					watchHistory: {
+						upsert: {
+							where: {
+								animeId_userDataId: {
+									animeId,
+									userDataId: userData!.id
+								}
+							},
+							create: {
+								animeId,
+								episodeNumber: Number(episode),
+								animeName: response.title.romaji,
+								providerId,
+								watchId,
+								...(newCover !== undefined ? { cover: newCover } : {})
+							},
+							update: {
+								animeId,
+								episodeNumber: Number(episode),
+								animeName: response.title.romaji,
+								providerId,
+								watchId,
+								createdAt: new Date(),
+								...(newCover !== undefined ? { cover: newCover } : {})
+							}
+						}
+					}
+				}
+			});
+		} catch {}
 
 		return response;
 	}

@@ -4,7 +4,7 @@
 	import { page, navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { fly, slide, scale } from 'svelte/transition';
-	import { initFlash } from 'sveltekit-flash-message/client';
+	import { getFlash } from 'sveltekit-flash-message/client';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
@@ -13,7 +13,7 @@
 
 	export let data: LayoutData;
 
-	const flash = initFlash(page);
+	const flash = getFlash(page);
 
 	flash.subscribe(($flash) => {
 		if (!$flash) return;
@@ -51,29 +51,29 @@
 			<a href="/" class="mr-5">lwnddni</a>
 		</div>
 
-		<div class="flex items-center gap-x-4">
-			<div>
-				<form
-					on:submit|preventDefault={() => {
-						goto(`/search?${new URLSearchParams({ query: input })}`);
-					}}
-					class="hidden sm:flex"
-				>
-					<Input class="max-w-[200px]" placeholder="Search..." bind:value={input} />
-				</form>
+		{#if data.user}
+			<div class="flex items-center gap-x-4">
+				<div>
+					<form
+						on:submit|preventDefault={() => {
+							goto(`/search?${new URLSearchParams({ query: input })}`);
+						}}
+						class="hidden sm:flex"
+					>
+						<Input class="max-w-[200px]" placeholder="Search..." bind:value={input} />
+					</form>
 
-				<Toggle
-					bind:pressed={dropdown}
-					on:click={() => (dropdown = !dropdown)}
-					class="-mr-1 block cursor-pointer p-2 sm:hidden"
-				>
-					<ChevronDown
-						class={`transition-transform duration-300 ${dropdown ? 'rotate-180' : ''}`}
-					/>
-				</Toggle>
-			</div>
+					<Toggle
+						bind:pressed={dropdown}
+						on:click={() => (dropdown = !dropdown)}
+						class="-mr-1 block cursor-pointer p-2 sm:hidden"
+					>
+						<ChevronDown
+							class={`transition-transform duration-300 ${dropdown ? 'rotate-180' : ''}`}
+						/>
+					</Toggle>
+				</div>
 
-			{#if data.user}
 				<Button href="/logout" variant="outline" class="flex h-10 items-center gap-x-3 px-3">
 					<img
 						class="h-7 w-7 rounded-full"
@@ -82,8 +82,8 @@
 					/>
 					<h1>{data.user?.username}</h1>
 				</Button>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	</div>
 	{#if dropdown}
 		<form

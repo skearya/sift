@@ -10,7 +10,7 @@
 	export let data;
 </script>
 
-<div class="flex h-[calc(100vh-64px)] w-full items-center justify-center gap-2">
+<section class="flex h-[calc(100vh-65px)] w-full items-center justify-center gap-2">
 	{#if !data.user}
 		<form method="POST" use:enhance class="flex flex-col items-center gap-2">
 			<h1 class="mb-4 text-3xl font-semibold tracking-tight">Log In</h1>
@@ -31,4 +31,4 @@
 			<AlertDescription>Not (yet?) whitelisted!</AlertDescription>
 		</Alert>
 	{/if}
-</div>
+</section>
