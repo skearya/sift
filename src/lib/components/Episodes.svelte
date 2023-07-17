@@ -95,7 +95,7 @@
 
 <button
 	{...$trigger}
-	use:trigger.action
+	use:trigger
 	class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
 >
 	Watch
@@ -110,12 +110,12 @@
 		/>
 		<div
 			class="fixed left-[50%] top-[50%] z-30 grid max-h-[85vh] w-full translate-x-[-50%]
-				translate-y-[-50%] gap-3 border-y bg-background p-6
+				translate-y-[-50%] gap-3 border-y bg-background p-5
 				shadow-lg sm:w-[90vw] sm:max-w-[450px] sm:rounded-lg sm:border"
 			in:flyAndScale={{ duration: 300, y: 20, start: 0.96 }}
 			out:flyAndScale={{ duration: 300, y: 0, start: 0.96 }}
 			{...$content}
-			use:content.action
+			use:content
 		>
 			<h2 {...title} class="text-xl font-semibold leading-none tracking-tight">Episode Selector</h2>
 
@@ -175,7 +175,7 @@
 
 			<button
 				{...close}
-				use:close.action
+				use:close
 				class="absolute right-[19px] top-[19px] inline-flex h-[30px] w-[30px] rounded-full
 				text-muted-foreground transition-colors hover:text-white"
 			>
