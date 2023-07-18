@@ -95,7 +95,10 @@ export const load = (async ({ url, params, locals }) => {
 								providerId,
 								watchId,
 								createdAt: new Date(),
-								...(newCover !== undefined ? { cover: newCover } : {})
+								...(newCover !== undefined ? { cover: newCover } : {}),
+								...(userData?.watchHistory[0].episodeNumber !== Number(episode)
+									? { progress: 0 }
+									: {})
 							}
 						}
 					}
