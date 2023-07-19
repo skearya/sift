@@ -9,6 +9,8 @@
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
 	import { Toggle } from '$components/ui/toggle';
+	import { LightSwitch } from '$components/light-switch';
+	import { setInitialClassState } from '$components/light-switch/light-switch';
 	import { ChevronDown, Loader2 } from 'lucide-svelte';
 
 	export let data: LayoutData;
@@ -36,6 +38,10 @@
 	$: if ($navigating) dropdown = false;
 </script>
 
+<svelte:head>
+	{@html `<script nonce="%sveltekit.nonce%">(${setInitialClassState.toString()})();</script>`}
+</svelte:head>
+
 {#if $navigating}
 	<div
 		transition:fly={{ x: -200 }}
@@ -51,8 +57,8 @@
 			<a href="/" class="mr-5">lwnddni</a>
 		</div>
 
-		{#if data.user}
-			<div class="flex items-center gap-x-4">
+		<div class="flex items-center gap-x-3">
+			{#if data.user}
 				<div>
 					<form
 						on:submit|preventDefault={() => {
@@ -66,7 +72,7 @@
 					<Toggle
 						bind:pressed={dropdown}
 						on:click={() => (dropdown = !dropdown)}
-						class="-mr-1 block cursor-pointer p-2 sm:hidden"
+						class="block cursor-pointer p-2 sm:hidden"
 					>
 						<ChevronDown
 							class={`transition-transform duration-300 ${dropdown ? 'rotate-180' : ''}`}
@@ -80,10 +86,12 @@
 						src={`https://avatar.vercel.sh/${data.user.username}?size=50`}
 						alt="pfp"
 					/>
-					<h1>{data.user?.username}</h1>
+					<h1 class="text-ellipsis max-w-[150px] overflow-hidden">{data.user?.username}</h1>
 				</Button>
-			</div>
-		{/if}
+			{/if}
+
+			<LightSwitch />
+		</div>
 	</div>
 	{#if dropdown}
 		<form

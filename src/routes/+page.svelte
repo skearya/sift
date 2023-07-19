@@ -67,6 +67,7 @@
 						<img
 							src={anime.coverImage}
 							alt="Anime cover art"
+							loading={i >= 6 ? 'lazy' : 'eager'}
 							class="h-96 w-full rounded-md object-cover"
 							data-fallback={anime.fallback}
 							on:error={(event) => {
