@@ -45,7 +45,7 @@
 		return response;
 	}
 
-	$: if ($navigating) $open = false;
+	$: if ($navigating) open.set(false);
 
 	// https://github.com/melt-ui/melt-ui/blob/388d8fe4282c1b7fb1b0359482fc184169fd872e/src/routes/helpers.ts#L101
 
@@ -96,7 +96,7 @@
 <button
 	{...$trigger}
 	use:trigger
-	class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+	class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
 >
 	Watch
 </button>
@@ -154,7 +154,7 @@
 												href={`/${animeId}/${provider.providerId}/${encodeURIComponent(
 													episode.id
 												)}/${episode.number}`}
-												class="rounded-md bg-muted px-4 py-2 text-black text-muted-foreground transition-all hover:bg-primary hover:text-black"
+												class="rounded-md bg-muted px-4 py-2 text-black text-muted-foreground transition-all hover:bg-foreground hover:text-background dark:hover:bg-primary"
 											>
 												{episode.number}
 											</a>
@@ -177,7 +177,7 @@
 				{...close}
 				use:close
 				class="absolute right-[19px] top-[19px] inline-flex h-[30px] w-[30px] rounded-full
-				text-muted-foreground transition-colors hover:text-white"
+				text-muted-foreground transition-colors hover:text-foreground"
 			>
 				<X />
 			</button>

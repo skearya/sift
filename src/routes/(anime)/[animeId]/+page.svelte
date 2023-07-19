@@ -24,8 +24,6 @@
 
 	let kitsuId = data.info.mappings.find((provider) => provider.providerId === 'kitsu')?.id;
 	let simklId = data.info.mappings.find((provider) => provider.providerId === 'simkl')?.id;
-
-	let consumet: boolean = false;
 </script>
 
 <section class="container my-10 space-y-10">
@@ -52,7 +50,7 @@
 					href={`https://anilist.co/anime/${data.info.id}`}
 					target="_blank"
 					variant="outline"
-					class="flex-1"
+					class="flex-1 bg-foreground dark:bg-background"
 				>
 					<AniList />
 				</Button>
@@ -61,7 +59,7 @@
 						href={`https://kitsu.io/anime/${kitsuId}`}
 						target="_blank"
 						variant="outline"
-						class="flex-1"
+						class="flex-1 bg-foreground dark:bg-background"
 					>
 						<Kitsu />
 					</Button>
@@ -71,7 +69,7 @@
 						href={`https://simkl.com/anime/${simklId}`}
 						target="_blank"
 						variant="outline"
-						class="flex-1"
+						class="flex-1 bg-foreground dark:bg-background"
 					>
 						<Simkl />
 					</Button>
@@ -100,10 +98,6 @@
 	<div>
 		<div class="flex items-center justify-between text-4xl font-semibold">
 			<h1>Episodes</h1>
-			<!-- <div class="flex items-center gap-3">
-				<Label class="text-sm text-muted-foreground">Consumet</Label>
-				<Switch bind:rootChecked={consumet} />
-			</div> -->
 		</div>
 
 		<Separator class="my-6" />
@@ -134,7 +128,7 @@
 								>
 									<h1 class="font-semibold">{episode.number}</h1>
 								</div>
-								<h1 class="flex-grow p-2 pl-1 pr-3 lg:text-lg font-medium">
+								<h1 class="flex-grow p-2 pl-1 pr-3 font-medium lg:text-lg">
 									{episode.title || episode.id}
 								</h1>
 								{#if data.covers[episode.number - 1]?.img && data.covers[episode.number - 1]?.img !== 'https://simkl.in/episodes/null_c.jpg'}

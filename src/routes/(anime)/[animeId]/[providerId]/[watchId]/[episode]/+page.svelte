@@ -155,8 +155,10 @@
 					)}/{episode.number}"
 					id={String(episode.number)}
 					class={`rounded-sm ${
-						episode.number == Number($page.params.episode) ? 'bg-primary text-black' : 'bg-muted'
-					} px-4 py-2 text-muted-foreground transition-all hover:bg-primary hover:text-black`}
+						episode.number == Number($page.params.episode)
+							? 'bg-foreground text-background'
+							: 'bg-muted'
+					} px-4 py-2 text-muted-foreground transition-all hover:bg-foreground hover:text-background dark:hover:bg-primary`}
 				>
 					{episode.number}
 				</a>

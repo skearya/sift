@@ -86,7 +86,7 @@
 						src={`https://avatar.vercel.sh/${data.user.username}?size=50`}
 						alt="pfp"
 					/>
-					<h1 class="text-ellipsis max-w-[150px] overflow-hidden">{data.user?.username}</h1>
+					<h1 class="max-w-[150px] overflow-hidden text-ellipsis">{data.user?.username}</h1>
 				</Button>
 			{/if}
 
