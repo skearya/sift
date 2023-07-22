@@ -104,7 +104,7 @@
 </script>
 
 <section
-	class="mx-auto min-h-screen max-w-screen-xl overflow-hidden border-b bg-popover xl:border-x"
+	class="mx-auto min-h-screen max-w-screen-xl overflow-hidden rounded-b-lg bg-popover xl:mb-10 xl:border-x xl:border-b"
 >
 	<media-player
 		title={`${data.info.title.romaji} - Episode ${$page.params.episode}`}

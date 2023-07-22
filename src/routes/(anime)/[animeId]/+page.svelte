@@ -40,6 +40,7 @@
 			{#if data.info.trailer !== '' && data.info.trailer !== 'https://youtube.com/watch?v=undefined'}
 				<Button
 					href={data.info.trailer}
+					target="_blank"
 					class="w-full text-base font-bold underline-offset-4 hover:underline"
 				>
 					<Play size="22" class="mr-2" /> Trailer

@@ -11,7 +11,7 @@
 	import { Toggle } from '$components/ui/toggle';
 	import { LightSwitch } from '$components/light-switch';
 	import { setInitialClassState } from '$components/light-switch/light-switch';
-	import { ChevronDown, Loader2 } from 'lucide-svelte';
+	import { ChevronDown, Github, Loader2 } from 'lucide-svelte';
 
 	export let data: LayoutData;
 
@@ -113,6 +113,30 @@
 		<slot />
 	</main>
 {/key}
+
+<footer class="w-full border-t">
+	<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-16">
+		<div class="flex flex-col items-baseline space-y-4">
+			<div class="mx-auto">
+				<a href="https://github.com/skearya/sift" target="_blank" class="text-md mx-auto">
+					<Github />
+				</a>
+			</div>
+			<div class="mx-auto">
+				<span class="mx-auto mt-2 text-sm text-muted-foreground">
+					Powered by
+					<a
+						href="https://docs.anify.tv"
+						target="_blank"
+						class="mx-0 text-blue-500 hover:text-gray-500"
+					>
+						Anify
+					</a>
+				</span>
+			</div>
+		</div>
+	</div>
+</footer>
 
 <Toaster
 	toastOptions={{
