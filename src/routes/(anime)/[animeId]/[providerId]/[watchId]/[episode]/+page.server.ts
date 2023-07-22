@@ -58,7 +58,7 @@ export const load = (async ({ url, params, locals }) => {
 
 			if (
 				userData?.watchHistory[0]?.cover == undefined ||
-				userData?.watchHistory[0].episodeNumber !== Number(episode)
+				userData?.watchHistory[0]?.episodeNumber !== Number(episode)
 			) {
 				let response = await api(`episode-covers/${animeId}?apikey=${API_KEY}`).json<
 					EpisodeCovers[]
@@ -96,7 +96,7 @@ export const load = (async ({ url, params, locals }) => {
 								watchId,
 								createdAt: new Date(),
 								...(newCover !== undefined ? { cover: newCover } : {}),
-								...(userData?.watchHistory[0].episodeNumber !== Number(episode)
+								...(userData?.watchHistory[0]?.episodeNumber !== Number(episode)
 									? { progress: 0 }
 									: {})
 							}
