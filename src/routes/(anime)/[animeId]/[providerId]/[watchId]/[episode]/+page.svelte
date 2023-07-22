@@ -146,7 +146,7 @@
 
 		<Separator class="my-4" />
 
-		<div class="flex gap-2 overflow-x-scroll">
+		<div class="flex gap-2 overflow-x-auto">
 			{#each data.episodes?.episodes as episode}
 				<a
 					data-sveltekit-reload
@@ -158,7 +158,7 @@
 						episode.number == Number($page.params.episode)
 							? 'bg-foreground text-background'
 							: 'bg-muted'
-					} px-4 py-2 text-muted-foreground transition-all hover:bg-foreground hover:text-background dark:hover:bg-primary`}
+					} mb-3 px-4 py-2 text-muted-foreground transition-all hover:bg-foreground hover:text-background dark:hover:bg-primary`}
 				>
 					{episode.number}
 				</a>

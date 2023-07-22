@@ -23,13 +23,13 @@
 	{#if data.history?.length > 0}
 		<h1 class="mb-5 mt-8 text-2xl font-semibold tracking-tight lg:text-3xl">Continue Watching</h1>
 
-		<div class="flex items-stretch gap-4 overflow-x-scroll">
+		<div class="flex items-stretch gap-3 overflow-x-auto">
 			{#each data.history as episode}
 				<a
 					href={`/${episode.animeId}/${episode.providerId}/${encodeURIComponent(episode.watchId)}/${
 						episode.episodeNumber
 					}?time=${episode.progress || 0}`}
-					class="flex min-h-full min-w-max flex-col overflow-hidden whitespace-nowrap rounded-md border"
+					class="mb-3 flex min-h-full min-w-max flex-col overflow-hidden whitespace-nowrap rounded-md border"
 				>
 					{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
 						<img src={episode.cover} alt="anime episode cover" class="max-h-28 object-cover" />
@@ -62,7 +62,7 @@
 
 		<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll">
 			{#each data.anime[collection] as anime, i}
-				<Card class="flex flex-shrink-0 basis-[16rem] snap-start flex-col">
+				<Card class="mb-3 flex flex-shrink-0 basis-[16rem] snap-start flex-col">
 					<CardHeader class="p-2 pb-0">
 						<img
 							src={anime.coverImage}

@@ -111,7 +111,7 @@
 		<div
 			class="fixed left-[50%] top-[50%] z-30 grid max-h-[85vh] w-full translate-x-[-50%]
 				translate-y-[-50%] gap-3 border-y bg-background p-5
-				shadow-lg sm:w-[90vw] sm:max-w-[450px] sm:rounded-lg sm:border"
+				shadow-lg sm:w-[90vw] sm:max-w-[550px] sm:rounded-lg sm:border"
 			in:flyAndScale={{ duration: 300, y: 20, start: 0.96 }}
 			out:flyAndScale={{ duration: 300, y: 0, start: 0.96 }}
 			{...$content}
@@ -147,8 +147,8 @@
 							</TabsList>
 
 							{#each data as provider}
-								<TabsContent value={provider.providerId} class="mt-4 max-h-40 overflow-y-scroll">
-									<div class="flex flex-wrap gap-2">
+								<TabsContent value={provider.providerId} class="mt-4 max-h-40 overflow-y-auto">
+									<div class="mr-2 flex flex-wrap gap-2">
 										{#each provider.episodes as episode}
 											<a
 												href={`/${animeId}/${provider.providerId}/${encodeURIComponent(

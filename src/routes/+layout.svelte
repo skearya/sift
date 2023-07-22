@@ -125,6 +125,7 @@
 	:global(html) {
 		scroll-behavior: smooth;
 		font-family: 'Inter var', sans-serif;
+		overflow-y: overlay;
 	}
 
 	@font-face {
