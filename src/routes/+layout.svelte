@@ -54,7 +54,7 @@
 <nav class="sticky top-0 z-40 flex w-full flex-col border-b bg-primary-foreground px-6">
 	<div class="flex h-16 items-center justify-between">
 		<div class="flex items-center">
-			<a href="/" class="mr-5">lwnddni</a>
+			<a href="/" class="mr-5">sift</a>
 		</div>
 
 		<div class="flex items-center gap-x-3">
