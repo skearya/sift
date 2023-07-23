@@ -152,7 +152,7 @@
 					data-sveltekit-reload
 					href="/{$page.params.animeId}/{$page.params.providerId}/{encodeURIComponent(
 						episode.id
-					)}/{episode.number}${data.dubbed ? '/?subType=dub' : ''}"
+					)}/{episode.number}{data.dubbed ? '/?subType=dub' : ''}"
 					id={String(episode.number)}
 					class={`rounded-sm ${
 						episode.number == Number($page.params.episode)
