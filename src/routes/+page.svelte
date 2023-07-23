@@ -28,7 +28,10 @@
 				<a
 					href={`/${episode.animeId}/${episode.providerId}/${encodeURIComponent(episode.watchId)}/${
 						episode.episodeNumber
-					}?time=${episode.progress || 0}`}
+					}?${new URLSearchParams({
+						time: String(episode.progress),
+						subType: episode.dubbed ? 'dub' : 'sub'
+					})}`}
 					class="mb-3 flex min-h-full min-w-max flex-col overflow-hidden whitespace-nowrap rounded-md border"
 				>
 					{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}

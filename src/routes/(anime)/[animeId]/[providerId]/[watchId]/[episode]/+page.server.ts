@@ -88,7 +88,8 @@ export const load = (async ({ url, params, locals }) => {
 								animeName: response.title.romaji,
 								providerId,
 								watchId,
-								...(newCover !== undefined ? { cover: newCover } : {})
+								cover: newCover,
+								dubbed: url.searchParams.get('subType') == 'dub'
 							},
 							update: {
 								animeId,
@@ -97,7 +98,8 @@ export const load = (async ({ url, params, locals }) => {
 								providerId,
 								watchId,
 								createdAt: new Date(),
-								...(newCover !== undefined ? { cover: newCover } : {}),
+								cover: newCover,
+								dubbed: url.searchParams.get('subType') == 'dub',
 								...(userData?.watchHistory[0]?.episodeNumber !== Number(episode)
 									? { progress: 0 }
 									: {})
