@@ -104,7 +104,7 @@
 </script>
 
 <section
-	class="mx-auto min-h-screen max-w-screen-xl overflow-hidden rounded-b-lg bg-popover xl:mb-10 xl:border-x xl:border-b"
+	class="mx-auto min-h-screen max-w-screen-xl overflow-hidden rounded-b-lg bg-popover min-[1300px]:mb-10 min-[1300px]:border-x min-[1300px]:border-b"
 >
 	<media-player
 		title={`${data.info.title.romaji} - Episode ${$page.params.episode}`}
@@ -152,7 +152,7 @@
 					data-sveltekit-reload
 					href="/{$page.params.animeId}/{$page.params.providerId}/{encodeURIComponent(
 						episode.id
-					)}/{episode.number}"
+					)}/{episode.number}${data.dubbed ? '/?subType=dub' : ''}"
 					id={String(episode.number)}
 					class={`rounded-sm ${
 						episode.number == Number($page.params.episode)

@@ -15,7 +15,9 @@ export const load = (async ({ url, params, locals }) => {
 	async function fetchSource() {
 		try {
 			return await api(
-				`sources?providerId=${providerId}&watchId=${watchId}&episode=${episode}&id=${animeId}&apikey=${API_KEY}`
+				`sources?providerId=${providerId}&watchId=${watchId}&episode=${episode}&id=${animeId}&subType=${
+					url.searchParams.get('subType') || 'sub'
+				}&apikey=${API_KEY}`
 			).json<SourceInfo>();
 		} catch (e: any) {
 			throw error(404, {
@@ -143,6 +145,7 @@ export const load = (async ({ url, params, locals }) => {
 		source: fetchSource(),
 		info: fetchInfo(),
 		episodes: fetchEpisodes(),
-		time: url.searchParams.get('time')
+		time: url.searchParams.get('time'),
+		dubbed: url.searchParams.get('subType') == 'dub'
 	};
 }) satisfies PageServerLoad;

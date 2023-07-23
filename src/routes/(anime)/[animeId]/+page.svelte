@@ -2,7 +2,9 @@
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import { bestFallback } from '$lib/api';
+	import { Label } from '$components/ui/label';
 	import { Badge } from '$components/ui/badge';
+	import { Switch } from '$components/ui/switch';
 	import { Button } from '$components/ui/button';
 	import { Separator } from '$components/ui/separator';
 	import { Alert, AlertTitle } from '$components/ui/alert';
@@ -11,6 +13,7 @@
 	import Simkl from '$lib/icons/Simkl.svelte';
 	import AniList from '$lib/icons/AniList.svelte';
 	import { AlertCircle, Play } from 'lucide-svelte';
+	import type { EpisodeData } from '$lib/types';
 
 	onMount(() => {
 		let img = document.getElementById('img') as HTMLImageElement;
@@ -21,6 +24,17 @@
 	});
 
 	export let data: PageData;
+	let checked: boolean = false;
+	let dubbed: EpisodeData[] = [];
+
+	data.episodes.forEach((provider, i) => {
+		if (provider.episodes.filter((episode) => episode.hasDub).length == 0) return;
+
+		dubbed[i] = {
+			providerId: provider.providerId,
+			episodes: provider.episodes.filter((episode) => episode.hasDub)
+		};
+	});
 
 	let kitsuId = data.info.mappings.find((provider) => provider.providerId === 'kitsu')?.id;
 	let simklId = data.info.mappings.find((provider) => provider.providerId === 'simkl')?.id;
@@ -99,13 +113,21 @@
 	<div>
 		<div class="flex items-center justify-between text-4xl font-semibold">
 			<h1>Episodes</h1>
+			<div class="flex items-center gap-3">
+				<Label class="text-sm text-muted-foreground">Dubbed</Label>
+				<Switch bind:rootChecked={checked} />
+			</div>
 		</div>
 
 		<Separator class="my-6" />
 
-		<Tabs value={data?.episodes[0]?.providerId} class="w-full">
-			<TabsList class={`mb-6 grid w-full grid-cols-1 sm:grid-cols-${data.episodes.length}`}>
-				{#each data.episodes as provider}
+		<Tabs value={checked ? dubbed[0]?.providerId : data?.episodes[0]?.providerId} class="w-full">
+			<TabsList
+				class={`mb-6 grid w-full grid-cols-1 sm:grid-cols-${
+					checked ? dubbed.length : data.episodes.length
+				}`}
+			>
+				{#each checked ? dubbed : data.episodes as provider}
 					<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
 				{:else}
 					<div class="flex w-full justify-center">
@@ -114,14 +136,14 @@
 				{/each}
 			</TabsList>
 
-			{#each data.episodes as provider}
+			{#each checked ? dubbed : data.episodes as provider}
 				<TabsContent value={provider.providerId}>
 					<div class="flex flex-col justify-center gap-4">
 						{#each provider.episodes as episode}
 							<a
 								href={`/${data.info.id}/${provider.providerId}/${encodeURIComponent(episode.id)}/${
 									episode.number
-								}`}
+								}${checked ? '/?subType=dub' : ''}`}
 								class="flex h-min w-full items-center overflow-hidden rounded-md border last:mb-4"
 							>
 								<div
@@ -156,8 +178,8 @@
 			{/each}
 		</Tabs>
 
-		<button on:click={() => window.scrollTo({ top: 0 })} class="text-muted-foreground"
-			>scroll to top
+		<button on:click={() => window.scrollTo({ top: 0 })} class="text-muted-foreground">
+			scroll to top
 		</button>
 	</div>
 </section>
