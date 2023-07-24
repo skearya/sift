@@ -40,8 +40,6 @@
 		// theres probably a better way to do what im trying to do
 	});
 
-	console.log(dubbed);
-
 	let kitsuId = data.info.mappings.find((provider) => provider.providerId === 'kitsu')?.id;
 	let simklId = data.info.mappings.find((provider) => provider.providerId === 'simkl')?.id;
 </script>
