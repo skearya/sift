@@ -27,17 +27,13 @@
 	let checked: boolean = false;
 	let dubbed: EpisodeData[] = [];
 
-	let i: number = 0;
-
 	data.episodes.forEach((provider) => {
 		if (provider.episodes.filter((episode) => episode.hasDub).length == 0) return;
 
-		dubbed[i] = {
+		dubbed[dubbed.length] = {
 			providerId: provider.providerId,
 			episodes: provider.episodes.filter((episode) => episode.hasDub)
 		};
-		i++;
-		// theres probably a better way to do what im trying to do
 	});
 
 	let kitsuId = data.info.mappings.find((provider) => provider.providerId === 'kitsu')?.id;

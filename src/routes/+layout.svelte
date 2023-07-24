@@ -12,6 +12,7 @@
 	import { LightSwitch } from '$components/light-switch';
 	import { setInitialClassState } from '$components/light-switch/light-switch';
 	import { ChevronDown, Github, Loader2 } from 'lucide-svelte';
+	import { node } from 'lucia-auth/middleware';
 
 	export let data: LayoutData;
 
@@ -36,6 +37,10 @@
 	let dropdown: boolean;
 
 	$: if ($navigating) dropdown = false;
+
+	let mocha: number = 0;
+
+	$: console.log(mocha);
 </script>
 
 <svelte:head>
@@ -54,7 +59,28 @@
 <nav class="sticky top-0 z-40 flex w-full flex-col border-b bg-primary-foreground px-6">
 	<div class="flex h-16 items-center justify-between">
 		<div class="flex items-center">
-			<a href="/" class="mr-5">sift</a>
+			<a
+				href="/"
+				class="mr-5"
+				on:click={() => {
+					mocha++;
+
+					if (mocha > 20) {
+						let textNodes = document.getElementsByTagName('h1');
+
+						for (var i = 0; i < textNodes.length; i++) {
+							textNodes[i].textContent = 'mochalinky';
+						}
+
+						let imgNodes = document.getElementsByTagName('img');
+
+						for (var i = 0; i < imgNodes.length; i++) {
+							imgNodes[i].src =
+								'https://cdn.discordapp.com/avatars/254415959505240064/d86672c399eda0eee0269a289f8db065.webp?size=64';
+						}
+					}
+				}}>sift</a
+			>
 		</div>
 
 		<div class="flex items-center gap-x-3">
