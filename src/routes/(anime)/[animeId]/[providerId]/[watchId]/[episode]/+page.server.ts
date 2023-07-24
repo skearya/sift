@@ -14,11 +14,20 @@ export const load = (async ({ url, params, locals }) => {
 
 	async function fetchSource() {
 		try {
-			return await api(
+			let response = await api(
 				`sources?providerId=${providerId}&watchId=${watchId}&episode=${episode}&id=${animeId}&subType=${
 					url.searchParams.get('subType') || 'sub'
 				}&apikey=${API_KEY}`
 			).json<SourceInfo>();
+
+			for (const source of response.sources) {
+				if (source.quality == 'default' || source.quality == 'auto') {
+					response.default = source.url;
+					break;
+				}
+			}
+
+			return response;
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching episode sources',

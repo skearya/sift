@@ -102,6 +102,7 @@ export interface EpisodeData {
 
 export interface SourceInfo {
 	sources: Source[];
+	default?: string;
 	subtitles: any[];
 	intro: Intro;
 	outro: Intro;

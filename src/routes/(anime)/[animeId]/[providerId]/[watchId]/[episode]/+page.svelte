@@ -12,24 +12,12 @@
 
 	export let data: PageData;
 	let interval: NodeJS.Timer;
-	let currentSource: string;
 	let usingProxy: boolean = false;
 
 	onMount(async () => {
 		await defineCustomElements();
 
 		const player = document.querySelector('media-player')!;
-
-		for (const source of data.source.sources) {
-			if (source.quality == 'default' || source.quality == 'auto') {
-				player.src = {
-					src: source.url,
-					type: 'application/x-mpegurl'
-				};
-
-				currentSource = source.url;
-			}
-		}
 
 		player.onAttach(() => {
 			if (data.time) player.currentTime = Number(data.time);
@@ -64,14 +52,14 @@
 		});
 
 		player.addEventListener('error', (event) => {
-			if ((event.detail.message = 'Failed to open media') && !usingProxy) {
+			if ((event.detail.message = 'Failed to open media')) {
 				useProxy();
 			}
 		});
 
 		player.addEventListener('hls-error', (event) => {
 			// @ts-expect-error
-			if ((event.detail.details = 'manifestLoadError') && !usingProxy) {
+			if ((event.detail.details = 'manifestLoadError')) {
 				useProxy();
 			}
 		});
@@ -81,11 +69,13 @@
 		});
 
 		function useProxy() {
+			if (usingProxy) return;
+
 			toast.error('Encountered CORS error, trying proxy');
 
 			player.src = {
 				src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
-					currentSource
+					data.source.default!
 				)}&headers=${encodeURIComponent(JSON.stringify(data.source.headers || {}))}`,
 				type: 'application/x-mpegurl'
 			};
@@ -108,6 +98,7 @@
 >
 	<media-player
 		title={`${data.info.title.romaji} - Episode ${$page.params.episode}`}
+		src={data.source.default}
 		aspect-ratio="16/9"
 		crossorigin
 	>
@@ -130,7 +121,7 @@
 			<div class="space-y-1">
 				<a
 					href="/{$page.params.animeId}"
-					class="text-2xl font-semibold tracking-tight transition-colors hover:text-white md:text-3xl"
+					class="text-2xl font-semibold tracking-tight transition-colors hover:text-blue-400 md:text-3xl"
 					>{data.info.title.romaji}</a
 				>
 				<h1 class="text-md capitalize text-muted-foreground md:text-lg">

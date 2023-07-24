@@ -152,7 +152,7 @@
 					<a
 						href="https://docs.anify.tv"
 						target="_blank"
-						class="mx-0 text-blue-500 hover:text-gray-500"
+						class="mx-0 text-blue-400 hover:text-gray-500"
 					>
 						Anify
 					</a>
