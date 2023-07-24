@@ -2,8 +2,8 @@
 	import type { PageData } from './$types';
 	import { Button } from '$components/ui/button';
 	import { Progress } from '$components/ui/progress';
+	import { animeId, toastState } from '$components/episodes';
 	import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from '$components/ui/card';
-	import Episodes from '$components/Episodes.svelte';
 	import { onMount } from 'svelte';
 
 	export let data: PageData;
@@ -89,7 +89,15 @@
 						</CardDescription>
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
-						<Episodes animeId={Number(anime.id)} />
+						<button
+							on:click={() => {
+								animeId.set(Number(anime.id));
+								toastState.set(true)
+							}}
+							class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-accent hover:text-foreground"
+						>
+							Watch
+						</button>
 						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 					</CardFooter>
 				</Card>

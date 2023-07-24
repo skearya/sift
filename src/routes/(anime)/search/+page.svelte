@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { Button } from '$components/ui/button';
-	import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '$components/ui/card';
 	import { Skeleton } from '$components/ui/skeleton';
+	import { animeId, toastState } from '$components/episodes';
 	import { Alert, AlertDescription, AlertTitle } from '$components/ui/alert';
+	import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '$components/ui/card';
 	import { AlertCircle } from 'lucide-svelte';
-	import Episodes from '$components/Episodes.svelte';
 
 	export let data: PageData;
 </script>
@@ -60,7 +60,15 @@
 						</CardDescription>
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
-						<Episodes animeId={Number(anime.id)} />
+						<button
+							on:click={() => {
+								animeId.set(Number(anime.id));
+								toastState.set(true);
+							}}
+							class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-accent hover:text-foreground"
+						>
+							Watch
+						</button>
 						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 					</CardFooter>
 				</Card>

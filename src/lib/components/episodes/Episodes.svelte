@@ -1,23 +1,23 @@
 <script lang="ts">
+	import type { EpisodeData } from '$lib/types';
 	import { navigating } from '$app/stores';
+	import { toastState, animeId } from './stores';
 	import { fade, slide, type TransitionConfig } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { createDialog } from '@melt-ui/svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
 	import { Loader2, X } from 'lucide-svelte';
 	import ky from 'ky-universal';
-	import type { EpisodeData } from '$lib/types';
 
-	export let animeId: number;
 	let longLoading: boolean = false;
 	let timeout: NodeJS.Timeout;
 
-	const { trigger, portal, overlay, content, title, close, open } = createDialog();
+	const { portal, overlay, content, title, close, open } = createDialog({ preventScroll: false });
 
 	async function fetchEpisodes() {
 		longLoading = false;
 
-		let response = await ky(`/api/episodes/${animeId}`, {
+		let response = await ky(`/api/episodes/${$animeId}`, {
 			hooks: {
 				beforeRequest: [
 					() => {
@@ -46,6 +46,12 @@
 	}
 
 	$: if ($navigating) open.set(false);
+
+	$: $toastState = $open;
+
+	toastState.subscribe((value) => {
+		open.set(value);
+	});
 
 	// https://github.com/melt-ui/melt-ui/blob/388d8fe4282c1b7fb1b0359482fc184169fd872e/src/routes/helpers.ts#L101
 
@@ -92,14 +98,6 @@
 		}, '');
 	}
 </script>
-
-<button
-	{...$trigger}
-	use:trigger
-	class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
->
-	Watch
-</button>
 
 <div use:portal>
 	{#if $open}
@@ -151,7 +149,7 @@
 									<div class="mr-2 flex flex-wrap gap-2">
 										{#each provider.episodes as episode}
 											<a
-												href={`/${animeId}/${provider.providerId}/${encodeURIComponent(
+												href={`/${$animeId}/${provider.providerId}/${encodeURIComponent(
 													episode.id
 												)}/${episode.number}`}
 												class="rounded-md bg-muted px-4 py-2 text-black text-muted-foreground transition-all hover:bg-foreground hover:text-background dark:hover:bg-primary"

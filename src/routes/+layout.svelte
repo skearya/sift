@@ -9,10 +9,10 @@
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
 	import { Toggle } from '$components/ui/toggle';
+	import { Episodes } from '$components/episodes';
 	import { LightSwitch } from '$components/light-switch';
 	import { setInitialClassState } from '$components/light-switch/light-switch';
 	import { ChevronDown, Github, Loader2 } from 'lucide-svelte';
-	import { node } from 'lucia-auth/middleware';
 
 	export let data: LayoutData;
 
@@ -39,8 +39,6 @@
 	$: if ($navigating) dropdown = false;
 
 	let mocha: number = 0;
-
-	$: console.log(mocha);
 </script>
 
 <svelte:head>
@@ -163,6 +161,8 @@
 		</div>
 	</div>
 </footer>
+
+<Episodes />
 
 <Toaster
 	toastOptions={{
