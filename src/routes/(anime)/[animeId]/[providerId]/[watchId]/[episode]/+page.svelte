@@ -171,5 +171,6 @@
 <style>
 	:root {
 		--video-font-family: 'Inter var';
+		--media-aspect-ratio: 16 / 9;
 	}
 </style>

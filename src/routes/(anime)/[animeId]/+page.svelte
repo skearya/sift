@@ -40,7 +40,7 @@
 	let simklId = data.info.mappings.find((provider) => provider.providerId === 'simkl')?.id;
 </script>
 
-<section class="container my-10 space-y-10">
+<section class="container my-10 space-y-10 px-6 lg:px-8">
 	<div class="flex flex-col gap-8 md:flex-row">
 		<div
 			class="max-w-[15rem] flex-shrink-0 space-y-3 self-center md:max-w-[20rem] md:self-start lg:max-w-sm"

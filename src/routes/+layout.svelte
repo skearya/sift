@@ -133,7 +133,7 @@
 </nav>
 
 {#key data.url}
-	<main in:fly={{ x: 200, duration: 300, delay: 300 }} out:fly={{ x: -200, duration: 300 }}>
+	<main in:fly={{ x: -10, duration: 500, delay: 500 }} out:fly={{ x: 5, duration: 500 }}>
 		<slot />
 	</main>
 {/key}
