@@ -70,8 +70,11 @@
 
 		function useProxy() {
 			if (usingProxy) return;
+			usingProxy = true;
 
 			toast.error('Encountered CORS error, trying proxy');
+
+			let time = player.currentTime;
 
 			player.src = {
 				src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
@@ -80,7 +83,14 @@
 				type: 'application/x-mpegurl'
 			};
 
-			usingProxy = true;
+			player.addEventListener(
+				'can-play',
+				async () => {
+					player.currentTime = time;
+					await player.play();
+				},
+				{ once: true }
+			);
 		}
 
 		// const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
