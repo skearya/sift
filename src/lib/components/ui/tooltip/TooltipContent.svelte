@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TooltipContentProps } from "radix-svelte/index";
+	import type { TooltipContentProps } from "radix-svelte";
 	import { Tooltip as TooltipPrimitive } from "radix-svelte";
 	import { cn } from "$lib/utils";
 
