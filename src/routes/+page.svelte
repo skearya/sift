@@ -48,11 +48,11 @@
 								: 'h-full flex-col'
 						}`}
 					>
-						<a
-							href={`/${episode.animeId}`}
-							class="max-w-[12rem] whitespace-normal font-semibold transition-colors hover:text-blue-400"
-							>{episode.animeName}</a
+						<h1
+							class="max-w-[12rem] whitespace-normal font-semibold transition-colors"
 						>
+							{episode.animeName}
+						</h1>
 						<h1 class="text-muted-foreground">
 							EP {episode.episodeNumber}
 						</h1>
