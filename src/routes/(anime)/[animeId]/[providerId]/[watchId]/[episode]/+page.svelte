@@ -70,11 +70,12 @@
 
 		function useProxy() {
 			if (usingProxy) return;
+
 			usingProxy = true;
 
 			toast.error('Encountered CORS error, trying proxy');
 
-			let time = player.currentTime;
+			let time = player.currentTime || Number(data.time);
 
 			player.src = {
 				src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
@@ -82,6 +83,8 @@
 				)}&headers=${encodeURIComponent(JSON.stringify(data.source.headers || {}))}`,
 				type: 'application/x-mpegurl'
 			};
+
+			if (player.currentTime == 0) return;
 
 			player.addEventListener(
 				'can-play',
