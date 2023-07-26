@@ -20,8 +20,10 @@
 
 			<Separator class="my-2" />
 
-			<Button variant="outline" href="/oauth" type="submit" class="w-full space-x-3">
-				<Discord />
+			<Button variant="outline" href="/oauth" class="w-full space-x-3">
+				<div class="dark:invert-0 invert">
+					<Discord />
+				</div>
 				<h1>Discord</h1>
 			</Button>
 		</form>

@@ -6,7 +6,7 @@ import type { Anime, EpisodeCovers, EpisodeData, SourceInfo } from '$lib/types';
 import { prisma } from '$lib/server/prisma';
 
 export const load = (async ({ url, params, locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 
 	let { animeId, providerId, watchId, episode } = params;
 
@@ -50,7 +50,7 @@ export const load = (async ({ url, params, locals }) => {
 
 		try {
 			let userData = await prisma.userData.findUnique({
-				where: { user_id: user!.userId },
+				where: { user_id: session!.user!.userId },
 				select: {
 					id: true,
 					watchHistory: {
@@ -58,7 +58,7 @@ export const load = (async ({ url, params, locals }) => {
 						where: {
 							animeId: animeId,
 							UserData: {
-								user_id: user!.userId
+								user_id: session!.user!.userId
 							}
 						}
 					}
@@ -80,7 +80,7 @@ export const load = (async ({ url, params, locals }) => {
 
 			await prisma.userData.update({
 				where: {
-					user_id: user!.userId
+					user_id: session!.user!.userId
 				},
 				data: {
 					watchHistory: {

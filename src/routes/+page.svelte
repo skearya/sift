@@ -78,9 +78,7 @@
 							class="h-96 w-full rounded-md object-cover"
 							data-fallback={anime.fallback}
 							on:error={(event) => {
-								// @ts-expect-error
 								if (event.target.src !== anime.fallback) {
-									// @ts-expect-error
 									event.target.src = anime.fallback;
 								}
 							}}

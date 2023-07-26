@@ -45,9 +45,7 @@
 							src={anime.coverImage}
 							alt="Anime cover art"
 							on:error={(event) => {
-								// @ts-expect-error
 								if (event.target.src !== anime.fallback) {
-									// @ts-expect-error
 									event.target.src = anime.fallback;
 								}
 							}}
