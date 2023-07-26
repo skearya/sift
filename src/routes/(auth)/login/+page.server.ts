@@ -4,9 +4,9 @@ import { fail } from '@sveltejs/kit';
 import { auth } from '$lib/server/lucia';
 
 export const load = (async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 
-	if (user?.authorized) throw redirect(303, '/');
+	if (session?.user?.authorized) throw redirect(303, '/');
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
@@ -24,7 +24,12 @@ export const actions: Actions = {
 
 		try {
 			const key = await auth.useKey('username', username, password);
-			const session = await auth.createSession(key.userId);
+
+			const session = await auth.createSession({
+				userId: key.userId,
+				attributes: {}
+			});
+
 			locals.auth.setSession(session);
 		} catch {
 			setFlash({ type: 'error', message: 'Invalid username or password' }, event);

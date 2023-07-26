@@ -5,9 +5,9 @@ import { OWNER_ID } from '$env/static/private';
 import { redirect } from 'sveltekit-flash-message/server';
 
 export const load = (async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 
-	if (user?.discordId !== OWNER_ID) throw redirect(303, '/');
+	if (session!.user?.discordId !== OWNER_ID) throw redirect(303, '/');
 
 	let users = await prisma.authUser.findMany();
 
@@ -18,9 +18,9 @@ export const actions = {
 	default: async (event) => {
 		const { locals, request } = event;
 
-		const { user } = await locals.auth.validateUser();
+		const session = await locals.auth.validate();
 
-		if (user?.discordId !== OWNER_ID) throw error(401, 'Unauthorized');
+		if (session!.user?.discordId !== OWNER_ID) throw error(401, 'Unauthorized');
 
 		const formData = await request.formData();
 		const id = formData.get('id');

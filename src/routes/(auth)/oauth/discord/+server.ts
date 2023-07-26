@@ -22,18 +22,25 @@ export const GET: RequestHandler = async (event) => {
 	}
 
 	try {
-		const { existingUser, providerUser, createUser } = await discordAuth.validateCallback(code);
+		const { existingUser, discordUser, createUser } = await discordAuth.validateCallback(code);
 
 		const getUser = async () => {
 			if (existingUser) return existingUser;
 			return await createUser({
-				discordId: providerUser.id,
-				username: providerUser.username,
-				authorized: providerUser.id == OWNER_ID ? true : false
+				attributes: {
+					discordId: discordUser.id,
+					username: discordUser.username,
+					authorized: discordUser.id == OWNER_ID ? true : false
+				}
 			});
 		};
+
 		const user = await getUser();
-		const session = await auth.createSession(user.userId);
+		const session = await auth.createSession({
+			userId: user.userId,
+			attributes: {}
+		});
+
 		locals.auth.setSession(session);
 
 		if (!existingUser) {
@@ -47,7 +54,7 @@ export const GET: RequestHandler = async (event) => {
 				}
 			});
 		}
-	} catch {
+	} catch (e) {
 		throw error(404, 'invalid code');
 	}
 

@@ -2,12 +2,12 @@ import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/prisma';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 
 	let { animeName, animeId, providerId, watchId, episode, length, time } = await request.json();
 
 	let userData = await prisma.userData.findUnique({
-		where: { user_id: user!.userId },
+		where: { user_id: session?.user!.userId },
 		select: {
 			id: true
 		}
@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	await prisma.userData.update({
 		where: {
-			user_id: user!.userId
+			user_id: session?.user!.userId
 		},
 		data: {
 			watchHistory: {

@@ -4,7 +4,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 export const handle = (async ({ event, resolve }) => {
 	event.locals.auth = auth.handleRequest(event);
 
-	const { user, session } = await event.locals.auth.validateUser();
+	const session = await event.locals.auth.validate();
 	const { pathname } = event.url;
 
 	if (
@@ -13,7 +13,7 @@ export const handle = (async ({ event, resolve }) => {
 		pathname != '/logout' &&
 		!pathname.startsWith('/oauth')
 	) {
-		if (!session || !user.authorized) {
+		if (!session || !session.user.authorized) {
 			throw redirect(303, '/login');
 		}
 	}

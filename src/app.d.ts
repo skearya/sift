@@ -7,7 +7,7 @@ declare global {
 			info?: string;
 		}
 		interface Locals {
-			auth: import('lucia-auth').AuthRequest;
+			auth: import('lucia').AuthRequest;
 		}
 		interface PageData {
 			flash?: { type: 'success' | 'error'; message: string };
@@ -17,15 +17,16 @@ declare global {
 	var __prisma: PrismaClient;
 }
 
-/// <reference types="lucia-auth" />
+/// <reference types="lucia" />
 declare global {
 	namespace Lucia {
 		type Auth = import('$lib/server/lucia').Auth;
-		type UserAttributes = {
+		type DatabaseUserAttributes = {
 			discordId: string;
 			username: string;
 			authorized: boolean;
 		};
+		type DatabaseSessionAttributes = {};
 	}
 }
 

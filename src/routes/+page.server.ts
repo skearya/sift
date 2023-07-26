@@ -6,7 +6,7 @@ import { API_KEY } from '$env/static/private';
 import type { Anime, SeasonalData } from '$lib/types';
 
 export const load = (async ({ locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 
 	async function fetchData() {
 		try {
@@ -34,7 +34,7 @@ export const load = (async ({ locals }) => {
 	async function fetchHistory() {
 		return await prisma.episode.findMany({
 			where: {
-				UserData: { user_id: user!.userId }
+				UserData: { user_id: session!.user?.userId }
 			},
 			orderBy: { createdAt: 'desc' },
 			take: 5

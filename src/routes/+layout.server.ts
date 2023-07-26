@@ -1,7 +1,10 @@
 import { loadFlash } from 'sveltekit-flash-message/server';
 
 export const load = loadFlash(async ({ url, locals }) => {
-	const { user } = await locals.auth.validateUser();
+	const session = await locals.auth.validate();
 
-	return { user, url: url.pathname };
+	return {
+		user: session?.user,
+		url: url.pathname
+	};
 });
