@@ -104,6 +104,7 @@
 		<div
 			transition:fade={{ duration: 150 }}
 			{...$overlay}
+			use:overlay
 			class="fixed inset-0 z-20 bg-background/80 backdrop-blur-sm"
 		/>
 		<div
@@ -132,7 +133,7 @@
 				{#if data?.message}
 					<h1 class="text-destructive">{data.message}</h1>
 				{:else}
-					<div class="mt-2 flex flex-wrap gap-2" in:slide>
+					<div class="mt-2 flex flex-wrap gap-2" in:slide|global>
 						<Tabs value={data[0]?.providerId} class="w-full">
 							<TabsList class={`mb-0 grid w-full grid-cols-1 sm:grid-cols-${data.length}`}>
 								{#each data as provider}
