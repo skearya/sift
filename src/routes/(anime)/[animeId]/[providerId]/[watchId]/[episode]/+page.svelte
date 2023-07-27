@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import toast from 'svelte-french-toast';
+	import { Button } from '$components/ui/button';
 	import { Separator } from '$components/ui/separator';
 	import HLS from 'hls.js';
 	import { defineCustomElements } from 'vidstack/elements';
@@ -13,6 +14,10 @@
 	export let data: PageData;
 	let interval: NodeJS.Timer;
 	let usingProxy: boolean = false;
+
+	let nextEp = data.episodes.episodes.find(
+		(episode) => episode.number == Number($page.params.episode) + 1
+	);
 
 	onMount(async () => {
 		await defineCustomElements();
@@ -143,9 +148,17 @@
 				</h1>
 			</div>
 
-			<h1 class="text-md ml-3 whitespace-nowrap text-muted-foreground md:text-lg">
-				Episode {$page.params.episode}
-			</h1>
+			{#if nextEp}
+				<Button
+					data-sveltekit-reload
+					href="/{$page.params.animeId}/{$page.params.providerId}/{encodeURIComponent(
+						nextEp.id
+					)}/{nextEp.number}{data.dubbed ? '/?subType=dub' : ''}"
+					size="sm"
+					variant="outline"
+					class="ml-3">Next Episode</Button
+				>
+			{/if}
 		</div>
 
 		<Separator class="my-4" />
