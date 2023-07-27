@@ -7,7 +7,11 @@ export const GET: RequestHandler = async ({ locals }) => {
 
 	if (session) {
 		await auth.invalidateSession(session.sessionId);
+
 		locals.auth.setSession(null);
+
+		await auth.deleteDeadUserSessions(session.user.userId);
+
 		throw redirect(303, '/login');
 	}
 

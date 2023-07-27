@@ -5,7 +5,7 @@
 	import { Input } from '$components/ui/input';
 	import { Separator } from '$components/ui/separator';
 	import { Lock } from 'lucide-svelte';
-	import Discord from '$lib/icons/Discord.svelte';
+	import { Discord } from '$lib/icons';
 
 	export let data;
 </script>

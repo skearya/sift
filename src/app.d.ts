@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 
+/// <reference types="lucia" />
 declare global {
 	namespace App {
 		interface Error {
@@ -14,11 +15,9 @@ declare global {
 		}
 		// interface Platform {}
 	}
-	var __prisma: PrismaClient;
-}
 
-/// <reference types="lucia" />
-declare global {
+	var __prisma: PrismaClient;
+
 	namespace Lucia {
 		type Auth = import('$lib/server/lucia').Auth;
 		type DatabaseUserAttributes = {

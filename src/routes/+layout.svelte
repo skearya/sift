@@ -57,28 +57,7 @@
 <nav class="sticky top-0 z-40 flex w-full flex-col border-b bg-primary-foreground px-6">
 	<div class="flex h-16 items-center justify-between">
 		<div class="flex items-center">
-			<a
-				href="/"
-				class="mr-5"
-				on:click={() => {
-					mocha++;
-
-					if (mocha > 20) {
-						let textNodes = document.getElementsByTagName('h1');
-
-						for (var i = 0; i < textNodes.length; i++) {
-							textNodes[i].textContent = 'mochalinky';
-						}
-
-						let imgNodes = document.getElementsByTagName('img');
-
-						for (var i = 0; i < imgNodes.length; i++) {
-							imgNodes[i].src =
-								'https://cdn.discordapp.com/avatars/254415959505240064/d86672c399eda0eee0269a289f8db065.webp?size=64';
-						}
-					}
-				}}>sift</a
-			>
+			<a href="/" class="mr-5">sift</a>
 		</div>
 
 		<div class="flex items-center gap-x-3">
@@ -104,7 +83,15 @@
 					</Toggle>
 				</div>
 
-				<Button href="/logout" variant="outline" class="flex h-10 items-center gap-x-3 px-3">
+				<Button
+					variant="outline"
+					class="flex h-10 items-center gap-x-3 px-3"
+					on:click={() => {
+						if (window.confirm('Are you sure you want to logout?')) {
+							goto('/logout');
+						}
+					}}
+				>
 					<img
 						class="h-7 w-7 rounded-full"
 						src={`https://avatar.vercel.sh/${data.user.username}?size=50`}

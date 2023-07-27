@@ -37,7 +37,7 @@ export const load = (async ({ locals }) => {
 				UserData: { user_id: session!.user?.userId }
 			},
 			orderBy: { createdAt: 'desc' },
-			take: 5
+			take: 6
 		});
 	}
 

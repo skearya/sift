@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import type { EpisodeData } from '$lib/types';
 	import { onMount } from 'svelte';
 	import { bestFallback } from '$lib/api';
 	import { Label } from '$components/ui/label';
@@ -9,11 +10,8 @@
 	import { Separator } from '$components/ui/separator';
 	import { Alert, AlertTitle } from '$components/ui/alert';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
-	import Kitsu from '$lib/icons/Kitsu.svelte';
-	import Simkl from '$lib/icons/Simkl.svelte';
-	import AniList from '$lib/icons/AniList.svelte';
 	import { AlertCircle, Play } from 'lucide-svelte';
-	import type { EpisodeData } from '$lib/types';
+	import { Kitsu, Simkl, AniList } from '$lib/icons';
 
 	onMount(() => {
 		let img = document.getElementById('img') as HTMLImageElement;
