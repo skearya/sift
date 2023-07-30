@@ -1,38 +1,32 @@
-# create-svelte
+# sift
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+<img width="1432" alt="image" src="https://github.com/skearya/sift/assets/77034153/5ea060de-0933-4dfc-839d-ac80eb375bf2">
 
-## Creating a project
+<details>
+  <summary>Screenshots</summary>
+  
+  <h5 align="center">Anime info</h5>
+  <img alt="image" src="https://github.com/skearya/sift/assets/77034153/e14a3380-9a05-44cc-bbb9-233b548e8369">
+  <h5 align="center">Episode player</h5>
+  <img alt="image" src="https://github.com/skearya/sift/assets/77034153/e7724523-d9bf-40a9-98e7-a987b85e08e1">
+</details>
 
-If you're seeing this, you've probably already done this step. Congrats!
-
+## Hosting
+`.env`
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
+API_KEY="anify api key (https://docs.anify.tv/)"
+PUBLIC_PROXY="instance of https://github.com/Eltik/M3U8-Proxy"
+DATABASE_URL="mysql db"
 
-# create a new project in my-app
-npm create svelte@latest my-app
+# needed for authentication 
+OWNER_ID="discord owner id"
+CLIENT_ID="discord app client id"
+CLIENT_SECRET="discord app client secret"
+REDIRECT_URI="<url where hosted>/oauth/discord"
 ```
 
-## Developing
+`/whitelist` to whitelist other users
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Acknowledgments
+- [Anify](https://docs.anify.tv/) and [Eltik](https://github.com/eltik)
+- [shadcn-svelte](https://www.shadcn-svelte.com/)
