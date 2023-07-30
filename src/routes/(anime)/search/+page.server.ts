@@ -13,7 +13,7 @@ export const load = (async ({ url }) => {
 				`search/anime/${encodeURIComponent(url.searchParams.get('query')!)}?apikey=${API_KEY}`
 			).json<Anime[]>();
 
-			(response as MinifiedAnime[]) = response.map((anime: Anime) => ({
+			let minifiedResponse: MinifiedAnime[] = response.map((anime: Anime) => ({
 				id: anime.id,
 				coverImage: anime.coverImage,
 				title: anime.title,
@@ -21,7 +21,7 @@ export const load = (async ({ url }) => {
 				fallback: bestFallback(anime.artwork)
 			}));
 
-			return response as MinifiedAnime[];
+			return minifiedResponse;
 		} catch (e: any) {
 			throw error(500, e.message);
 		}

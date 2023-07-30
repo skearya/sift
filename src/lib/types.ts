@@ -129,6 +129,14 @@ export interface EpisodeCovers {
 }
 
 export interface SeasonalData {
+	trending: Anime[];
+	popular: Anime[];
+	top: Anime[];
+	seasonal: Anime[];
+	[x: string]: Anime[];
+}
+
+export interface MinifiedSeasonalData {
 	trending: MinifiedAnime[];
 	popular: MinifiedAnime[];
 	top: MinifiedAnime[];

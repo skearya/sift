@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import type { HLSProvider } from 'vidstack';
 	import { PUBLIC_PROXY } from '$env/static/public';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
@@ -12,7 +13,6 @@
 	import 'vidstack/styles/community-skin/video.css';
 	import { AniList, Kitsu, Simkl } from '$lib/icons';
 	import { Play } from 'lucide-svelte';
-	import type { HLSProvider } from 'vidstack';
 
 	export let data: PageData;
 	let interval: ReturnType<typeof setInterval>;
@@ -145,7 +145,7 @@
 	</media-player>
 
 	<div class="p-4 md:p-6">
-		<div class="mb-4 space-y-1">
+		<div class="space-y-1">
 			<a
 				href="/{$page.params.animeId}"
 				class="text-2xl font-semibold tracking-tight transition-colors hover:text-blue-400 md:text-3xl"
@@ -165,7 +165,7 @@
 				)}/${nextEp.number}${data.dubbed ? '/?subType=dub' : ''}`}
 				variant="outline"
 				size="lg"
-				class="whitespace-nowrap">Next Episode</Button
+				class="mt-4 whitespace-nowrap">Next Episode</Button
 			>
 		{/if}
 	</div>

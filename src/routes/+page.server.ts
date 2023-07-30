@@ -3,17 +3,24 @@ import { error } from '@sveltejs/kit';
 import { api, bestFallback } from '$lib/api';
 import { prisma } from '$lib/server/prisma';
 import { API_KEY } from '$env/static/private';
-import type { Anime, SeasonalData } from '$lib/types';
+import type { Anime, MinifiedSeasonalData, SeasonalData } from '$lib/types';
 
 export const load = (async ({ locals }) => {
 	const session = await locals.auth.validate();
 
 	async function fetchData() {
 		try {
-			let response = await api(`seasonal/anime?apikey=${API_KEY}`).json<any>();
+			let response = await api(`seasonal/anime?apikey=${API_KEY}`).json<SeasonalData>();
+
+			let minifiedResponse: MinifiedSeasonalData = {
+				trending: [],
+				popular: [],
+				top: [],
+				seasonal: []
+			};
 
 			for (const collection in response) {
-				response[collection] = response[collection].map((anime: Anime) => ({
+				minifiedResponse[collection] = response[collection].map((anime: Anime) => ({
 					id: anime.id,
 					coverImage: anime.coverImage,
 					title: anime.title,
@@ -22,7 +29,7 @@ export const load = (async ({ locals }) => {
 				}));
 			}
 
-			return response as SeasonalData;
+			return minifiedResponse;
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching homepage data',
