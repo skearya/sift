@@ -6,7 +6,7 @@
   <summary>Screenshots</summary>
   
   <h5 align="center">Anime info</h5>
-  <img alt="image" src="https://github.com/skearya/sift/assets/77034153/945555a8-4b79-4c6d-bcb4-658b69661403">
+  <img alt="image" src="https://github.com/skearya/sift/assets/77034153/b60a1ccd-16f1-4a7d-82e8-15cfd196b65d">
   <h5 align="center">Episode player</h5>
   <img alt="image" src="https://github.com/skearya/sift/assets/77034153/c3fea2bb-a7f0-47c8-a4b8-7f8872f69772">
 </details>
