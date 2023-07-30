@@ -11,6 +11,7 @@ export const handle = (async ({ event, resolve }) => {
 		pathname.startsWith('/') &&
 		pathname != '/login' &&
 		pathname != '/logout' &&
+		pathname != '/dmca' &&
 		!pathname.startsWith('/oauth')
 	) {
 		if (!session || !session.user.authorized) {
