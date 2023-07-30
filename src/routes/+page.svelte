@@ -36,11 +36,13 @@
 				>
 					{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
 						<img src={episode.cover} alt="anime episode cover" class="max-h-28 object-cover" />
-						<Progress
-							value={((episode.progress || 0) / (episode.totalLength || 22)) * 100}
-							class="h-1 rounded-none"
-						/>
 					{/if}
+
+					<Progress
+						value={((episode.progress || 0) / (episode.totalLength || 22)) * 100}
+						class="h-1 rounded-none"
+					/>
+
 					<div
 						class={`flex items-center justify-between gap-x-4 p-4 ${
 							episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'
@@ -48,9 +50,7 @@
 								: 'h-full flex-col'
 						}`}
 					>
-						<h1
-							class="max-w-[12rem] whitespace-normal font-semibold transition-colors"
-						>
+						<h1 class="max-w-[12rem] whitespace-normal font-semibold transition-colors">
 							{episode.animeName}
 						</h1>
 						<h1 class="text-muted-foreground">
@@ -69,7 +69,7 @@
 
 		<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll">
 			{#each data.anime[collection] as anime, i}
-				<Card class="mb-3 flex flex-shrink-0 basis-[16rem] snap-start flex-col">
+				<Card class="flex flex-shrink-0 basis-[16rem] snap-start flex-col">
 					<CardHeader class="p-2 pb-0">
 						<img
 							src={anime.coverImage}

@@ -7,7 +7,6 @@
 	import { Badge } from '$components/ui/badge';
 	import { Switch } from '$components/ui/switch';
 	import { Button } from '$components/ui/button';
-	import { Separator } from '$components/ui/separator';
 	import { Alert, AlertTitle } from '$components/ui/alert';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
 	import { AlertCircle, Play } from 'lucide-svelte';
@@ -109,15 +108,13 @@
 	</div>
 
 	<div>
-		<div class="flex items-center justify-between text-4xl font-semibold">
+		<div class="flex items-center justify-between text-4xl font-semibold mb-6">
 			<h1>Episodes</h1>
 			<div class="flex items-center gap-3">
 				<Label class="text-sm text-muted-foreground">Dubbed</Label>
 				<Switch bind:rootChecked={checked} />
 			</div>
 		</div>
-
-		<Separator class="my-6" />
 
 		<Tabs value={checked ? dubbed[0]?.providerId : data?.episodes[0]?.providerId} class="w-full">
 			<TabsList

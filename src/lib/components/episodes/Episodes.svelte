@@ -146,14 +146,14 @@
 							</TabsList>
 
 							{#each data as provider}
-								<TabsContent value={provider.providerId} class="mt-4 max-h-40 overflow-y-auto">
+								<TabsContent value={provider.providerId} class="mt-3 max-h-40 overflow-y-auto">
 									<div class="mr-2 flex flex-wrap gap-2">
 										{#each provider.episodes as episode}
 											<a
 												href={`/${$animeId}/${provider.providerId}/${encodeURIComponent(
 													episode.id
 												)}/${episode.number}`}
-												class="rounded-md bg-muted px-4 py-2 text-black text-muted-foreground transition-all hover:bg-foreground hover:text-background dark:hover:bg-primary"
+												class="rounded-md bg-muted px-4 py-2 transition-all hover:bg-foreground hover:text-background dark:hover:bg-primary"
 											>
 												{episode.number}
 											</a>

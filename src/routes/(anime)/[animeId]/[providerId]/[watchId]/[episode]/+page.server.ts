@@ -15,10 +15,12 @@ export const load = (async ({ url, params, locals }) => {
 	async function fetchSource() {
 		try {
 			let response = await api(
-				`sources?providerId=${providerId}&watchId=${watchId}&episode=${episode}&id=${animeId}&subType=${
+				`sources?providerId=${providerId}&watchId=${encodeURIComponent(watchId)}&episode=${episode}&id=${animeId}&subType=${
 					url.searchParams.get('subType') || 'sub'
 				}&apikey=${API_KEY}`
 			).json<SourceInfo>();
+
+			if (response.sources.length == 0) throw new Error('No sources found');
 
 			for (const source of response.sources) {
 				if (source.quality == 'default' || source.quality == 'auto') {
@@ -135,15 +137,30 @@ export const load = (async ({ url, params, locals }) => {
 				}
 			}
 
-			const providerEpisodes = response.filter((provider) => provider.providerId == providerId)[0];
+			const providerEpisodes = response.find((provider) => provider.providerId == providerId);
 
 			if (providerEpisodes == undefined) {
 				throw Error(
 					`Episode could not be found on ${providerId} anymore, please try another provider`
 				);
-			} else {
-				return providerEpisodes;
 			}
+
+			if (url.searchParams.get('subType') == 'dub') {
+				let dubbed: EpisodeData[] = [];
+
+				response.forEach((provider) => {
+					if (provider.episodes.filter((episode) => episode.hasDub).length == 0) return;
+
+					dubbed[dubbed.length] = {
+						providerId: provider.providerId,
+						episodes: provider.episodes.filter((episode) => episode.hasDub)
+					};
+				});
+
+				return dubbed;
+			}
+
+			return response;
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching episode info',

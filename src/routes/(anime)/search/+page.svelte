@@ -78,10 +78,10 @@
 					<AlertDescription>Please try another search.</AlertDescription>
 				</Alert>
 			{/each}
-		{:catch error}
+		{:catch e}
 			<Alert variant="destructive">
 				<AlertTitle class="flex gap-x-2"><AlertCircle class="h-4 w-4" />Error</AlertTitle>
-				<AlertDescription>{error.message}</AlertDescription>
+				<AlertDescription>{e.message}</AlertDescription>
 			</Alert>
 		{/await}
 	</div>

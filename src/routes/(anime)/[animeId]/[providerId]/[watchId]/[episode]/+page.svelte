@@ -3,23 +3,39 @@
 	import { PUBLIC_PROXY } from '$env/static/public';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { bestFallback } from '$lib/api';
 	import toast from 'svelte-french-toast';
 	import { Button } from '$components/ui/button';
-	import { Separator } from '$components/ui/separator';
 	import HLS from 'hls.js';
 	import { defineCustomElements } from 'vidstack/elements';
 	import 'vidstack/styles/defaults.css';
 	import 'vidstack/styles/community-skin/video.css';
+	import { AniList, Kitsu, Simkl } from '$lib/icons';
+	import { Play } from 'lucide-svelte';
+	import type { HLSProvider } from 'vidstack';
 
 	export let data: PageData;
 	let interval: NodeJS.Timer;
 	let usingProxy: boolean = false;
 
-	let nextEp = data.episodes.episodes.find(
+	let currentProvider = data.episodes.find(
+		(provider) => provider.providerId == $page.params.providerId
+	)!;
+
+	let nextEp = currentProvider.episodes.find(
 		(episode) => episode.number == Number($page.params.episode) + 1
 	);
 
+	let kitsuId = data.info.mappings.find((provider) => provider.providerId === 'kitsu')?.id;
+	let simklId = data.info.mappings.find((provider) => provider.providerId === 'simkl')?.id;
+
 	onMount(async () => {
+		let cover = document.getElementById('cover') as HTMLImageElement;
+
+		if (cover.naturalWidth === 0 && cover.naturalHeight === 0) {
+			cover.src = bestFallback(data.info.artwork);
+		}
+
 		await defineCustomElements();
 
 		const player = document.querySelector('media-player')!;
@@ -51,22 +67,16 @@
 			const provider = event.detail;
 
 			if (provider?.type === 'hls') {
-				// @ts-expect-error
-				provider.library = HLS;
+				(provider as HLSProvider).library = HLS;
 			}
 		});
 
 		player.addEventListener('error', (event) => {
-			if ((event.detail.message = 'Failed to open media')) {
-				useProxy();
-			}
+			if ((event.detail.message = 'Failed to open media')) useProxy();
 		});
 
 		player.addEventListener('hls-error', (event) => {
-			// @ts-expect-error
-			if ((event.detail.details = 'manifestLoadError')) {
-				useProxy();
-			}
+			if (event.detail.fatal) useProxy();
 		});
 
 		player.addEventListener('destroy', () => {
@@ -135,51 +145,126 @@
 	</media-player>
 
 	<div class="p-4 md:p-6">
-		<div class="flex items-center justify-between">
-			<div class="space-y-1">
-				<a
-					href="/{$page.params.animeId}"
-					class="text-2xl font-semibold tracking-tight transition-colors hover:text-blue-400 md:text-3xl"
-					>{data.info.title.romaji}</a
-				>
-				<h1 class="text-md capitalize text-muted-foreground md:text-lg">
-					{data.info.season}
-					{data.info.year}
-				</h1>
-			</div>
-
-			{#if nextEp}
-				<Button
-					data-sveltekit-reload
-					href="/{$page.params.animeId}/{$page.params.providerId}/{encodeURIComponent(
-						nextEp.id
-					)}/{nextEp.number}{data.dubbed ? '/?subType=dub' : ''}"
-					size="sm"
-					variant="outline"
-					class="ml-3">Next Episode</Button
-				>
-			{/if}
+		<div class="space-y-1 mb-4">
+			<a
+				href="/{$page.params.animeId}"
+				class="text-2xl font-semibold tracking-tight transition-colors hover:text-blue-400 md:text-3xl"
+				>{data.info.title.romaji}
+			</a>
+			<h1 class="text-md capitalize text-muted-foreground md:text-lg">
+				{data.info.season}
+				{data.info.year}
+			</h1>
 		</div>
 
-		<Separator class="my-4" />
+		{#if nextEp}
+			<Button
+				data-sveltekit-reload
+				href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
+					nextEp.id
+				)}/${nextEp.number}${data.dubbed ? '/?subType=dub' : ''}`}
+				variant="outline"
+				size="lg"
+				class="whitespace-nowrap">Next Episode</Button
+			>
+		{/if}
+	</div>
 
-		<div class="flex gap-2 overflow-x-auto">
-			{#each data.episodes?.episodes as episode}
+	<div class="border-t p-4 md:p-6">
+		<div class="flex text-center rounded-md bg-muted text-muted-foreground p-1 w-min mb-3">
+			{#each data.episodes as provider}
+				{@const episode = provider.episodes.find(
+					(episode) => episode.number == Number($page.params.episode)
+				)}
+				{#if episode?.id && episode?.number}
+					<a
+						data-sveltekit-reload
+						href={`/${$page.params.animeId}/${provider.providerId}/${encodeURIComponent(
+							episode.id
+						)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}
+						class={`rounded-sm px-3 py-1.5 text-sm font-medium cursor-pointer transition-all hover:text-foreground ${
+							provider.providerId == currentProvider.providerId
+								? 'bg-background text-foreground'
+								: ''
+						}`}
+					>
+						<h1>{provider.providerId}</h1>
+					</a>
+				{/if}
+			{/each}
+		</div>
+
+		<div class="flex flex-wrap gap-2 overflow-y-auto bg-muted p-1 rounded-md max-h-48">
+			{#each currentProvider.episodes as episode}
 				<a
 					data-sveltekit-reload
-					href="/{$page.params.animeId}/{$page.params.providerId}/{encodeURIComponent(
+					href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
 						episode.id
-					)}/{episode.number}{data.dubbed ? '/?subType=dub' : ''}"
+					)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}
 					id={String(episode.number)}
 					class={`rounded-sm ${
 						episode.number == Number($page.params.episode)
-							? 'bg-foreground text-background'
-							: 'bg-muted'
-					} mb-3 px-4 py-2 text-muted-foreground transition-all hover:bg-foreground hover:text-background dark:hover:bg-primary`}
+							? 'bg-background text-foreground'
+							: 'text-muted-foreground'
+					} px-4 py-2 transition-all font-medium hover:bg-background hover:text-foreground`}
 				>
 					{episode.number}
 				</a>
 			{/each}
+		</div>
+	</div>
+
+	<div class="border-t p-4 md:p-6">
+		<div class="flex flex-col gap-8 md:flex-row">
+			<div class="max-w-[15rem] flex-shrink-0 space-y-3 self-center md:self-start">
+				<img
+					id="cover"
+					src={data.info.coverImage}
+					alt="anime cover"
+					class="rounded-md object-cover shadow"
+				/>
+				{#if data.info.trailer !== '' && data.info.trailer !== 'https://youtube.com/watch?v=undefined'}
+					<Button
+						href={data.info.trailer}
+						target="_blank"
+						class="w-full text-base font-bold underline-offset-4 hover:underline"
+					>
+						<Play size="22" class="mr-2" /> Trailer
+					</Button>
+				{/if}
+				<div class="flex gap-x-2">
+					<Button
+						href={`https://anilist.co/anime/${data.info.id}`}
+						target="_blank"
+						variant="outline"
+						class="flex-1 bg-foreground dark:bg-background"
+					>
+						<AniList />
+					</Button>
+					{#if kitsuId}
+						<Button
+							href={`https://kitsu.io/anime/${kitsuId}`}
+							target="_blank"
+							variant="outline"
+							class="flex-1 bg-foreground dark:bg-background"
+						>
+							<Kitsu />
+						</Button>
+					{/if}
+					{#if simklId}
+						<Button
+							href={`https://simkl.com/anime/${simklId}`}
+							target="_blank"
+							variant="outline"
+							class="flex-1 bg-foreground dark:bg-background"
+						>
+							<Simkl />
+						</Button>
+					{/if}
+				</div>
+			</div>
+
+			<div>{@html data.info.description}</div>
 		</div>
 	</div>
 </section>
