@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
 	import { Button } from '$components/ui/button';
 	import { Progress } from '$components/ui/progress';
 	import { animeId, toastState } from '$components/episodes';
 	import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from '$components/ui/card';
-	import { onMount } from 'svelte';
 
 	export let data: PageData;
 

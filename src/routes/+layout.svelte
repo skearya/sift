@@ -37,12 +37,11 @@
 	let dropdown: boolean;
 
 	$: if ($navigating) dropdown = false;
-
-	let mocha: number = 0;
 </script>
 
 <svelte:head>
 	{@html `<script nonce="%sveltekit.nonce%">(${setInitialClassState.toString()})();</script>`}
+	<title>sift</title>
 </svelte:head>
 
 {#if $navigating}
@@ -104,6 +103,7 @@
 			<LightSwitch />
 		</div>
 	</div>
+
 	{#if dropdown}
 		<form
 			transition:slide
@@ -143,6 +143,8 @@
 					>
 						Anify
 					</a>
+					|
+					<a href="/dmca" class="text-blue-400 hover:text-gray-500">DMCA</a>
 				</span>
 			</div>
 		</div>

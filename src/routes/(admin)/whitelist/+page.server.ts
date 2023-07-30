@@ -2,7 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { prisma } from '$lib/server/prisma';
 import { error } from '@sveltejs/kit';
 import { OWNER_ID } from '$env/static/private';
-import { redirect } from 'sveltekit-flash-message/server';
+import { redirect, setFlash } from 'sveltekit-flash-message/server';
 
 export const load = (async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -28,6 +28,10 @@ export const actions = {
 
 		if (!id || !value) throw error(400, 'Bad request');
 
+		if (id == session!.user?.userId) {
+			return setFlash({ type: 'error', message: 'You cant deauthorize yourself!' }, event);
+		}
+
 		try {
 			await prisma.authUser.update({
 				where: {
@@ -41,6 +45,6 @@ export const actions = {
 			throw error(500, 'Error updating user');
 		}
 
-		throw redirect(303, '/whitelist', { type: 'success', message: 'User updated' }, event);
+		return setFlash({ type: 'success', message: 'User updated' }, event);
 	}
 } satisfies Actions;
