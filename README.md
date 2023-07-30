@@ -1,14 +1,14 @@
 # sift
 
-<img width="1432" alt="image" src="https://github.com/skearya/sift/assets/77034153/5ea060de-0933-4dfc-839d-ac80eb375bf2">
+<img width="1434" alt="image" src="https://github.com/skearya/sift/assets/77034153/8b406d82-6dd1-4aa3-b9c6-3f5be5ef47f1">
 
 <details>
   <summary>Screenshots</summary>
   
   <h5 align="center">Anime info</h5>
-  <img alt="image" src="https://github.com/skearya/sift/assets/77034153/e14a3380-9a05-44cc-bbb9-233b548e8369">
+  <img alt="image" src="https://github.com/skearya/sift/assets/77034153/945555a8-4b79-4c6d-bcb4-658b69661403">
   <h5 align="center">Episode player</h5>
-  <img alt="image" src="https://github.com/skearya/sift/assets/77034153/e7724523-d9bf-40a9-98e7-a987b85e08e1">
+  <img alt="image" src="https://github.com/skearya/sift/assets/77034153/c3fea2bb-a7f0-47c8-a4b8-7f8872f69772">
 </details>
 
 ## Hosting
