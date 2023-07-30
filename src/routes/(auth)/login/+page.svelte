@@ -21,7 +21,7 @@
 			<Separator class="my-2" />
 
 			<Button variant="outline" href="/oauth" class="w-full space-x-3">
-				<div class="dark:invert-0 invert">
+				<div class="invert dark:invert-0">
 					<Discord />
 				</div>
 				<h1>Discord</h1>

@@ -1,1 +1,1 @@
-export { default as AspectRatio } from "./AspectRatio.svelte";
+export { default as AspectRatio } from './AspectRatio.svelte';

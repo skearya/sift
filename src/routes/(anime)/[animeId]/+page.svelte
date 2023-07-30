@@ -108,7 +108,7 @@
 	</div>
 
 	<div>
-		<div class="flex items-center justify-between text-4xl font-semibold mb-6">
+		<div class="mb-6 flex items-center justify-between text-4xl font-semibold">
 			<h1>Episodes</h1>
 			<div class="flex items-center gap-3">
 				<Label class="text-sm text-muted-foreground">Dubbed</Label>

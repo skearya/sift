@@ -61,7 +61,7 @@ Derived from SkeletonUI:  https://github.com/skeletonlabs/skeleton/blob/master/p
 				size: 'sm',
 				variant: 'ghost'
 			}),
-			'h-10 px-0 w-10'
+			'h-10 w-10 px-0'
 		)}
 	>
 		{#if $modeCurrent}

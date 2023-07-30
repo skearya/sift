@@ -10,7 +10,7 @@
 	import ky from 'ky-universal';
 
 	let longLoading: boolean = false;
-	let timeout: NodeJS.Timeout;
+	let timeout: ReturnType<typeof setInterval>;
 
 	const { portal, overlay, content, title, close, open } = createDialog({ preventScroll: false });
 

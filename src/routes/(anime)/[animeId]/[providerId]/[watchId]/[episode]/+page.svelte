@@ -15,7 +15,7 @@
 	import type { HLSProvider } from 'vidstack';
 
 	export let data: PageData;
-	let interval: NodeJS.Timer;
+	let interval: ReturnType<typeof setInterval>;
 	let usingProxy: boolean = false;
 
 	let currentProvider = data.episodes.find(
@@ -145,7 +145,7 @@
 	</media-player>
 
 	<div class="p-4 md:p-6">
-		<div class="space-y-1 mb-4">
+		<div class="mb-4 space-y-1">
 			<a
 				href="/{$page.params.animeId}"
 				class="text-2xl font-semibold tracking-tight transition-colors hover:text-blue-400 md:text-3xl"
@@ -171,7 +171,7 @@
 	</div>
 
 	<div class="border-t p-4 md:p-6">
-		<div class="flex text-center rounded-md bg-muted text-muted-foreground p-1 w-min mb-3">
+		<div class="mb-3 flex w-min rounded-md bg-muted p-1 text-center text-muted-foreground">
 			{#each data.episodes as provider}
 				{@const episode = provider.episodes.find(
 					(episode) => episode.number == Number($page.params.episode)
@@ -182,7 +182,7 @@
 						href={`/${$page.params.animeId}/${provider.providerId}/${encodeURIComponent(
 							episode.id
 						)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}
-						class={`rounded-sm px-3 py-1.5 text-sm font-medium cursor-pointer transition-all hover:text-foreground ${
+						class={`cursor-pointer rounded-sm px-3 py-1.5 text-sm font-medium transition-all hover:text-foreground ${
 							provider.providerId == currentProvider.providerId
 								? 'bg-background text-foreground'
 								: ''
@@ -194,7 +194,7 @@
 			{/each}
 		</div>
 
-		<div class="flex flex-wrap gap-2 overflow-y-auto bg-muted p-1 rounded-md max-h-48">
+		<div class="flex max-h-48 flex-wrap gap-2 overflow-y-auto rounded-md bg-muted p-1">
 			{#each currentProvider.episodes as episode}
 				<a
 					data-sveltekit-reload
@@ -206,7 +206,7 @@
 						episode.number == Number($page.params.episode)
 							? 'bg-background text-foreground'
 							: 'text-muted-foreground'
-					} px-4 py-2 transition-all font-medium hover:bg-background hover:text-foreground`}
+					} px-4 py-2 font-medium transition-all hover:bg-background hover:text-foreground`}
 				>
 					{episode.number}
 				</a>

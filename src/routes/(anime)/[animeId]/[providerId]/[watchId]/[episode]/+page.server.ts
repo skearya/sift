@@ -15,7 +15,9 @@ export const load = (async ({ url, params, locals }) => {
 	async function fetchSource() {
 		try {
 			let response = await api(
-				`sources?providerId=${providerId}&watchId=${encodeURIComponent(watchId)}&episode=${episode}&id=${animeId}&subType=${
+				`sources?providerId=${providerId}&watchId=${encodeURIComponent(
+					watchId
+				)}&episode=${episode}&id=${animeId}&subType=${
 					url.searchParams.get('subType') || 'sub'
 				}&apikey=${API_KEY}`
 			).json<SourceInfo>();
