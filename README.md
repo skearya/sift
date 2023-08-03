@@ -11,6 +11,14 @@
   <img alt="image" src="https://github.com/skearya/sift/assets/77034153/c3fea2bb-a7f0-47c8-a4b8-7f8872f69772">
 </details>
 
+## Info
+- Full stack framework: [SvelteKit](https://kit.svelte.dev/)
+- ORM: [Prisma](https://www.prisma.io/)
+- Auth library: [Lucia](https://lucia-auth.com/)
+- Video player: [Vidstack](https://www.vidstack.io/)
+- TypeScript
+- TailwindCSS
+
 ## Hosting
 `.env`
 ```bash
