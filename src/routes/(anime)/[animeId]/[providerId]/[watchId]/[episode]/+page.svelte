@@ -30,10 +30,12 @@
 	let simklId = data.info.mappings.find((provider) => provider.providerId === 'simkl')?.id;
 
 	onMount(async () => {
-		let cover = document.getElementById('cover') as HTMLImageElement;
+		let img = document.getElementsByTagName('img');
 
-		if (cover.naturalWidth === 0 && cover.naturalHeight === 0) {
-			cover.src = bestFallback(data.info.artwork);
+		for (let i = 0; i < img.length; i++) {
+			if (img[i].naturalWidth === 0 && img[i].naturalHeight === 0) {
+				img[i].src = img[i].getAttribute('data-fallback') || img[i].src;
+			}
 		}
 
 		await defineCustomElements();
@@ -146,28 +148,30 @@
 
 	<div class="p-4 md:p-6">
 		<div class="space-y-1">
-			<a
-				href="/{$page.params.animeId}"
-				class="text-2xl font-semibold tracking-tight transition-colors hover:text-blue-400 md:text-3xl"
-				>{data.info.title.romaji}
-			</a>
+			<h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
+				{data.info.title.romaji}
+			</h1>
 			<h1 class="text-md capitalize text-muted-foreground md:text-lg">
 				{data.info.season}
 				{data.info.year}
 			</h1>
 		</div>
 
-		{#if nextEp}
-			<Button
-				data-sveltekit-reload
-				href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
-					nextEp.id
-				)}/${nextEp.number}${data.dubbed ? '/?subType=dub' : ''}`}
-				variant="outline"
-				size="lg"
-				class="mt-4 whitespace-nowrap">Next Episode</Button
-			>
-		{/if}
+		<div class="mt-4 flex gap-x-3">
+			<Button href={`/${$page.params.animeId}`} size="lg">Anime Info</Button>
+
+			{#if nextEp}
+				<Button
+					data-sveltekit-reload
+					href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
+						nextEp.id
+					)}/${nextEp.number}${data.dubbed ? '/?subType=dub' : ''}`}
+					variant="outline"
+					size="lg"
+					class="whitespace-nowrap">Next Episode</Button
+				>
+			{/if}
+		</div>
 	</div>
 
 	<div class="border-t p-4 md:p-6">
@@ -218,10 +222,17 @@
 		<div class="flex flex-col gap-8 md:flex-row">
 			<div class="max-w-[15rem] flex-shrink-0 space-y-3 self-center md:self-start">
 				<img
-					id="cover"
 					src={data.info.coverImage}
 					alt="anime cover"
 					class="rounded-md object-cover shadow"
+					data-fallback={bestFallback(data.info.artwork)}
+					on:error={(event) => {
+						// @ts-ignore
+						if (event.target.src !== bestFallback(data.info.artwork)) {
+							// @ts-ignore
+							event.target.src = bestFallback(data.info.artwork);
+						}
+					}}
 				/>
 				{#if data.info.trailer !== '' && data.info.trailer !== 'https://youtube.com/watch?v=undefined'}
 					<Button

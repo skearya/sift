@@ -13,17 +13,19 @@
 
 		for (let i = 0; i < img.length; i++) {
 			if (img[i].naturalWidth === 0 && img[i].naturalHeight === 0) {
-				img[i].src = img[i].getAttribute('fallback') || img[i].src;
+				img[i].src = img[i].getAttribute('data-fallback') || img[i].src;
 			}
 		}
 	});
 </script>
 
-<section class="container px-6 lg:px-8">
+<section class="container border-x px-0">
 	{#if data.history?.length > 0}
-		<h1 class="mb-5 mt-8 text-2xl font-semibold tracking-tight lg:text-3xl">Continue Watching</h1>
+		<h1 class="pl-6 pt-8 pb-6 text-2xl font-semibold tracking-tight lg:pl-8 lg:text-3xl">
+			Continue Watching
+		</h1>
 
-		<div class="flex items-stretch gap-3 overflow-x-auto">
+		<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto">
 			{#each data.history as episode}
 				<a
 					href={`/${episode.animeId}/${episode.providerId}/${encodeURIComponent(episode.watchId)}/${
@@ -32,7 +34,7 @@
 						time: String(episode.progress),
 						subType: episode.dubbed ? 'dub' : 'sub'
 					})}`}
-					class="mb-3 flex min-h-full min-w-max flex-col overflow-hidden whitespace-nowrap rounded-md border"
+					class="mb-3 flex min-h-full min-w-max snap-start scroll-ml-8 flex-col overflow-hidden whitespace-nowrap rounded-md border first:ml-6 last:mr-6 lg:first:ml-8 lg:last:mr-8"
 				>
 					{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
 						<img src={episode.cover} alt="anime episode cover" class="max-h-28 object-cover" />
@@ -63,13 +65,17 @@
 	{/if}
 
 	{#each Object.keys(data.anime) as collection}
-		<h1 class="mb-5 mt-8 text-2xl font-semibold tracking-tight first-letter:uppercase lg:text-3xl">
+		<h1
+			class="pl-6 pt-8 pb-6 text-2xl font-semibold tracking-tight first-letter:uppercase lg:pl-8 lg:text-3xl"
+		>
 			{collection}
 		</h1>
 
 		<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll">
 			{#each data.anime[collection] as anime, i}
-				<Card class="flex flex-shrink-0 basis-[16rem] snap-start flex-col">
+				<Card
+					class="flex flex-shrink-0 basis-[16rem] snap-start scroll-ml-8 flex-col first:ml-6 last:mr-6 lg:first:ml-8 lg:last:mr-8"
+				>
 					<CardHeader class="p-2 pb-0">
 						<img
 							src={anime.coverImage}
@@ -78,7 +84,9 @@
 							class="h-96 w-full rounded-md object-cover"
 							data-fallback={anime.fallback}
 							on:error={(event) => {
+								// @ts-ignore
 								if (event.target.src !== anime.fallback) {
+									// @ts-ignore
 									event.target.src = anime.fallback;
 								}
 							}}
@@ -107,5 +115,5 @@
 		</div>
 	{/each}
 
-	<div class="mt-10" />
+	<div class="pt-8" />
 </section>
