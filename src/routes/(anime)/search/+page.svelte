@@ -60,15 +60,15 @@
 						</CardDescription>
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
-						<button
+						<Button
 							on:click={() => {
 								animeId.set(Number(anime.id));
 								toastState.set(true);
 							}}
-							class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-accent hover:text-foreground"
+							class="w-full hover:bg-accent hover:text-foreground"
 						>
 							Watch
-						</button>
+						</Button>
 						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 					</CardFooter>
 				</Card>

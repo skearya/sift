@@ -22,7 +22,7 @@
 <section class="container border-x px-0">
 	{#if data.history?.length > 0}
 		<h1 class="pb-6 pl-6 pt-8 text-2xl font-semibold tracking-tight lg:pl-8 lg:text-3xl">
-			Continue Watching
+			<a href="/history" class="hover:underline">Continue Watching</a>
 		</h1>
 
 		<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto">
@@ -39,12 +39,10 @@
 					{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
 						<img src={episode.cover} alt="anime episode cover" class="max-h-28 object-cover" />
 					{/if}
-
 					<Progress
 						value={((episode.progress || 0) / (episode.totalLength || 22)) * 100}
 						class="h-1 rounded-none"
 					/>
-
 					<div
 						class={`flex items-center justify-between gap-x-4 p-4 ${
 							episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'
@@ -87,19 +85,19 @@
 					<div class="space-y-1.5 p-6">
 						<CardTitle>{anime.title.romaji || anime.id}</CardTitle>
 						<CardDescription class="flex justify-between">
-							<h1>Episode {anime.episodeNumber}</h1>
+							<h1>EP {anime.episodeNumber}</h1>
 						</CardDescription>
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
-						<button
+						<Button
 							on:click={() => {
 								animeId.set(Number(anime.id));
 								toastState.set(true);
 							}}
-							class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-accent hover:text-foreground"
+							class="w-full hover:bg-accent hover:text-foreground"
 						>
 							Watch
-						</button>
+						</Button>
 						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 					</CardFooter>
 				</Card>
@@ -142,15 +140,15 @@
 						</CardDescription>
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
-						<button
+						<Button
 							on:click={() => {
 								animeId.set(Number(anime.id));
 								toastState.set(true);
 							}}
-							class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-accent hover:text-foreground"
+							class="w-full hover:bg-accent hover:text-foreground"
 						>
 							Watch
-						</button>
+						</Button>
 						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
 					</CardFooter>
 				</Card>
