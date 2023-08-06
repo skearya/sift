@@ -38,6 +38,16 @@ export const load = (async ({ locals }) => {
 		}
 	}
 
+	async function fetchRecent() {
+		try {
+			return await api(`meta/anilist/recent-episodes`, {
+				prefixUrl: 'https://api.consumet.org/'
+			}).json<ConsumetRecent>();
+		} catch (e: any) {
+			return {} as ConsumetRecent;
+		}
+	}
+
 	async function fetchHistory() {
 		return await prisma.episode.findMany({
 			where: {
@@ -50,6 +60,36 @@ export const load = (async ({ locals }) => {
 
 	return {
 		anime: fetchData(),
+		recent: fetchRecent(),
 		history: fetchHistory()
 	};
 }) satisfies PageServerLoad;
+
+interface ConsumetRecent {
+	currentPage: number;
+	hasNextPage: boolean;
+	totalPages: number;
+	totalResults: number;
+	results: Result[];
+}
+
+interface Result {
+	id: string;
+	malId: number;
+	title: Title;
+	image: string;
+	rating?: number;
+	color: string;
+	episodeId: string;
+	episodeTitle: string;
+	episodeNumber: number;
+	genres: string[];
+	type: string;
+}
+
+interface Title {
+	romaji: string;
+	english?: string;
+	native: string;
+	userPreferred: string;
+}
