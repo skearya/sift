@@ -16,7 +16,11 @@
 				class="group relative flex min-h-full min-w-max flex-1 flex-col whitespace-nowrap rounded-md border"
 			>
 				{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
-					<img src={episode.cover} alt="anime episode cover" class="max-h-28 object-cover" />
+					<img
+						src={episode.cover}
+						alt="anime episode cover"
+						class="max-h-28 rounded-t-md object-cover"
+					/>
 					<Progress
 						value={((episode.progress || 0) / (episode.totalLength || 22)) * 100}
 						class="h-1 rounded-none"

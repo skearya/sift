@@ -134,7 +134,7 @@
 					<h1 class="text-destructive">{data.message}</h1>
 				{:else}
 					<div class="mt-2 flex flex-wrap gap-2" in:slide|global>
-						<Tabs value={data[0]?.providerId} class="w-full">
+						<Tabs value={data[0]?.providerId} class="w-full" activateOn={'click'}>
 							<TabsList class={`mb-0 grid w-full grid-cols-1 sm:grid-cols-${data.length}`}>
 								{#each data as provider}
 									<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
