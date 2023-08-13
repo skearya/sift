@@ -59,7 +59,7 @@ export const load = (async ({ locals }) => {
 	}
 
 	return {
-		anime: {},
+		anime: fetchData(),
 		recent: fetchRecent(),
 		history: fetchHistory()
 	};
