@@ -50,7 +50,7 @@
 								: 'h-full flex-col'
 						}`}
 					>
-						<h1 class="max-w-[12rem] whitespace-normal font-semibold transition-colors">
+						<h1 class="max-w-[12rem] whitespace-normal font-semibold transition-colors line-clamp-2">
 							{episode.animeName}
 						</h1>
 						<h1 class="text-muted-foreground">
@@ -83,7 +83,7 @@
 						/>
 					</CardHeader>
 					<div class="space-y-1.5 p-6">
-						<CardTitle>{anime.title.romaji || anime.id}</CardTitle>
+						<CardTitle class="line-clamp-3">{anime.title.romaji || anime.id}</CardTitle>
 						<CardDescription class="flex justify-between">
 							<h1>EP {anime.episodeNumber}</h1>
 						</CardDescription>
@@ -134,7 +134,7 @@
 						/>
 					</CardHeader>
 					<div class="space-y-1.5 p-6">
-						<CardTitle>{anime.title.romaji || anime.id}</CardTitle>
+						<CardTitle class="line-clamp-3">{anime.title.romaji || anime.id}</CardTitle>
 						<CardDescription class="flex justify-between">
 							<h1>{anime.year || ''}</h1>
 						</CardDescription>

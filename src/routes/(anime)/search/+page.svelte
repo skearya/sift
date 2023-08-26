@@ -54,7 +54,7 @@
 						/>
 					</CardHeader>
 					<div class="space-y-1.5 p-6">
-						<CardTitle>{anime.title.romaji || ''}</CardTitle>
+						<CardTitle class="line-clamp-3">{anime.title.romaji || ''}</CardTitle>
 						<CardDescription class="flex justify-between">
 							<h1>{anime.year || ''}</h1>
 						</CardDescription>
