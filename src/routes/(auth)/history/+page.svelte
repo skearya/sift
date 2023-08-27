@@ -13,7 +13,7 @@
 	<div class="flex flex-wrap gap-3 pb-3">
 		{#each data.history as episode}
 			<div
-				class="group relative flex min-h-full min-w-max flex-1 flex-col whitespace-nowrap rounded-md border"
+				class="group relative flex min-h-full min-w-max max-w-md flex-1 flex-col whitespace-nowrap rounded-md border"
 			>
 				{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
 					<img
@@ -42,7 +42,9 @@
 								: 'h-full flex-col'
 						}`}
 					>
-						<h1 class="max-w-[12rem] whitespace-normal font-semibold transition-colors">
+						<h1
+							class="line-clamp-3 max-w-[12rem] whitespace-normal font-semibold transition-colors"
+						>
 							{episode.animeName}
 						</h1>
 						<h1 class="text-muted-foreground">

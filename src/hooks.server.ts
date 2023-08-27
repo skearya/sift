@@ -9,6 +9,7 @@ export const handle = (async ({ event, resolve }) => {
 
 	if (
 		pathname.startsWith('/') &&
+		pathname != '/create' &&
 		pathname != '/login' &&
 		pathname != '/logout' &&
 		pathname != '/dmca' &&

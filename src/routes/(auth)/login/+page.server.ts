@@ -2,6 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { setFlash, redirect } from 'sveltekit-flash-message/server';
 import { fail } from '@sveltejs/kit';
 import { auth } from '$lib/server/lucia';
+import { prisma } from '$lib/server/prisma';
 
 export const load = (async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -18,8 +19,7 @@ export const actions: Actions = {
 		const password = form.get('password');
 
 		if (typeof username !== 'string' || typeof password !== 'string') {
-			setFlash({ type: 'error', message: 'Missing values' }, event);
-			return fail(400);
+			return setFlash({ type: 'error', message: 'Missing values' }, event);
 		}
 
 		try {
@@ -32,8 +32,7 @@ export const actions: Actions = {
 
 			locals.auth.setSession(session);
 		} catch {
-			setFlash({ type: 'error', message: 'Invalid username or password' }, event);
-			return fail(400);
+			return setFlash({ type: 'error', message: 'Invalid username/password' }, event);
 		}
 
 		throw redirect(302, '/', { type: 'success', message: 'Logged in' }, event);

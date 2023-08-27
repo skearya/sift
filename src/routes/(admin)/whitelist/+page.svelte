@@ -41,6 +41,8 @@
 							class="mt-[2px] flex items-end justify-end"
 						>
 							<input name="id" type="hidden" class="hidden" hidden value={user.id} />
+							<input name="discordId" type="hidden" class="hidden" hidden value={user.discordId} />
+							<input name="username" type="hidden" class="hidden" hidden value={user.username} />
 							<input
 								name="authorized"
 								type="hidden"

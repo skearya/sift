@@ -26,6 +26,8 @@
 				</div>
 				<h1>Discord</h1>
 			</Button>
+
+			<Button variant="link" href="/create">Create Account</Button>
 		</form>
 	{:else}
 		<Alert class="w-min whitespace-nowrap" variant="destructive">
