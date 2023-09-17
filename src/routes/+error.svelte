@@ -1,12 +1,28 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { animeId as animeIdStore, toastState } from '$components/episodes';
+	import { Button } from '$components/ui/button';
 	import { Separator } from '$components/ui/separator';
+
+	let { animeId, providerId, watchId, episode } = $page.params;
 </script>
 
 <section class="container flex h-[calc(100vh-65px)] items-center justify-center">
 	<div class="rounded-lg border border-destructive p-4">
 		<h1 class="text-4xl">{$page.status}</h1>
 		<h1 class="text-lg">{$page.error?.message || 'An error occurred'}</h1>
+
+		{#if animeId && providerId && watchId && episode}
+			<Button
+				on:click={() => {
+					animeIdStore.set(Number(animeId));
+					toastState.set(true);
+				}}
+				class="my-2 w-full"
+			>
+				Alternative Providers
+			</Button>
+		{/if}
 
 		{#if $page.error?.info}
 			<Separator class="my-2 bg-destructive" />

@@ -30,6 +30,8 @@ export const load = (async ({ url, params, locals }) => {
 					break;
 				}
 			}
+			
+			if (response.default == undefined) throw new Error('No playable sources found');
 
 			return response;
 		} catch (e: any) {
