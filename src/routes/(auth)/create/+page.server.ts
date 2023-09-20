@@ -1,7 +1,7 @@
 import type { PageServerLoad, Actions } from './$types';
 import { setFlash, redirect } from 'sveltekit-flash-message/server';
 import { auth } from '$lib/server/lucia';
-import { OWNER_USERNAME } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { prisma } from '$lib/server/prisma';
 
 export const load = (async ({ locals }) => {
@@ -34,7 +34,7 @@ export const actions: Actions = {
 			attributes: {
 				username,
 				discordId: 'none',
-				authorized: username == OWNER_USERNAME ? true : false
+				authorized: username == env?.OWNER_USERNAME ? true : false
 			}
 		});
 
@@ -54,7 +54,7 @@ export const actions: Actions = {
 				}
 			}
 		});
-		
+
 		throw redirect(302, '/', { type: 'success', message: 'Created user' }, event);
 	}
 };

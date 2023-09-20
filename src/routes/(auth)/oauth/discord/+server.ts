@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 import { auth, discordAuth } from '$lib/server/lucia';
 import { redirect } from 'sveltekit-flash-message/server';
 import { error } from '@sveltejs/kit';
-import { OWNER_ID } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { prisma } from '$lib/server/prisma';
 
 export const GET: RequestHandler = async (event) => {
@@ -30,7 +30,7 @@ export const GET: RequestHandler = async (event) => {
 				attributes: {
 					discordId: discordUser.id,
 					username: discordUser.username,
-					authorized: discordUser.id == OWNER_ID ? true : false
+					authorized: discordUser.id == env?.OWNER_ID ? true : false
 				}
 			});
 		};

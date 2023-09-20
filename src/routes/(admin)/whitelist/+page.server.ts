@@ -1,13 +1,16 @@
 import type { PageServerLoad, Actions } from './$types';
 import { prisma } from '$lib/server/prisma';
 import { error } from '@sveltejs/kit';
-import { OWNER_ID, OWNER_USERNAME } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { redirect, setFlash } from 'sveltekit-flash-message/server';
 
 export const load = (async ({ locals }) => {
 	const session = await locals.auth.validate();
 
-	if (session!.user?.discordId !== OWNER_ID && session!.user?.username !== OWNER_USERNAME) {
+	if (
+		session!.user?.discordId !== env?.OWNER_ID &&
+		session!.user?.username !== env?.OWNER_USERNAME
+	) {
 		throw redirect(303, '/');
 	}
 
@@ -22,7 +25,10 @@ export const actions = {
 
 		const session = await locals.auth.validate();
 
-		if (session!.user?.discordId !== OWNER_ID && session!.user?.username !== OWNER_USERNAME) {
+		if (
+			session!.user?.discordId !== env?.OWNER_ID &&
+			session!.user?.username !== env?.OWNER_USERNAME
+		) {
 			throw error(401, 'Unauthorized');
 		}
 
@@ -34,7 +40,7 @@ export const actions = {
 
 		if (!id || !discordId || !username || !value) throw error(400, 'Bad request');
 
-		if (discordId == OWNER_ID || username == OWNER_USERNAME) {
+		if (discordId == env?.OWNER_ID || username == env?.OWNER_USERNAME) {
 			return setFlash({ type: 'error', message: 'You cant deauthorize an admin!' }, event);
 		}
 

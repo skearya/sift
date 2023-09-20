@@ -1,4 +1,4 @@
-import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { lucia } from 'lucia';
 import { sveltekit } from 'lucia/middleware';
 import { discord } from '@lucia-auth/oauth/providers';
@@ -28,9 +28,9 @@ export const auth = lucia({
 });
 
 export const discordAuth = discord(auth, {
-	clientId: CLIENT_ID,
-	clientSecret: CLIENT_SECRET,
-	redirectUri: REDIRECT_URI
+	clientId: env.CLIENT_ID!,
+	clientSecret: env.CLIENT_SECRET!,
+	redirectUri: env.REDIRECT_URI!
 });
 
 export type Auth = typeof auth;
