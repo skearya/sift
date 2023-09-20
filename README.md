@@ -15,7 +15,7 @@
   <img alt="image" src="https://github.com/skearya/sift/assets/77034153/c3fea2bb-a7f0-47c8-a4b8-7f8872f69772">
 </details>
 
-## Info
+# Info
 - Full stack framework: [SvelteKit](https://kit.svelte.dev/)
 - ORM: [Prisma](https://www.prisma.io/)
 - Auth library: [Lucia](https://lucia-auth.com/)
@@ -23,10 +23,13 @@
 - TypeScript
 - TailwindCSS
 
-## Hosting
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift&env=API_KEY,PUBLIC_PROXY,DATABASE_URL,OWNER_ID,CLIENT_ID,CLIENT_SECRET,REDIRECT_URI&envDescription=More%20info%20about%20all%20environment%20variables%20in%20repository.&envLink=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift%23hosting)
+# Hosting
+### Hosting with discord authentication 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift&env=API_KEY,PUBLIC_PROXY,DATABASE_URL,OWNER_ID,CLIENT_ID,CLIENT_SECRET,REDIRECT_URI&envDescription=!%20see%20repo's%20description%20on%20environment%20variable%20details%20!&envLink=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift)
+### Hosting with username/password authentication
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift&env=API_KEY,PUBLIC_PROXY,DATABASE_URL,OWNER_USERNAME&envDescription=!%20see%20repo's%20description%20on%20environment%20variable%20details%20!&envLink=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift)
 
-`.env`
+`.env` details
 ```bash
 API_KEY="anify api key (https://docs.anify.tv/)"
 PUBLIC_PROXY="url to an instance of https://github.com/Eltik/M3U8-Proxy"
