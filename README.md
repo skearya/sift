@@ -24,6 +24,7 @@
 - TailwindCSS
 
 # Hosting
+Video guide: https://youtu.be/w-v5Pm-gcy4
 ### Hosting with discord authentication 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift&env=API_KEY,PUBLIC_PROXY,DATABASE_URL,OWNER_ID,CLIENT_ID,CLIENT_SECRET,REDIRECT_URI&envDescription=!%20see%20repo's%20description%20on%20environment%20variable%20details%20!&envLink=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift)
 ### Hosting with username/password authentication
