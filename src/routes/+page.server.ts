@@ -1,18 +1,19 @@
 import type { PageServerLoad } from './$types';
+import type { Anime, MinifiedSeasonalData, SeasonalData } from '$lib/types';
 import { error } from '@sveltejs/kit';
 import { api, bestFallback } from '$lib/api';
 import { prisma } from '$lib/server/prisma';
-import { API_KEY } from '$env/static/private';
-import type { Anime, MinifiedSeasonalData, SeasonalData } from '$lib/types';
 
 export const load = (async ({ locals }) => {
 	const session = await locals.auth.validate();
 
 	async function fetchData() {
 		try {
-			let response = await api(`seasonal/anime?apikey=${API_KEY}`).json<SeasonalData>();
+			let response = await api(
+				`seasonal/anime?fields=[id,title,coverImage,year,artwork]`
+			).json<SeasonalData>();
 
-			let minifiedResponse: MinifiedSeasonalData = {
+			let newResponse: MinifiedSeasonalData = {
 				trending: [],
 				popular: [],
 				top: [],
@@ -20,7 +21,7 @@ export const load = (async ({ locals }) => {
 			};
 
 			for (const collection in response) {
-				minifiedResponse[collection] = response[collection].map((anime: Anime) => ({
+				newResponse[collection] = response[collection].map((anime: Anime) => ({
 					id: anime.id,
 					coverImage: anime.coverImage,
 					title: anime.title,
@@ -29,7 +30,7 @@ export const load = (async ({ locals }) => {
 				}));
 			}
 
-			return minifiedResponse;
+			return newResponse;
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching homepage data',
