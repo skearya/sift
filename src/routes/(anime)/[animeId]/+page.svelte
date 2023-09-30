@@ -149,13 +149,13 @@
 								<h1 class="flex-grow p-2 pl-1 pr-3 font-medium lg:text-lg">
 									{episode.title || episode.id}
 								</h1>
-								{#if data.covers[episode.number - 1]?.img && data.covers[episode.number - 1]?.img !== 'https://simkl.in/episodes/null_c.jpg'}
+								{#if data.covers[0]?.data[episode.number - 1]?.img && data.covers[0]?.data[episode.number - 1]?.img !== 'https://simkl.in/episodes/null_c.jpg'}
 									<div class="m-2 hidden min-w-[210px] overflow-hidden rounded-md md:block">
 										<img
 											loading="lazy"
 											width="210"
 											height="118"
-											src={data.covers[episode.number - 1]?.img}
+											src={data.covers[0]?.data[episode.number - 1]?.img}
 											alt="episode cover"
 										/>
 									</div>

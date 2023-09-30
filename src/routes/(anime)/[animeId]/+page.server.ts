@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
 import { API_KEY } from '$env/static/private';
 import { api } from '$lib/api';
-import type { Anime, EpisodeCovers, EpisodeData } from '$lib/types';
+import type { Anime, ContentMetadata, EpisodeData } from '$lib/types';
 
 export const load = (async ({ params }) => {
 	let { animeId } = params;
@@ -44,9 +44,9 @@ export const load = (async ({ params }) => {
 
 	async function fetchCovers() {
 		try {
-			return await api(`episode-covers/${animeId}?apikey=${API_KEY}`).json<EpisodeCovers[]>();
+			return await api(`content-metadata/${animeId}?apikey=${API_KEY}`).json<ContentMetadata[]>();
 		} catch (e: any) {
-			return {} as EpisodeCovers[];
+			return {} as ContentMetadata[];
 		}
 	}
 

@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { api } from '$lib/api';
 import { redirect, error } from '@sveltejs/kit';
 import { API_KEY } from '$env/static/private';
-import type { Anime, EpisodeCovers, EpisodeData, SourceInfo } from '$lib/types';
+import type { Anime, ContentMetadata, EpisodeData, SourceInfo } from '$lib/types';
 import { prisma } from '$lib/server/prisma';
 
 export const load = (async ({ url, params, locals }) => {
@@ -30,7 +30,7 @@ export const load = (async ({ url, params, locals }) => {
 					break;
 				}
 			}
-			
+
 			if (response.default == undefined) throw new Error('No playable sources found');
 
 			return response;
@@ -77,11 +77,11 @@ export const load = (async ({ url, params, locals }) => {
 				userData?.watchHistory[0]?.cover == undefined ||
 				userData?.watchHistory[0]?.episodeNumber !== Number(episode)
 			) {
-				let response = await api(`episode-covers/${animeId}?apikey=${API_KEY}`).json<
-					EpisodeCovers[]
+				let response = await api(`content-metadata/${animeId}?apikey=${API_KEY}`).json<
+					ContentMetadata[]
 				>();
 
-				newCover = response[Number(episode) - 1]?.img;
+				newCover = response[0]?.data[Number(episode) - 1]?.img;
 			}
 
 			await prisma.userData.update({

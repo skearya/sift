@@ -123,9 +123,21 @@ interface Source {
 	quality: string;
 }
 
-export interface EpisodeCovers {
-	episode: number;
-	img: string;
+export interface ContentMetadata {
+	providerId: string;
+	data: Datum[];
+}
+
+interface Datum {
+	id: string;
+	description?: string;
+	hasDub: boolean;
+	img?: undefined | string;
+	isFiller: boolean;
+	number: number;
+	title: string;
+	updatedAt: number;
+	rating?: number;
 }
 
 export interface SeasonalData {
