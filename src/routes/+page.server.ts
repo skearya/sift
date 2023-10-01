@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import type { Anime, MinifiedSeasonalData, SeasonalData } from '$lib/types';
+import type { Anime, MinifiedAnime, MinifiedSeasonalData, SeasonalData } from '$lib/types';
 import { error } from '@sveltejs/kit';
 import { api, bestFallback } from '$lib/api';
 import { prisma } from '$lib/server/prisma';
@@ -41,11 +41,24 @@ export const load = (async ({ locals }) => {
 
 	async function fetchRecent() {
 		try {
-			return await api(`meta/anilist/recent-episodes`, {
-				prefixUrl: 'https://api.consumet.org/'
-			}).json<ConsumetRecent>();
+			let response = await api(`recent?type=anime`).json<Anime[]>();
+
+			let newReponse: (MinifiedAnime & { currentEpisode: number | undefined })[] = [];
+
+			for (const anime of response) {
+				newReponse.push({
+					id: anime.id,
+					coverImage: anime.coverImage,
+					title: anime.title,
+					year: anime.year,
+					currentEpisode: anime.currentEpisode,
+					fallback: bestFallback(anime.artwork)
+				});
+			}
+
+			return newReponse;
 		} catch (e: any) {
-			return {} as ConsumetRecent;
+			return [];
 		}
 	}
 
@@ -65,32 +78,3 @@ export const load = (async ({ locals }) => {
 		history: fetchHistory()
 	};
 }) satisfies PageServerLoad;
-
-interface ConsumetRecent {
-	currentPage: number;
-	hasNextPage: boolean;
-	totalPages: number;
-	totalResults: number;
-	results: Result[];
-}
-
-interface Result {
-	id: string;
-	malId: number;
-	title: Title;
-	image: string;
-	rating?: number;
-	color: string;
-	episodeId: string;
-	episodeTitle: string;
-	episodeNumber: number;
-	genres: string[];
-	type: string;
-}
-
-interface Title {
-	romaji: string;
-	english?: string;
-	native: string;
-	userPreferred: string;
-}

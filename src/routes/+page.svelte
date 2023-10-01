@@ -50,7 +50,9 @@
 								: 'h-full flex-col'
 						}`}
 					>
-						<h1 class="max-w-[12rem] whitespace-normal font-semibold transition-colors line-clamp-2">
+						<h1
+							class="line-clamp-2 max-w-[12rem] whitespace-normal font-semibold transition-colors"
+						>
 							{episode.animeName}
 						</h1>
 						<h1 class="text-muted-foreground">
@@ -62,7 +64,7 @@
 		</div>
 	{/if}
 
-	{#if data.recent?.results?.length > 0}
+	{#if data.recent?.length > 0}
 		<h1
 			class="pb-6 pl-6 pt-8 text-2xl font-semibold tracking-tight first-letter:uppercase lg:pl-8 lg:text-3xl"
 		>
@@ -70,22 +72,30 @@
 		</h1>
 
 		<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll">
-			{#each data.recent.results as anime, i}
+			{#each data.recent as anime, i}
 				<Card
 					class="flex flex-shrink-0 basis-[16rem] snap-start scroll-ml-8 flex-col first:ml-6 last:mr-6 lg:first:ml-8 lg:last:mr-8"
 				>
 					<CardHeader class="p-2 pb-0">
 						<img
-							src={anime.image}
+							src={anime.coverImage}
 							alt="Anime cover art"
 							loading={i >= 6 ? 'lazy' : 'eager'}
 							class="h-96 w-full rounded-md object-cover"
+							data-fallback={anime?.fallback}
+							on:error={(event) => {
+								// @ts-ignore
+								if (event.target.src !== anime.fallback) {
+									// @ts-ignore
+									event.target.src = anime.fallback;
+								}
+							}}
 						/>
 					</CardHeader>
 					<div class="space-y-1.5 p-6">
 						<CardTitle class="line-clamp-3">{anime.title.romaji || anime.id}</CardTitle>
 						<CardDescription class="flex justify-between">
-							<h1>EP {anime.episodeNumber}</h1>
+							<h1>EP {anime.currentEpisode}</h1>
 						</CardDescription>
 					</div>
 					<CardFooter class="mt-auto flex gap-x-3">
