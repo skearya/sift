@@ -1,6 +1,5 @@
 import type { PageServerLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
-import { API_KEY } from '$env/static/private';
 import { api, bestFallback } from '$lib/api';
 import type { Anime, MinifiedAnime } from '$lib/types';
 
@@ -10,7 +9,7 @@ export const load = (async ({ url }) => {
 	async function fetchResults() {
 		try {
 			let response = await api(
-				`search/anime/${encodeURIComponent(url.searchParams.get('query')!)}?apikey=${API_KEY}`
+				`search/anime/${encodeURIComponent(url.searchParams.get('query')!)}`
 			).json<Anime[]>();
 
 			let minifiedResponse: MinifiedAnime[] = response.map((anime: Anime) => ({

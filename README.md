@@ -26,13 +26,12 @@
 # Hosting
 Video guide: https://youtu.be/w-v5Pm-gcy4
 ### Hosting with discord authentication 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift&env=API_KEY,PUBLIC_PROXY,DATABASE_URL,OWNER_ID,CLIENT_ID,CLIENT_SECRET,REDIRECT_URI&envDescription=!%20see%20repo's%20description%20on%20environment%20variable%20details%20!&envLink=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift&env=PUBLIC_PROXY,DATABASE_URL,OWNER_ID,CLIENT_ID,CLIENT_SECRET,REDIRECT_URI&envDescription=more%20info%20in%20github%20readme&envLink=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift%23hosting)
 ### Hosting with username/password authentication
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift&env=API_KEY,PUBLIC_PROXY,DATABASE_URL,OWNER_USERNAME&envDescription=!%20see%20repo's%20description%20on%20environment%20variable%20details%20!&envLink=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift&env=PUBLIC_PROXY,DATABASE_URL,OWNER_USERNAME&envDescription=more%20info%20in%20github%20readme&envLink=https%3A%2F%2Fgithub.com%2Fskearya%2Fsift%23hosting)
 
 `.env` details
 ```bash
-API_KEY="anify api key (https://docs.anify.tv/)"
 PUBLIC_PROXY="url to an instance of https://github.com/Eltik/M3U8-Proxy"
 DATABASE_URL="mysql db"
 

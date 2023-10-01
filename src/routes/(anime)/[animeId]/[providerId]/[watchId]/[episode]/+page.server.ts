@@ -1,7 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { api } from '$lib/api';
 import { redirect, error } from '@sveltejs/kit';
-import { API_KEY } from '$env/static/private';
 import type { Anime, ContentMetadata, EpisodeData, SourceInfo } from '$lib/types';
 import { prisma } from '$lib/server/prisma';
 
@@ -19,7 +18,7 @@ export const load = (async ({ url, params, locals }) => {
 					watchId
 				)}&episodeNumber=${episode}&id=${animeId}&subType=${
 					url.searchParams.get('subType') || 'sub'
-				}&apikey=${API_KEY}`
+				}`
 			).json<SourceInfo>();
 
 			if (response.sources.length == 0) throw new Error('No sources found');
@@ -46,7 +45,7 @@ export const load = (async ({ url, params, locals }) => {
 		let response: Anime;
 
 		try {
-			response = await api(`info/${animeId}?apikey=${API_KEY}`).json<Anime>();
+			response = await api(`info/${animeId}`).json<Anime>();
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching anime info',
@@ -77,9 +76,7 @@ export const load = (async ({ url, params, locals }) => {
 				userData?.watchHistory[0]?.cover == undefined ||
 				userData?.watchHistory[0]?.episodeNumber !== Number(episode)
 			) {
-				let response = await api(`content-metadata/${animeId}?apikey=${API_KEY}`).json<
-					ContentMetadata[]
-				>();
+				let response = await api(`content-metadata/${animeId}`).json<ContentMetadata[]>();
 
 				newCover = response[0]?.data[Number(episode) - 1]?.img;
 			}
@@ -130,7 +127,7 @@ export const load = (async ({ url, params, locals }) => {
 
 	async function fetchEpisodes() {
 		try {
-			let response = await api(`episodes/${animeId}?apikey=${API_KEY}`).json<EpisodeData[]>();
+			let response = await api(`episodes/${animeId}`).json<EpisodeData[]>();
 
 			for (let i = 0; i < response.length; i++) {
 				let firstItem = response[i].episodes[0].number;

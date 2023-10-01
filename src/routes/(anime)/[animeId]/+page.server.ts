@@ -1,6 +1,5 @@
 import type { PageServerLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
-import { API_KEY } from '$env/static/private';
 import { api } from '$lib/api';
 import type { Anime, ContentMetadata, EpisodeData } from '$lib/types';
 
@@ -11,7 +10,7 @@ export const load = (async ({ params }) => {
 
 	async function fetchInfo() {
 		try {
-			return await api(`info/${animeId}?apikey=${API_KEY}`).json<Anime>();
+			return await api(`info/${animeId}`).json<Anime>();
 		} catch (e: any) {
 			throw error(404, {
 				message: 'Error fetching anime info',
@@ -22,7 +21,7 @@ export const load = (async ({ params }) => {
 
 	async function fetchEpisodes() {
 		try {
-			let response = await api(`episodes/${animeId}?apikey=${API_KEY}`).json<EpisodeData[]>();
+			let response = await api(`episodes/${animeId}`).json<EpisodeData[]>();
 
 			for (let i = 0; i < response.length; i++) {
 				let firstItem = response[i].episodes[0].number;
@@ -44,7 +43,7 @@ export const load = (async ({ params }) => {
 
 	async function fetchCovers() {
 		try {
-			return await api(`content-metadata/${animeId}?apikey=${API_KEY}`).json<ContentMetadata[]>();
+			return await api(`content-metadata/${animeId}`).json<ContentMetadata[]>();
 		} catch (e: any) {
 			return {} as ContentMetadata[];
 		}
