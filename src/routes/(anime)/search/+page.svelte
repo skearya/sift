@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { page } from '$app/stores';
 	import { Button } from '$components/ui/button';
 	import { Skeleton } from '$components/ui/skeleton';
 	import { animeId, toastState } from '$components/episodes';
 	import { Alert, AlertDescription, AlertTitle } from '$components/ui/alert';
 	import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '$components/ui/card';
-	import { AlertCircle } from 'lucide-svelte';
+	import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-svelte';
 
 	export let data: PageData;
 </script>
@@ -86,5 +87,26 @@
 				<AlertDescription>{e.message}</AlertDescription>
 			</Alert>
 		{/await}
+	</div>
+
+	<div class="mb-6 flex justify-between">
+		{#if (Number($page.url.searchParams.get('page')) || 1) !== 1}
+			<Button
+				href={`/search?${new URLSearchParams({
+					query: $page.url.searchParams.get('query') || '',
+					page: String((Number($page.url.searchParams.get('page')) || 1) - 1)
+				})}`}
+				class="mr-auto"><ChevronLeft /></Button
+			>
+		{/if}
+		<Button
+			href={`/search?${new URLSearchParams({
+				query: $page.url.searchParams.get('query') || '',
+				page: String((Number($page.url.searchParams.get('page')) || 1) + 1)
+			})}`}
+			class="ml-auto"
+		>
+			<ChevronRight />
+		</Button>
 	</div>
 </section>

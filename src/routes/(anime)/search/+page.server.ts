@@ -9,7 +9,9 @@ export const load = (async ({ url }) => {
 	async function fetchResults() {
 		try {
 			let response = await api(
-				`search/anime/${encodeURIComponent(url.searchParams.get('query')!)}`
+				`search-advanced?type=anime&page=${
+					url.searchParams.get('page') || 1
+				}&query=${encodeURIComponent(url.searchParams.get('query')!)}`
 			).json<Anime[]>();
 
 			let minifiedResponse: MinifiedAnime[] = response.map((anime: Anime) => ({
