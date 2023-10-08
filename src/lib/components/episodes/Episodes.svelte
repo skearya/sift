@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { EpisodeData } from '$lib/types';
+	import { api } from '$lib/api';
 	import { navigating } from '$app/stores';
-	import { toastState, animeId } from './stores';
 	import { fade, slide, type TransitionConfig } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import { createDialog } from '@melt-ui/svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
 	import { Loader2, X } from 'lucide-svelte';
-	import ky from 'ky-universal';
+	import { toastState, animeId } from './stores';
 
 	let longLoading: boolean = false;
 	let timeout: ReturnType<typeof setInterval>;
@@ -17,7 +17,7 @@
 	async function fetchEpisodes() {
 		longLoading = false;
 
-		let response = await ky(`/api/episodes/${$animeId}`, {
+		let response = await api(`episodes/${$animeId}`, {
 			hooks: {
 				beforeRequest: [
 					() => {
