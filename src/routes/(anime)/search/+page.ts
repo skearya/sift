@@ -1,9 +1,9 @@
-import type { PageServerLoad } from './$types';
+import type { PageLoad } from './$types';
 import { error, redirect } from '@sveltejs/kit';
 import { api, bestFallback } from '$lib/api';
 import type { Anime, MinifiedAnime } from '$lib/types';
 
-export const load = (async ({ url }) => {
+export const load = (async ({ fetch, url }) => {
 	if (!url.searchParams.get('query')) throw redirect(303, '/');
 
 	async function fetchResults() {
@@ -11,7 +11,8 @@ export const load = (async ({ url }) => {
 			let response = await api(
 				`search-advanced?type=anime&page=${
 					url.searchParams.get('page') || 1
-				}&query=${encodeURIComponent(url.searchParams.get('query')!)}`
+				}&query=${encodeURIComponent(url.searchParams.get('query')!)}`,
+				{ fetch }
 			).json<Anime[]>();
 
 			let minifiedResponse: MinifiedAnime[] = response.map((anime: Anime) => ({
@@ -33,4 +34,4 @@ export const load = (async ({ url }) => {
 			response: fetchResults()
 		}
 	};
-}) satisfies PageServerLoad;
+}) satisfies PageLoad;
