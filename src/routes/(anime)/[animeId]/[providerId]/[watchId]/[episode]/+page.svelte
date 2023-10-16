@@ -44,6 +44,9 @@
 
 		player.onAttach(() => {
 			if (data.time) player.currentTime = Number(data.time);
+			if (localStorage.getItem('volume') !== null) {
+				player.volume = Number(localStorage.getItem('volume'));
+			}
 
 			interval = setInterval(() => {
 				if (!player.state.playing) return;
@@ -63,6 +66,10 @@
 					})
 				});
 			}, 10000);
+		});
+
+		player.addEventListener('volume-change', (event) => {
+			localStorage.setItem('volume', event.detail.volume.toString());
 		});
 
 		player.addEventListener('provider-change', (event) => {
