@@ -41,11 +41,9 @@ export const load = (async ({ url, params, locals }) => {
 			});
 
 			let newCover: string | undefined = undefined;
+			let differentEpisode = userData?.watchHistory[0]?.episodeNumber !== Number(episode);
 
-			if (
-				userData?.watchHistory[0]?.cover == undefined ||
-				userData?.watchHistory[0]?.episodeNumber !== Number(episode)
-			) {
+			if (userData?.watchHistory[0]?.cover == undefined || differentEpisode) {
 				let response = await api(`content-metadata/${animeId}`).json<ContentMetadata[]>();
 
 				newCover = response[0]?.data[Number(episode) - 1]?.img;
@@ -53,7 +51,7 @@ export const load = (async ({ url, params, locals }) => {
 
 			await prisma.userData.update({
 				where: {
-					user_id: session!.user!.userId
+					user_id: session!.user.userId
 				},
 				data: {
 					watchHistory: {
@@ -82,9 +80,7 @@ export const load = (async ({ url, params, locals }) => {
 								createdAt: new Date(),
 								cover: newCover,
 								dubbed: url.searchParams.get('subType') == 'dub',
-								...(userData?.watchHistory[0]?.episodeNumber !== Number(episode)
-									? { progress: 0 }
-									: {})
+								progress: differentEpisode ? 0 : undefined
 							}
 						}
 					}

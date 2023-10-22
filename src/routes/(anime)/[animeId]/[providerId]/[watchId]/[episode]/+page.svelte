@@ -173,6 +173,7 @@
 
 			{#if nextEp}
 				<Button
+					data-sveltekit-reload
 					href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
 						nextEp.id
 					)}/${nextEp.number}${data.dubbed ? '/?subType=dub' : ''}`}
@@ -192,6 +193,7 @@
 				)}
 				{#if episode?.id && episode?.number}
 					<a
+						data-sveltekit-reload
 						href={`/${$page.params.animeId}/${provider.providerId}/${encodeURIComponent(
 							episode.id
 						)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}
@@ -210,6 +212,7 @@
 		<div class="flex max-h-48 flex-wrap gap-2 overflow-y-auto rounded-md bg-muted p-1">
 			{#each currentProvider.episodes as episode}
 				<a
+					data-sveltekit-reload
 					href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
 						episode.id
 					)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}
