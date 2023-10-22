@@ -4,7 +4,9 @@
 	import { PUBLIC_PROXY } from '$env/static/public';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 	import { bestFallback } from '$lib/api';
+	import { preferences } from '$lib/settings';
 	import toast from 'svelte-french-toast';
 	import { Button } from '$components/ui/button';
 	import HLS from 'hls.js';
@@ -15,6 +17,8 @@
 	import { Play } from 'lucide-svelte';
 
 	export let data: PageData;
+
+	let nameType = get(preferences).type;
 	let interval: ReturnType<typeof setInterval>;
 	let usingProxy: boolean = false;
 
@@ -134,7 +138,7 @@
 	class="mx-auto min-h-screen max-w-screen-xl overflow-hidden rounded-b-lg bg-popover min-[1300px]:mb-10 min-[1300px]:border-x min-[1300px]:border-b"
 >
 	<media-player
-		title={`${data.info.title.romaji} - Episode ${$page.params.episode}`}
+		title={`${data.info.title[nameType]} - Episode ${$page.params.episode}`}
 		src={data.source.default}
 		aspect-ratio="16/9"
 		crossorigin
@@ -156,7 +160,7 @@
 	<div class="p-4 md:p-6">
 		<div class="space-y-1">
 			<h1 class="text-2xl font-semibold tracking-tight md:text-3xl">
-				{data.info.title.romaji}
+				{data.info.title[nameType]}
 			</h1>
 			<h1 class="text-md capitalize text-muted-foreground md:text-lg">
 				{data.info.season}
@@ -169,7 +173,6 @@
 
 			{#if nextEp}
 				<Button
-					data-sveltekit-reload
 					href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
 						nextEp.id
 					)}/${nextEp.number}${data.dubbed ? '/?subType=dub' : ''}`}
@@ -189,7 +192,6 @@
 				)}
 				{#if episode?.id && episode?.number}
 					<a
-						data-sveltekit-reload
 						href={`/${$page.params.animeId}/${provider.providerId}/${encodeURIComponent(
 							episode.id
 						)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}
@@ -208,7 +210,6 @@
 		<div class="flex max-h-48 flex-wrap gap-2 overflow-y-auto rounded-md bg-muted p-1">
 			{#each currentProvider.episodes as episode}
 				<a
-					data-sveltekit-reload
 					href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
 						episode.id
 					)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}

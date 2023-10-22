@@ -14,7 +14,7 @@
 	export let data: PageData;
 </script>
 
-<section class="container my-8 px-6 lg:px-8">
+<section class="my-8 px-6 lg:px-8">
 	<h1 class="mb-5 text-2xl font-semibold tracking-tight lg:text-3xl">Users</h1>
 
 	<Table class="border">

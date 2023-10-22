@@ -22,8 +22,9 @@ export const GET: RequestHandler = async (event) => {
 	}
 
 	try {
-		const { existingUser, discordUser, createUser } = await discordAuth.validateCallback(code);
+		const { getExistingUser, discordUser, createUser } = await discordAuth.validateCallback(code);
 
+		const existingUser = await getExistingUser();
 		const getUser = async () => {
 			if (existingUser) return existingUser;
 			return await createUser({

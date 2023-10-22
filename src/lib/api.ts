@@ -1,8 +1,13 @@
-import ky from 'ky-universal';
+import ky from 'ky';
 
-const api = ky.create({ prefixUrl: 'https://api.anify.tv/', timeout: 10000 });
+export const api = ky.create({ prefixUrl: 'https://api.anify.tv/', timeout: 15000 });
 
-function bestFallback(artwork: Artwork[]): string {
+export const validCover = (url: string | undefined) =>
+	url &&
+	url !== 'https://simkl.in/episodes/null_c.jpg' &&
+	url !== 'https://image.tmdb.org/t/p/w500null';
+
+export function bestFallback(artwork: Artwork[]): string {
 	let newImg = '';
 
 	for (let i = 0; i < artwork.length; i++) {
@@ -32,5 +37,3 @@ interface Artwork {
 	type: string;
 	providerId: string;
 }
-
-export { api, bestFallback };

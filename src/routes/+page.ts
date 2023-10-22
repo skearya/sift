@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit';
 import { api, bestFallback } from '$lib/api';
 
 export const load = (async ({ fetch, data }) => {
-	async function fetchData() {
+	async function fetchSeasonal() {
 		try {
 			let response = await api(`seasonal/anime?fields=[id,title,coverImage,year,artwork]`, {
 				fetch
@@ -59,9 +59,19 @@ export const load = (async ({ fetch, data }) => {
 		}
 	}
 
+	async function mergeData() {
+		let [seasonal, recent] = await Promise.allSettled([fetchSeasonal(), fetchRecent()]);
+
+		return {
+			recent: recent.status == 'fulfilled' ? recent.value : [],
+			...(seasonal.status == 'fulfilled' ? seasonal.value : [])
+		};
+	}
+
 	return {
 		...data,
-		anime: fetchData(),
-		recent: fetchRecent()
+		streamed: {
+			anime: mergeData()
+		}
 	};
 }) satisfies PageLoad;

@@ -21,13 +21,15 @@
 					toastState.set(true);
 				}}
 				class="my-2 w-full"
+				variant="secondary"
 			>
-				Alternative Providers
+				Try Alternative Provider
 			</Button>
 		{/if}
 
 		{#if page.error?.info}
-			<Separator class="my-2 bg-destructive" />
+			<Separator class="my-2" />
+			<h1 class="">More Info:</h1>
 			<pre class="whitespace-normal">{page.error?.info}</pre>
 		{/if}
 	</div>

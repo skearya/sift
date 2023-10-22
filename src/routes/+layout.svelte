@@ -1,18 +1,29 @@
 <script lang="ts">
 	import '../app.postcss';
 	import type { LayoutData } from './$types';
+	import { onMount } from 'svelte';
 	import { page, navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { fly, slide, scale } from 'svelte/transition';
 	import { getFlash } from 'sveltekit-flash-message/client';
+	import { flyAndScale, sleep } from '$lib/utils';
+	import { preferences } from '$lib/settings';
+	import { fly, slide, scale, fade } from 'svelte/transition';
+	import { createDialog, createSelect } from '@melt-ui/svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import { Input } from '$components/ui/input';
-	import { Button } from '$components/ui/button';
 	import { Toggle } from '$components/ui/toggle';
+	import { Switch } from '$components/ui/switch';
+	import { Button } from '$components/ui/button';
+	import { Separator } from '$components/ui/separator';
 	import { Episodes } from '$components/episodes';
-	import { LightSwitch } from '$components/light-switch';
 	import { setInitialClassState } from '$components/light-switch/light-switch';
-	import { ChevronDown, Github, Loader2 } from 'lucide-svelte';
+	import { ChevronDown, Github, Loader2, Settings, X } from 'lucide-svelte';
+	import {
+		getModeOsPrefers,
+		modeCurrent,
+		setModeCurrent,
+		setModeUserPrefers
+	} from '$components/light-switch/light-switch';
 
 	export let data: LayoutData;
 
@@ -33,10 +44,52 @@
 		flash.set(undefined);
 	});
 
-	let input: string;
-	let dropdown: boolean;
+	let input: string = '';
+	let dropdown: boolean = false;
+	let resetClickCount = 0;
+
+	const {
+		elements: { portalled, overlay, content, title, close },
+		states: { open: settingsOpen }
+	} = createDialog();
+
+	const {
+		elements: { trigger, menu, option },
+		states: { selectedLabel, open: nameTypeOpen }
+	} = createSelect({
+		defaultSelected: { value: $preferences.type, label: $preferences.type },
+		required: true,
+		forceVisible: true,
+		positioning: {
+			placement: 'bottom',
+			fitViewport: true,
+			sameWidth: true
+		}
+	});
+
+	onMount(() => {
+		if (!('modeCurrent' in localStorage)) {
+			setModeCurrent(getModeOsPrefers());
+		}
+
+		modeCurrent.subscribe((mode) => {
+			setModeUserPrefers(mode);
+			setModeCurrent(mode);
+		});
+
+		selectedLabel.subscribe(
+			(label) => ($preferences.type = label as 'romaji' | 'native' | 'english')
+		);
+	});
+
+	function search() {
+		if (input !== '') {
+			goto(`/search?${new URLSearchParams({ query: input })}`);
+		}
+	}
 
 	$: if ($navigating) dropdown = false;
+	$: if ($settingsOpen) resetClickCount = 0;
 </script>
 
 <svelte:head>
@@ -47,41 +100,28 @@
 {#if $navigating}
 	<div
 		transition:fly={{ x: -200 }}
-		class="fixed left-8 top-24 z-50 rounded-lg border bg-secondary p-3 shadow-lg"
+		class="fixed left-6 top-24 z-50 flex flex-wrap items-center gap-x-2 rounded-lg border bg-secondary p-3 shadow-lg"
 	>
 		<Loader2 class="animate-spin" size="35" />
+
+		{#await sleep(3000) then _}
+			<h1 in:slide={{ axis: 'x' }} class="whitespace-nowrap">this can take a while..</h1>
+		{/await}
 	</div>
 {/if}
 
-<nav class="sticky top-0 z-40 flex w-full flex-col border-b bg-primary-foreground px-6">
+<nav class="sticky top-0 z-40 flex w-full select-none flex-col border-b bg-primary-foreground px-6">
 	<div class="flex h-16 items-center justify-between">
 		<div class="flex items-center">
 			<a href="/" class="mr-5">sift</a>
 		</div>
 
-		<div class="flex items-center gap-x-3">
+		<div class="flex gap-x-2">
+			<form on:submit|preventDefault={search} class="hidden sm:flex">
+				<Input class="max-w-[200px]" placeholder="Search..." bind:value={input} />
+			</form>
+
 			{#if data.user}
-				<div>
-					<form
-						on:submit|preventDefault={() => {
-							goto(`/search?${new URLSearchParams({ query: input })}`);
-						}}
-						class="hidden sm:flex"
-					>
-						<Input class="max-w-[200px]" placeholder="Search..." bind:value={input} />
-					</form>
-
-					<Toggle
-						bind:pressed={dropdown}
-						on:click={() => (dropdown = !dropdown)}
-						class="block cursor-pointer p-2 sm:hidden"
-					>
-						<ChevronDown
-							class={`transition-transform duration-300 ${dropdown ? 'rotate-180' : ''}`}
-						/>
-					</Toggle>
-				</div>
-
 				<Button
 					variant="outline"
 					class="flex h-10 items-center gap-x-3 px-3"
@@ -100,24 +140,135 @@
 				</Button>
 			{/if}
 
-			<LightSwitch />
+			<Toggle
+				bind:pressed={dropdown}
+				on:click={() => (dropdown = !dropdown)}
+				class="block cursor-pointer p-2 sm:hidden"
+			>
+				<ChevronDown class={`transition-transform duration-300 ${dropdown ? 'rotate-180' : ''}`} />
+			</Toggle>
+
+			<Toggle
+				bind:pressed={$settingsOpen}
+				on:click={() => ($settingsOpen = !$settingsOpen)}
+				class="cursor-pointer p-2"
+			>
+				<Settings strokeWidth="1.5" class="transition-transform duration-300" />
+			</Toggle>
 		</div>
 	</div>
 
 	{#if dropdown}
-		<form
-			transition:slide
-			on:submit|preventDefault={() => {
-				goto(`/search?${new URLSearchParams({ query: input })}`);
-			}}
-			class="mb-3 block sm:hidden"
-		>
+		<form transition:slide on:submit|preventDefault={search} class="mb-3 block sm:hidden">
 			<div transition:scale>
 				<Input placeholder="Search..." bind:value={input} />
 			</div>
 		</form>
 	{/if}
 </nav>
+
+<div {...$portalled} use:portalled>
+	{#if $settingsOpen}
+		<div
+			transition:fade={{ duration: 150 }}
+			{...$overlay}
+			use:overlay
+			class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
+		/>
+		<div
+			class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw]
+			max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-lg
+			border bg-background p-5 shadow-lg"
+			in:flyAndScale={{
+				duration: 150,
+				y: 10,
+				start: 0.96
+			}}
+			out:flyAndScale={{
+				duration: 150,
+				y: 0,
+				start: 0.96
+			}}
+			{...$content}
+			use:content
+		>
+			<h2 {...$title} use:title class="m-0 mb-6 text-xl font-semibold leading-none tracking-tight">
+				Settings
+			</h2>
+
+			<div class="flex flex-col gap-y-3">
+				<div class="flex items-center justify-between">
+					<h1>Light Mode</h1>
+					<Switch bind:rootChecked={$modeCurrent} />
+				</div>
+
+				<Separator />
+
+				<div class="flex items-center justify-between">
+					<h1>Name Type</h1>
+					<button
+						class="text-magnum-700 flex h-10 min-w-[220px] items-center justify-between rounded-lg border px-3
+						py-2 shadow transition-opacity hover:opacity-90"
+						{...$trigger}
+						use:trigger
+					>
+						{$selectedLabel.charAt(0).toUpperCase() + $selectedLabel.slice(1) || 'Select a type'}
+						<ChevronDown class="square-5" />
+					</button>
+				</div>
+
+				{#if $nameTypeOpen}
+					<div
+						class="z-10 flex max-h-[300px] flex-col
+						overflow-y-auto rounded-lg border bg-background
+						p-1 shadow focus:!ring-0"
+						{...$menu}
+						use:menu
+						transition:fade={{ duration: 150 }}
+					>
+						{#each ['romaji', 'native', 'english'] as type}
+							<div
+								class="relative flex cursor-pointer rounded-lg py-1
+								pl-8 pr-4 hover:bg-muted focus:z-10 data-[highlighted]:bg-muted data-[disabled]:opacity-50"
+								{...$option({ value: type, label: type })}
+								use:option
+							>
+								{type.charAt(0).toUpperCase() + type.slice(1)}
+							</div>
+						{/each}
+					</div>
+				{/if}
+
+				<Separator />
+
+				<div class="flex items-center justify-between">
+					<h1>Reset Everything</h1>
+					<Button
+						variant="destructive"
+						on:click={() => {
+							resetClickCount += 1;
+							if (resetClickCount >= 2) {
+								localStorage.clear();
+								location.reload();
+							}
+						}}
+					>
+						{resetClickCount >= 1 ? "I'm really sure!" : "I'm sure!"}
+					</Button>
+				</div>
+			</div>
+
+			<button
+				{...close}
+				use:close
+				class="absolute right-[19px] top-[19px] inline-flex h-[30px] w-[30px] rounded-full
+				text-muted-foreground transition-colors hover:text-foreground"
+			>
+				<X />
+			</button>
+		</div>
+	{/if}
+</div>
 
 {#key data.url}
 	<main in:fly={{ x: -10, duration: 500, delay: 500 }} out:fly={{ x: 5, duration: 500 }}>

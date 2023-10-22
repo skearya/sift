@@ -1,12 +1,26 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
-	import { Button } from '$components/ui/button';
+	import { get } from 'svelte/store';
+	import { validCover } from '$lib/api';
+	import { preferences } from '$lib/settings';
 	import { Progress } from '$components/ui/progress';
-	import { animeId, toastState } from '$components/episodes';
-	import { Card, CardDescription, CardHeader, CardTitle, CardFooter } from '$components/ui/card';
+	import { AnimeCard, SkeletonCard } from '$components/cards';
+	import { ArrowLeft, ArrowRight } from 'lucide-svelte';
 
 	export let data: PageData;
+
+	let nameType = get(preferences).type;
+
+	function scroll(dir: 'left' | 'right', id: string) {
+		let cards = document.getElementById(id)!;
+		let width = window.innerWidth >= 1024 ? 1200 : 200;
+
+		cards.scrollBy({
+			left: dir == 'left' ? -width : width,
+			behavior: 'smooth'
+		});
+	}
 
 	onMount(() => {
 		let img = document.getElementsByTagName('img');
@@ -19,7 +33,7 @@
 	});
 </script>
 
-<section class="container border-x px-0">
+<section>
 	{#if data.history?.length > 0}
 		<h1 class="pb-6 pl-6 pt-8 text-2xl font-semibold tracking-tight lg:pl-8 lg:text-3xl">
 			<a href="/history" class="hover:underline">Continue Watching</a>
@@ -36,18 +50,16 @@
 					})}`}
 					class="mb-3 flex min-h-full min-w-max snap-start scroll-ml-8 flex-col overflow-hidden whitespace-nowrap rounded-md border first:ml-6 last:mr-6 lg:first:ml-8 lg:last:mr-8"
 				>
-					{#if episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'}
+					{#if validCover(episode?.cover || '')}
 						<img src={episode.cover} alt="anime episode cover" class="max-h-28 object-cover" />
 					{/if}
 					<Progress
-						value={((episode.progress || 0) / (episode.totalLength || 22)) * 100}
+						value={((episode.progress || 0) / (episode.totalLength || 22 * 60)) * 100}
 						class="h-1 rounded-none"
 					/>
 					<div
 						class={`flex items-center justify-between gap-x-4 p-4 ${
-							episode?.cover && episode?.cover !== 'https://simkl.in/episodes/null_c.jpg'
-								? ''
-								: 'h-full flex-col'
+							validCover(episode?.cover || '') ? '' : 'h-full flex-col'
 						}`}
 					>
 						<h1
@@ -64,107 +76,54 @@
 		</div>
 	{/if}
 
-	{#if data.recent?.length > 0}
-		<h1
-			class="pb-6 pl-6 pt-8 text-2xl font-semibold tracking-tight first-letter:uppercase lg:pl-8 lg:text-3xl"
-		>
-			Recent
-		</h1>
+	{#await data.streamed.anime}
+		{#each ['recent', 'trending', 'popular', 'top', 'seasonal'] as collection}
+			<h1
+				class="pb-6 pl-6 pt-8 text-2xl font-semibold tracking-tight first-letter:uppercase lg:pl-8 lg:text-3xl"
+			>
+				{collection}
+			</h1>
 
-		<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll">
-			{#each data.recent as anime, i}
-				<Card
-					class="flex flex-shrink-0 basis-[16rem] snap-start scroll-ml-8 flex-col first:ml-6 last:mr-6 lg:first:ml-8 lg:last:mr-8"
+			<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto">
+				{#each Array(6) as _}
+					<SkeletonCard />
+				{/each}
+			</div>
+		{/each}
+	{:then anime}
+		{#each Object.entries(anime) as [collection, animeCollection]}
+			<div class="group relative">
+				<h1
+					class="pb-6 pl-6 pt-8 text-2xl font-semibold tracking-tight first-letter:uppercase lg:pl-8 lg:text-3xl"
 				>
-					<CardHeader class="p-2 pb-0">
-						<img
-							src={anime.coverImage}
-							alt="Anime cover art"
-							loading={i >= 6 ? 'lazy' : 'eager'}
-							class="h-96 w-full rounded-md object-cover"
-							data-fallback={anime?.fallback}
-							on:error={(event) => {
-								// @ts-ignore
-								if (event.target.src !== anime.fallback) {
-									// @ts-ignore
-									event.target.src = anime.fallback;
-								}
-							}}
-						/>
-					</CardHeader>
-					<div class="space-y-1.5 p-6">
-						<CardTitle class="line-clamp-3">{anime.title.romaji || anime.id}</CardTitle>
-						<CardDescription class="flex justify-between">
-							<h1>EP {anime.currentEpisode}</h1>
-						</CardDescription>
-					</div>
-					<CardFooter class="mt-auto flex gap-x-3">
-						<Button
-							on:click={() => {
-								animeId.set(Number(anime.id));
-								toastState.set(true);
-							}}
-							class="w-full hover:bg-accent hover:text-foreground"
-						>
-							Watch
-						</Button>
-						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
-					</CardFooter>
-				</Card>
-			{/each}
-		</div>
-	{/if}
+					{collection}
+				</h1>
 
-	{#each Object.keys(data.anime) as collection}
-		<h1
-			class="pb-6 pl-6 pt-8 text-2xl font-semibold tracking-tight first-letter:uppercase lg:pl-8 lg:text-3xl"
-		>
-			{collection}
-		</h1>
-
-		<div class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll">
-			{#each data.anime[collection] as anime, i}
-				<Card
-					class="flex flex-shrink-0 basis-[16rem] snap-start scroll-ml-8 flex-col first:ml-6 last:mr-6 lg:first:ml-8 lg:last:mr-8"
+				<div
+					id={collection}
+					class="flex snap-x snap-mandatory items-stretch gap-3 overflow-x-scroll"
 				>
-					<CardHeader class="p-2 pb-0">
-						<img
-							src={anime.coverImage}
-							alt="Anime cover art"
-							loading={i >= 6 ? 'lazy' : 'eager'}
-							class="h-96 w-full rounded-md object-cover"
-							data-fallback={anime.fallback}
-							on:error={(event) => {
-								// @ts-ignore
-								if (event.target.src !== anime.fallback) {
-									// @ts-ignore
-									event.target.src = anime.fallback;
-								}
-							}}
-						/>
-					</CardHeader>
-					<div class="space-y-1.5 p-6">
-						<CardTitle class="line-clamp-3">{anime.title.romaji || anime.id}</CardTitle>
-						<CardDescription class="flex justify-between">
-							<h1>{anime.year || ''}</h1>
-						</CardDescription>
-					</div>
-					<CardFooter class="mt-auto flex gap-x-3">
-						<Button
-							on:click={() => {
-								animeId.set(Number(anime.id));
-								toastState.set(true);
-							}}
-							class="w-full hover:bg-accent hover:text-foreground"
-						>
-							Watch
-						</Button>
-						<Button href={`/${anime.id}`} variant="outline" class="w-full">Info</Button>
-					</CardFooter>
-				</Card>
-			{/each}
-		</div>
-	{/each}
+					{#each animeCollection as anime, i}
+						<AnimeCard {anime} {i} {nameType} />
+					{/each}
+				</div>
+
+				<button
+					on:click={() => scroll('left', collection)}
+					class="absolute left-12 top-1/2 rounded-full border bg-background p-2 opacity-0 transition-all group-hover:opacity-100"
+				>
+					<ArrowLeft size="30" />
+				</button>
+
+				<button
+					on:click={() => scroll('right', collection)}
+					class="absolute right-12 top-1/2 rounded-full border bg-background p-2 opacity-0 transition-all group-hover:opacity-100"
+				>
+					<ArrowRight size="30" />
+				</button>
+			</div>
+		{/each}
+	{/await}
 
 	<div class="pt-8" />
 </section>

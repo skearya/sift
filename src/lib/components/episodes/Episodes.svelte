@@ -2,36 +2,21 @@
 	import type { EpisodeData } from '$lib/types';
 	import { api } from '$lib/api';
 	import { navigating } from '$app/stores';
-	import { fade, slide, type TransitionConfig } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
+	import { toastState, animeId } from './stores';
+	import { fade, slide } from 'svelte/transition';
 	import { createDialog } from '@melt-ui/svelte';
 	import { Tabs, TabsContent, TabsList, TabsTrigger } from '$components/ui/tabs';
+	import { flyAndScale, sleep } from '$lib/utils';
 	import { Loader2, X } from 'lucide-svelte';
-	import { toastState, animeId } from './stores';
 
-	let longLoading: boolean = false;
-	let timeout: ReturnType<typeof setInterval>;
-
-	const { portal, overlay, content, title, close, open } = createDialog({ preventScroll: false });
+	const {
+		elements: { portalled, overlay, content, title, close }
+	} = createDialog({
+		open: toastState
+	});
 
 	async function fetchEpisodes() {
-		longLoading = false;
-
-		let response = await api(`episodes/${$animeId}`, {
-			hooks: {
-				beforeRequest: [
-					() => {
-						timeout = setTimeout(() => (longLoading = true), 3000);
-					}
-				],
-				afterResponse: [
-					() => {
-						clearTimeout(timeout);
-						longLoading = false;
-					}
-				]
-			}
-		}).json<EpisodeData[] & { message?: string }>();
+		let response = await api(`episodes/${$animeId}`).json<EpisodeData[] & { message?: string }>();
 
 		for (let i = 0; i < response.length; i++) {
 			let firstItem = response[i].episodes[0].number;
@@ -45,62 +30,11 @@
 		return response;
 	}
 
-	$: if ($navigating) open.set(false);
-
-	$: $toastState = $open;
-
-	toastState.subscribe((value) => {
-		open.set(value);
-	});
-
-	// https://github.com/melt-ui/melt-ui/blob/388d8fe4282c1b7fb1b0359482fc184169fd872e/src/routes/helpers.ts#L101
-
-	type FlyAndScaleOptions = {
-		y: number;
-		start: number;
-		duration?: number;
-	};
-
-	const flyAndScale = (node: HTMLElement, options: FlyAndScaleOptions): TransitionConfig => {
-		const style = getComputedStyle(node);
-		const transform = style.transform === 'none' ? '' : style.transform;
-
-		return {
-			duration: options.duration ?? 150,
-			delay: 0,
-			css: (t) => {
-				const y = scaleConversion(t, [0, 1], [options.y, 0]);
-				const scale = scaleConversion(t, [0, 1], [options.start, 1]);
-
-				return styleToString({
-					transform: `${transform} translate3d(0, ${y}px, 0) scale(${scale})`,
-					opacity: t
-				});
-			},
-			easing: cubicOut
-		};
-	};
-
-	const scaleConversion = (valueA: number, scaleA: [number, number], scaleB: [number, number]) => {
-		const [minA, maxA] = scaleA;
-		const [minB, maxB] = scaleB;
-
-		const percentage = (valueA - minA) / (maxA - minA);
-		const valueB = percentage * (maxB - minB) + minB;
-
-		return valueB;
-	};
-
-	function styleToString(style: Record<string, number | string | undefined>): string {
-		return Object.keys(style).reduce((str, key) => {
-			if (style[key] === undefined) return str;
-			return str + `${key}:${style[key]};`;
-		}, '');
-	}
+	$: if ($navigating) toastState.set(false);
 </script>
 
-<div use:portal>
-	{#if $open}
+<div {...$portalled} use:portalled>
+	{#if $toastState}
 		<div
 			transition:fade={{ duration: 150 }}
 			{...$overlay}
@@ -119,21 +53,20 @@
 			<h2 {...title} class="text-xl font-semibold leading-none tracking-tight">Episode Selector</h2>
 
 			{#await fetchEpisodes()}
-				<div class="-mb-10 mt-2 flex w-full flex-wrap items-center justify-center gap-2">
+				<div class="flex w-full flex-wrap items-center justify-center gap-2">
 					<Loader2 class="animate-spin" />
-					{#if longLoading}
+
+					{#await sleep(3000) then _}
 						<h1 in:slide={{ axis: 'x' }} class="whitespace-nowrap text-muted-foreground">
 							this can take a while..
 						</h1>
-					{/if}
+					{/await}
 				</div>
-
-				<div class="mt-[25px]" />
 			{:then data}
 				{#if data?.message}
 					<h1 class="text-destructive">{data.message}</h1>
 				{:else}
-					<div class="mt-2 flex flex-wrap gap-2" in:slide|global>
+					<div class="flex flex-wrap gap-2" in:slide|global>
 						<Tabs value={data[0]?.providerId} class="w-full" activateOn={'click'}>
 							<TabsList class={`mb-0 grid w-full grid-cols-1 sm:grid-cols-${data.length}`}>
 								{#each data as provider}
@@ -175,7 +108,7 @@
 			<button
 				{...close}
 				use:close
-				class="absolute right-[19px] top-[19px] inline-flex h-[30px] w-[30px] rounded-full
+				class="absolute right-[16px] top-[16px] inline-flex h-[30px] w-[30px] rounded-full
 				text-muted-foreground transition-colors hover:text-foreground"
 			>
 				<X />

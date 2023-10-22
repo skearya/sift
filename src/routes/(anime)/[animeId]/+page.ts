@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
-import { error, redirect } from '@sveltejs/kit';
-import { api } from '$lib/api';
 import type { Anime, ContentMetadata, EpisodeData } from '$lib/types';
+import { api } from '$lib/api';
+import { error, redirect } from '@sveltejs/kit';
 
 export const load = (async ({ fetch, params }) => {
 	let { animeId } = params;
