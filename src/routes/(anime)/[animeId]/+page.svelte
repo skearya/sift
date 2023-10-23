@@ -116,7 +116,7 @@
 			<h1>Episodes</h1>
 			<div class="flex items-center gap-3">
 				<Label class="text-sm text-muted-foreground">Dubbed</Label>
-				<Switch bind:rootChecked={checked} />
+				<Switch bind:checked />
 			</div>
 		</div>
 

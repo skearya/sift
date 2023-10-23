@@ -2,18 +2,12 @@
 	import type { HTMLAttributes } from "svelte/elements";
 	import { cn } from "$lib/utils";
 
-	type $$Props = HTMLAttributes<HTMLDivElement>;
+	type $$Props = HTMLAttributes<HTMLParagraphElement>;
 
 	let className: $$Props["class"] = undefined;
 	export { className as class };
 </script>
 
-<div
-	class={cn(
-		"rounded-lg border bg-card text-card-foreground shadow-sm",
-		className
-	)}
-	{...$$restProps}
->
+<p class={cn("text-sm text-muted-foreground", className)} {...$$restProps}>
 	<slot />
-</div>
+</p>

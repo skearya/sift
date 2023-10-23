@@ -31,7 +31,7 @@
 		</TableHeader>
 		<TableBody>
 			{#each data.users as user, i (i)}
-				<TableRow key={user.id}>
+				<TableRow>
 					<TableCell>{user.username}</TableCell>
 					<TableCell>
 						<form

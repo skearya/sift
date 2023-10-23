@@ -1,22 +1,26 @@
 <script lang="ts">
-	import type { ProgressRootProps } from 'radix-svelte';
-	import { Progress as ProgressPrimitive } from 'radix-svelte';
-	import { cn } from '$lib/utils';
+	import { Progress as ProgressPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils";
 
-	let className: string | undefined | null = undefined;
+	type $$Props = ProgressPrimitive.Props;
+
+	let className: $$Props["class"] = undefined;
+	export let max: $$Props["max"] = 100;
+	export let value: $$Props["value"] = undefined;
 	export { className as class };
-	export let value: ProgressRootProps['value'] = null;
-	export let max: ProgressRootProps['max'] = 100;
 </script>
 
 <ProgressPrimitive.Root
-	class={cn('relative h-4 w-full overflow-hidden rounded-full bg-secondary', className)}
-	{value}
-	{max}
+	class={cn(
+		"relative h-4 w-full overflow-hidden rounded-full bg-secondary",
+		className
+	)}
 	{...$$restProps}
 >
-	<ProgressPrimitive.Indicator
+	<div
 		class="h-full w-full flex-1 bg-primary transition-all"
-		style={`transform: translateX(-${100 - (100 * (value ?? 0)) / (max ?? 1)}%)`}
+		style={`transform: translateX(-${
+			100 - (100 * (value ?? 0)) / (max ?? 1)
+		}%)`}
 	/>
 </ProgressPrimitive.Root>

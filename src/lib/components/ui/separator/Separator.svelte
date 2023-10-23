@@ -1,22 +1,22 @@
 <script lang="ts">
-	import type { SeparatorRootProps } from 'radix-svelte';
-	import { Separator } from 'radix-svelte';
-	import { cn } from '$lib/utils';
+	import { Separator as SeparatorPrimitive } from "bits-ui";
+	import { cn } from "$lib/utils";
 
-	let className: string | undefined | null = undefined;
+	type $$Props = SeparatorPrimitive.Props;
+
+	let className: $$Props["class"] = undefined;
+	export let orientation: $$Props["orientation"] = "horizontal";
+	export let decorative: $$Props["decorative"] = undefined;
 	export { className as class };
-
-	export let orientation: SeparatorRootProps['orientation'] = 'horizontal';
-	export let decorative: SeparatorRootProps['decorative'] = true;
 </script>
 
-<Separator.Root
-	{orientation}
-	{decorative}
+<SeparatorPrimitive.Root
 	class={cn(
-		'shrink-0 bg-border',
-		orientation === 'horizontal' ? 'h-[1px] w-full' : 'h-full w-[1px]',
+		"shrink-0 bg-border",
+		orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
 		className
 	)}
+	{orientation}
+	{decorative}
 	{...$$restProps}
 />

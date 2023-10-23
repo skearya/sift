@@ -2,13 +2,12 @@
 	import { cn } from "$lib/utils";
 	import type { HTMLAttributes } from "svelte/elements";
 
-	type $$Props = HTMLAttributes<HTMLDivElement>;
+	type $$Props = HTMLAttributes<HTMLTableSectionElement>;
 
 	let className: $$Props["class"] = undefined;
 	export { className as class };
 </script>
 
-<div
-	class={cn("animate-pulse rounded-md bg-muted", className)}
-	{...$$restProps}
-/>
+<tbody class={cn("[&_tr:last-child]:border-0", className)} {...$$restProps}>
+	<slot />
+</tbody>

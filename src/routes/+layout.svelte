@@ -16,13 +16,13 @@
 	import { Button } from '$components/ui/button';
 	import { Separator } from '$components/ui/separator';
 	import { Episodes } from '$components/episodes';
-	import { setInitialClassState } from '$components/light-switch/light-switch';
 	import { ChevronDown, Github, Loader2, Settings, X } from 'lucide-svelte';
 	import {
 		getModeOsPrefers,
 		modeCurrent,
 		setModeCurrent,
-		setModeUserPrefers
+		setModeUserPrefers,
+		setInitialClassState
 	} from '$components/light-switch/light-switch';
 
 	export let data: LayoutData;
@@ -199,7 +199,7 @@
 			<div class="flex flex-col gap-y-3">
 				<div class="flex items-center justify-between">
 					<h1>Light Mode</h1>
-					<Switch bind:rootChecked={$modeCurrent} />
+					<Switch bind:checked={$modeCurrent} />
 				</div>
 
 				<Separator />

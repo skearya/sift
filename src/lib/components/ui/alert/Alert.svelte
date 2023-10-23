@@ -1,29 +1,21 @@
 <script lang="ts">
-	import type { VariantProps } from 'class-variance-authority';
-	import { cva } from 'class-variance-authority';
-	import { cn } from '$lib/utils';
+	import { cn } from "$lib/utils";
+	import type { HTMLAttributes } from "svelte/elements";
+	import { alertVariants, type Variant } from ".";
 
-	const alertVariants = cva(
-		'relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:text-foreground [&>svg]:left-4 [&>svg]:top-4 [&>svg+div]:translate-y-[-3px]',
-		{
-			variants: {
-				variant: {
-					default: 'bg-background text-foreground',
-					destructive:
-						'text-destructive border-destructive/50 dark:border-destructive [&>svg]:text-destructive text-destructive'
-				}
-			},
-			defaultVariants: {
-				variant: 'default'
-			}
-		}
-	);
+	type $$Props = HTMLAttributes<HTMLDivElement> & {
+		variant?: Variant;
+	};
 
-	let className: string | undefined | null = undefined;
+	let className: $$Props["class"] = undefined;
+	export let variant: $$Props["variant"] = "default";
 	export { className as class };
-	export let variant: VariantProps<typeof alertVariants>['variant'] = 'default';
 </script>
 
-<div class={cn(alertVariants({ variant }), className)} {...$$restProps}>
+<div
+	class={cn(alertVariants({ variant }), className)}
+	{...$$restProps}
+	role="alert"
+>
 	<slot />
 </div>
