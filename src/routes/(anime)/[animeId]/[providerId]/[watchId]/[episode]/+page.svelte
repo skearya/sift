@@ -1,26 +1,17 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import type { HLSProvider } from 'vidstack';
-	import { PUBLIC_PROXY } from '$env/static/public';
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { get } from 'svelte/store';
 	import { bestFallback } from '$lib/api';
 	import { preferences } from '$lib/settings';
-	import toast from 'svelte-french-toast';
 	import { Button } from '$components/ui/button';
-	import HLS from 'hls.js';
-	import { defineCustomElements } from 'vidstack/elements';
-	import 'vidstack/styles/defaults.css';
-	import 'vidstack/styles/community-skin/video.css';
 	import { AniList, Kitsu, Simkl } from '$lib/icons';
 	import { Play } from 'lucide-svelte';
 
 	export let data: PageData;
 
 	let nameType = get(preferences).type;
-	let interval: ReturnType<typeof setInterval>;
-	let usingProxy: boolean = false;
 
 	let currentProvider = data.episodes.find(
 		(provider) => provider.providerId == $page.params.providerId
@@ -41,121 +32,24 @@
 				img[i].src = img[i].getAttribute('data-fallback') || img[i].src;
 			}
 		}
-
-		await defineCustomElements();
-
-		const player = document.querySelector('media-player')!;
-
-		player.onAttach(() => {
-			if (data.time) player.currentTime = Number(data.time);
-			if (localStorage.getItem('volume') !== null) {
-				player.volume = Number(localStorage.getItem('volume'));
-			}
-
-			interval = setInterval(() => {
-				if (!player.state.playing) return;
-
-				const { animeId, providerId, watchId, episode } = $page.params;
-
-				fetch('/api/history', {
-					method: 'POST',
-					body: JSON.stringify({
-						animeName: data.info.title.romaji,
-						animeId,
-						providerId,
-						watchId,
-						episode,
-						length: player.state.duration,
-						time: player.currentTime
-					})
-				});
-			}, 10000);
-		});
-
-		player.addEventListener('volume-change', (event) => {
-			localStorage.setItem('volume', event.detail.volume.toString());
-		});
-
-		player.addEventListener('provider-change', (event) => {
-			const provider = event.detail;
-
-			if (provider?.type === 'hls') {
-				(provider as HLSProvider).library = HLS;
-			}
-		});
-
-		player.addEventListener('error', (event) => {
-			if ((event.detail.message = 'Failed to open media')) useProxy();
-		});
-
-		player.addEventListener('hls-error', (event) => {
-			if (event.detail.fatal) useProxy();
-		});
-
-		player.addEventListener('destroy', () => {
-			clearInterval(interval);
-		});
-
-		function useProxy() {
-			if (usingProxy) return;
-
-			usingProxy = true;
-
-			toast.error('Encountered CORS error, trying proxy');
-
-			let time = player.currentTime || Number(data.time);
-
-			player.src = {
-				src: `${PUBLIC_PROXY}m3u8-proxy?url=${encodeURIComponent(
-					data.source.default!
-				)}&headers=${encodeURIComponent(JSON.stringify(data.source.headers || {}))}`,
-				type: 'application/x-mpegurl'
-			};
-
-			if (player.currentTime == 0) return;
-
-			player.addEventListener(
-				'can-play',
-				async () => {
-					player.currentTime = time;
-					await player.play();
-				},
-				{ once: true }
-			);
-		}
-
-		// const currentEpisode: HTMLElement = document.getElementById($page.params.episode)!;
-
-		// currentEpisode.scrollIntoView({
-		// 	behavior: 'smooth'
-		// });
-
-		// messes up page transition, fix later?
 	});
 </script>
 
 <section
 	class="mx-auto min-h-screen max-w-screen-xl overflow-hidden rounded-b-lg bg-popover min-[1300px]:mb-10 min-[1300px]:border-x min-[1300px]:border-b"
 >
-	<media-player
-		title={`${data.info.title[nameType]} - Episode ${$page.params.episode}`}
-		src={data.source.default}
-		aspect-ratio="16/9"
-		crossorigin
-	>
-		<media-outlet>
-			{#each data.source.subtitles as subtitle}
-				<track
-					src={subtitle.url}
-					kind="subtitles"
-					label={subtitle.lang}
-					default={subtitle.lang == 'English'}
-					data-type="vtt"
-				/>
-			{/each}
-		</media-outlet>
-		<media-community-skin />
-	</media-player>
+	{#await import('$components/player')}
+		<div class="aspect-video h-full w-full bg-black"></div>
+	{:then { Player }}
+		<svelte:component
+			this={Player}
+			src={data.source.default}
+			time={data.time}
+			headers={data.source.headers}
+			subtitles={data.source.subtitles}
+			title={data.info.title[nameType]}
+		/>
+	{/await}
 
 	<div class="p-4 md:p-6">
 		<div class="space-y-1">
@@ -173,7 +67,6 @@
 
 			{#if nextEp}
 				<Button
-					data-sveltekit-reload
 					href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
 						nextEp.id
 					)}/${nextEp.number}${data.dubbed ? '/?subType=dub' : ''}`}
@@ -193,7 +86,6 @@
 				)}
 				{#if episode?.id && episode?.number}
 					<a
-						data-sveltekit-reload
 						href={`/${$page.params.animeId}/${provider.providerId}/${encodeURIComponent(
 							episode.id
 						)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}
@@ -212,7 +104,6 @@
 		<div class="flex max-h-48 flex-wrap gap-2 overflow-y-auto rounded-md bg-muted p-1">
 			{#each currentProvider.episodes as episode}
 				<a
-					data-sveltekit-reload
 					href={`/${$page.params.animeId}/${$page.params.providerId}/${encodeURIComponent(
 						episode.id
 					)}/${episode.number}${data.dubbed ? '/?subType=dub' : ''}`}

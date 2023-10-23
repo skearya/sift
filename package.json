@@ -49,6 +49,6 @@
 		"sveltekit-flash-message": "^2.2.1",
 		"tailwind-merge": "^1.14.0",
 		"tailwindcss-animate": "^1.0.7",
-		"vidstack": "^0.6.13"
+		"vidstack": "^1.4.3"
 	}
 }

@@ -89,10 +89,10 @@ interface Mapping {
 	similarity: number;
 }
 
-interface Title {
+export interface Title {
 	native: string;
 	romaji: string;
-	english?: string;
+	english: string;
 }
 
 export interface EpisodeData {
@@ -102,14 +102,14 @@ export interface EpisodeData {
 
 export interface SourceInfo {
 	sources: Source[];
-	default?: string;
+	default: string;
 	subtitles: any[];
 	intro: Intro;
 	outro: Intro;
 	headers: Headers;
 }
 
-interface Headers {
+export interface Headers {
 	Referer?: string;
 }
 
