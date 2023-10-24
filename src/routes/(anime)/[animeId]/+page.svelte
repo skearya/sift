@@ -121,11 +121,7 @@
 		</div>
 
 		<Tabs value={checked ? dubbed[0]?.providerId : data?.episodes[0]?.providerId} class="w-full">
-			<TabsList
-				class={`mb-6 grid w-full grid-cols-1 sm:grid-cols-${
-					checked ? dubbed.length : data.episodes.length
-				}`}
-			>
+			<TabsList class={`mb-6`}>
 				{#each checked ? dubbed : data.episodes as provider}
 					<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
 				{:else}

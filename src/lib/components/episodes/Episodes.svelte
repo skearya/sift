@@ -68,7 +68,7 @@
 				{:else}
 					<div class="flex flex-wrap gap-2" in:slide|global>
 						<Tabs value={data[0]?.providerId} class="w-full" activateOnFocus={false}>
-							<TabsList class={`mb-0 grid w-full grid-cols-1 sm:grid-cols-${data.length}`}>
+							<TabsList class={`mb-0`}>
 								{#each data as provider}
 									<TabsTrigger value={provider.providerId}>{provider.providerId}</TabsTrigger>
 								{:else}

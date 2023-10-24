@@ -5,11 +5,12 @@
 	import { page, navigating } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { getFlash } from 'sveltekit-flash-message/client';
-	import { flyAndScale, sleep } from '$lib/utils';
+	import { sleep } from '$lib/utils';
 	import { preferences } from '$lib/settings';
-	import { fly, slide, scale, fade } from 'svelte/transition';
-	import { createDialog, createSelect } from '@melt-ui/svelte';
+	import { fly, slide, scale } from 'svelte/transition';
 	import toast, { Toaster } from 'svelte-french-toast';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import * as Select from '$components/ui/select';
 	import * as DropdownMenu from '$components/ui/dropdown-menu';
 	import { Input } from '$components/ui/input';
 	import { Toggle } from '$components/ui/toggle';
@@ -17,15 +18,7 @@
 	import { Button } from '$components/ui/button';
 	import { Separator } from '$components/ui/separator';
 	import { Episodes } from '$components/episodes';
-	import {
-		ChevronDown,
-		Github,
-		History,
-		Loader2,
-		LogOut,
-		Settings,
-		X
-	} from 'lucide-svelte';
+	import { ChevronDown, Github, History, Loader2, LogOut, Settings } from 'lucide-svelte';
 	import {
 		getModeOsPrefers,
 		modeCurrent,
@@ -56,25 +49,10 @@
 	let input: string = '';
 	let dropdown: boolean = false;
 	let resetClickCount = 0;
-
-	const {
-		elements: { portalled, overlay, content, title, close },
-		states: { open: settingsOpen }
-	} = createDialog();
-
-	const {
-		elements: { trigger, menu, option },
-		states: { selectedLabel, open: nameTypeOpen }
-	} = createSelect({
-		defaultSelected: { value: $preferences.type, label: $preferences.type },
-		required: true,
-		forceVisible: true,
-		positioning: {
-			placement: 'bottom',
-			fitViewport: true,
-			sameWidth: true
-		}
-	});
+	let selected = {
+		value: $preferences.type,
+		label: $preferences.type.charAt(0).toUpperCase() + $preferences.type.slice(1)
+	};
 
 	onMount(() => {
 		if (!('modeCurrent' in localStorage)) {
@@ -85,10 +63,6 @@
 			setModeUserPrefers(mode);
 			setModeCurrent(mode);
 		});
-
-		selectedLabel.subscribe(
-			(label) => ($preferences.type = label as 'romaji' | 'native' | 'english')
-		);
 	});
 
 	function search() {
@@ -98,7 +72,7 @@
 	}
 
 	$: if ($navigating) dropdown = false;
-	$: if ($settingsOpen) resetClickCount = 0;
+	$: $preferences.type = selected.value as 'romaji' | 'native' | 'english';
 </script>
 
 <svelte:head>
@@ -170,13 +144,69 @@
 				<ChevronDown class={`transition-transform duration-300 ${dropdown ? 'rotate-180' : ''}`} />
 			</Toggle>
 
-			<Toggle
-				bind:pressed={$settingsOpen}
-				on:click={() => ($settingsOpen = !$settingsOpen)}
-				class="cursor-pointer p-2"
-			>
-				<Settings strokeWidth="1.5" class="transition-transform duration-300" />
-			</Toggle>
+			<Dialog.Root>
+				<Dialog.Trigger
+					on:click={() => (resetClickCount = 0)}
+					class="rounded-md p-2 transition-colors hover:bg-accent"
+				>
+					<Settings strokeWidth="1.5" />
+				</Dialog.Trigger>
+				<Dialog.Content>
+					<Dialog.Header>
+						<Dialog.Title class="text-xl">Settings</Dialog.Title>
+					</Dialog.Header>
+
+					<div class="flex flex-col gap-y-3">
+						<div class="flex items-center justify-between">
+							<h1>Light Mode</h1>
+							<Switch bind:checked={$modeCurrent} />
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center justify-between">
+							<h1>Name Type</h1>
+
+							<Select.Root bind:selected>
+								<Select.Trigger class="w-[150px]">
+									<Select.Value placeholder="Select a type" />
+								</Select.Trigger>
+								<Select.Content>
+									<Select.Group>
+										{#each ['romaji', 'native', 'english'] as type}
+											<Select.Item
+												value={type}
+												label={type.charAt(0).toUpperCase() + type.slice(1)}
+												class="text-white"
+											>
+												{type.charAt(0).toUpperCase() + type.slice(1)}
+											</Select.Item>
+										{/each}
+									</Select.Group>
+								</Select.Content>
+							</Select.Root>
+						</div>
+
+						<Separator />
+
+						<div class="flex items-center justify-between">
+							<h1>Reset Everything</h1>
+							<Button
+								variant="destructive"
+								on:click={() => {
+									resetClickCount += 1;
+									if (resetClickCount >= 2) {
+										localStorage.clear();
+										location.reload();
+									}
+								}}
+							>
+								{resetClickCount >= 1 ? "I'm really sure!" : "I'm sure!"}
+							</Button>
+						</div>
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
 		</div>
 	</div>
 
@@ -188,109 +218,6 @@
 		</form>
 	{/if}
 </nav>
-
-<div {...$portalled} use:portalled>
-	{#if $settingsOpen}
-		<div
-			transition:fade={{ duration: 150 }}
-			{...$overlay}
-			use:overlay
-			class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
-		/>
-		<div
-			class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw]
-			max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-lg
-			border bg-background p-5 shadow-lg"
-			in:flyAndScale={{
-				duration: 150,
-				y: 10,
-				start: 0.96
-			}}
-			out:flyAndScale={{
-				duration: 150,
-				y: 0,
-				start: 0.96
-			}}
-			{...$content}
-			use:content
-		>
-			<h2 {...$title} use:title class="m-0 mb-6 text-xl font-semibold leading-none tracking-tight">
-				Settings
-			</h2>
-
-			<div class="flex flex-col gap-y-3">
-				<div class="flex items-center justify-between">
-					<h1>Light Mode</h1>
-					<Switch bind:checked={$modeCurrent} />
-				</div>
-
-				<Separator />
-
-				<div class="flex items-center justify-between">
-					<h1>Name Type</h1>
-					<button
-						class="text-magnum-700 flex h-10 min-w-[220px] items-center justify-between rounded-lg border px-3
-						py-2 shadow transition-opacity hover:opacity-90"
-						{...$trigger}
-						use:trigger
-					>
-						{$selectedLabel.charAt(0).toUpperCase() + $selectedLabel.slice(1) || 'Select a type'}
-						<ChevronDown class="square-5" />
-					</button>
-				</div>
-
-				{#if $nameTypeOpen}
-					<div
-						class="z-10 flex max-h-[300px] flex-col
-						overflow-y-auto rounded-lg border bg-background
-						p-1 shadow focus:!ring-0"
-						{...$menu}
-						use:menu
-						transition:fade={{ duration: 150 }}
-					>
-						{#each ['romaji', 'native', 'english'] as type}
-							<div
-								class="relative flex cursor-pointer rounded-lg py-1
-								pl-8 pr-4 hover:bg-muted focus:z-10 data-[highlighted]:bg-muted data-[disabled]:opacity-50"
-								{...$option({ value: type, label: type })}
-								use:option
-							>
-								{type.charAt(0).toUpperCase() + type.slice(1)}
-							</div>
-						{/each}
-					</div>
-				{/if}
-
-				<Separator />
-
-				<div class="flex items-center justify-between">
-					<h1>Reset Everything</h1>
-					<Button
-						variant="destructive"
-						on:click={() => {
-							resetClickCount += 1;
-							if (resetClickCount >= 2) {
-								localStorage.clear();
-								location.reload();
-							}
-						}}
-					>
-						{resetClickCount >= 1 ? "I'm really sure!" : "I'm sure!"}
-					</Button>
-				</div>
-			</div>
-
-			<button
-				{...close}
-				use:close
-				class="absolute right-[19px] top-[19px] inline-flex h-[30px] w-[30px] rounded-full
-				text-muted-foreground transition-colors hover:text-foreground"
-			>
-				<X />
-			</button>
-		</div>
-	{/if}
-</div>
 
 {#key data.url}
 	<main
