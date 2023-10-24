@@ -7,7 +7,7 @@
 	export let data: PageData;
 </script>
 
-<section class="container min-h-screen border-x px-6 lg:px-8">
+<section class="container min-h-screen px-6 lg:px-8">
 	<h1 class="pb-6 pt-8 text-2xl font-semibold tracking-tight lg:text-3xl">Watch History</h1>
 
 	<div class="flex flex-wrap gap-3 pb-3">

@@ -10,13 +10,22 @@
 	import { fly, slide, scale, fade } from 'svelte/transition';
 	import { createDialog, createSelect } from '@melt-ui/svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
+	import * as DropdownMenu from '$components/ui/dropdown-menu';
 	import { Input } from '$components/ui/input';
 	import { Toggle } from '$components/ui/toggle';
 	import { Switch } from '$components/ui/switch';
 	import { Button } from '$components/ui/button';
 	import { Separator } from '$components/ui/separator';
 	import { Episodes } from '$components/episodes';
-	import { ChevronDown, Github, Loader2, Settings, X } from 'lucide-svelte';
+	import {
+		ChevronDown,
+		Github,
+		History,
+		Loader2,
+		LogOut,
+		Settings,
+		X
+	} from 'lucide-svelte';
 	import {
 		getModeOsPrefers,
 		modeCurrent,
@@ -110,7 +119,7 @@
 	</div>
 {/if}
 
-<nav class="sticky top-0 z-40 flex w-full select-none flex-col border-b bg-primary-foreground px-6">
+<nav class="fixed top-0 z-40 flex w-full select-none flex-col border-b bg-primary-foreground px-6">
 	<div class="flex h-16 items-center justify-between">
 		<div class="flex items-center">
 			<a href="/" class="mr-5">sift</a>
@@ -122,22 +131,35 @@
 			</form>
 
 			{#if data.user}
-				<Button
-					variant="outline"
-					class="flex h-10 items-center gap-x-3 px-3"
-					on:click={() => {
-						if (window.confirm('Are you sure you want to logout?')) {
-							goto('/logout');
-						}
-					}}
-				>
-					<img
-						class="h-7 w-7 rounded-full"
-						src={`https://avatar.vercel.sh/${data.user.username}?size=50`}
-						alt="pfp"
-					/>
-					<h1 class="max-w-[150px] overflow-hidden text-ellipsis">{data.user?.username}</h1>
-				</Button>
+				<DropdownMenu.Root>
+					<DropdownMenu.Trigger asChild let:builder>
+						<Button
+							builders={[builder]}
+							variant="outline"
+							class="flex h-10 items-center gap-x-3 px-3"
+						>
+							<img
+								class="h-7 w-7 rounded-full"
+								src={`https://avatar.vercel.sh/${data.user.username}?size=56`}
+								alt="pfp"
+							/>
+							<h1 class="max-w-[150px] overflow-hidden text-ellipsis">{data.user?.username}</h1>
+						</Button>
+					</DropdownMenu.Trigger>
+					<DropdownMenu.Content class="w-56 text-white">
+						<DropdownMenu.Label>My Account</DropdownMenu.Label>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item on:click={() => goto('/history')}>
+							<History class="mr-2 h-4 w-4" />
+							<span>Watch History</span>
+						</DropdownMenu.Item>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item on:click={() => goto('/logout')}>
+							<LogOut class="mr-2 h-4 w-4" />
+							<span>Log out</span>
+						</DropdownMenu.Item>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>
 			{/if}
 
 			<Toggle
@@ -271,7 +293,11 @@
 </div>
 
 {#key data.url}
-	<main in:fly={{ x: -10, duration: 500, delay: 500 }} out:fly={{ x: 5, duration: 500 }}>
+	<main
+		in:fly={{ x: -10, duration: 500, delay: 500 }}
+		out:fly={{ x: 5, duration: 500 }}
+		class="pt-16"
+	>
 		<slot />
 	</main>
 {/key}
