@@ -1,5 +1,6 @@
 # sift
 ### a decent way to watch anime
+(made by [@skearya](https://github.com/skearya), moved to Hontom)
 - no tracking/analytics
 - no ads
 - watch history
